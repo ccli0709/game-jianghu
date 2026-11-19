@@ -1,0 +1,24 @@
+{
+  "id": "world_jianghu_main",
+  "name": "神州浩土全圖",
+  "version": "1.0.0",
+  "width": 16,
+  "height": 16,
+  "maxWidth": 128,
+  "maxHeight": 128,
+  "dimensions": {
+    "width": 16,
+    "height": 16,
+    "maxWidth": 128,
+    "maxHeight": 128
+  },
+  "chunkTileSize": 16,
+  "cells": {
+    "7,7": {
+      "mapFile": "overworld_default.tmj",
+      "name": "中原核心郡縣 (洛陽·龍門)",
+      "biome": "PLAINS",
+      "assignedAt": "2026-11-20T07:20:00.000Z"
+    }
+  }
+}

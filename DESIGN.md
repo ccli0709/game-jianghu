@@ -4,12 +4,13 @@
 
 ## 1. 遊戲定位與核心哲學
 
-* **類型**：2D 俯視角（Top-Down）、**雙層雙循環架構**（大地圖回合旅行冒險 + 戰術小地圖回合死鬥）。
+* **類型**：2D 俯視角（Top-Down）、**三層空間多尺度架構**（世界地圖宏觀佈局 $\rightarrow$ 大地圖小時時序探索 $\rightarrow$ 戰術小地圖死鬥博弈）。
 * **平台目標**：Web 首發（瀏覽器即玩，HTML5 / WebGL / WebGPU），後續可無縫包裝跨平台（Electron / Tauri）。
 * **核心哲學**：
-  * **雙層地圖分工**：
-    * **大地圖（Overworld）**：專注於宏觀江湖旅行、時序推演、情報打聽、門派勢力巡邏、懸賞接取與隨機奇遇。
-    * **戰術小地圖（Tactical Arena）**：遇敵時依據當前地形（密林、客棧、水泊、荒野）動態生成微觀網格戰場，專注於招式預判、元素化學反應與擊退物理。
+  * **三層空間多尺度分工**：
+    * **世界地圖（World Map，最大 128x128 區塊）**：掌管天下九州大勢、地理板塊接壤、門派領地疆界與大型天候生態圈。世界地圖上的每一格皆對應一張專屬大地圖，**且嚴格禁止重複使用相同大地圖（排他性唯一約束）**，確保天下山水千姿百態。
+    * **大地圖區塊（Overworld Chunk，16x16）**：專注於宏觀江湖旅行、時序推演（小時/十二時辰制）、情報打聽、門派勢力巡邏、懸賞接取與隨機奇遇。
+    * **戰術小地圖（Tactical Arena，16x16）**：遇敵時依據當前地形（密林、客棧、水泊、荒野）動態生成微觀網格戰場，專注於招式預判、元素化學反應與擊退物理。
   * **環境即武器**：戰術場景內所有介質、地形、障礙具備物理/化學反應屬性。
   * **世界有記憶**：NPC 具備獨立記憶、動態人情網絡與死後生態位替補（權力真空）。
   * **確定性博弈**：全回合制，摒棄純數值堆疊，強化時間差、擊退、預判與代價決策。
@@ -60,17 +61,50 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
     * `Terrain_Layer` (tilelayer)：青石 (100E)、泥濘 (160E)、深水 (200E)、碎石 (130E)、掩體岩壁。
     * `Chemical_Surfaces` 與 `Tactical_Spawns` (objectgroup)：火油桶位置、雙方出生陣位。
 
-### 3.3 本地視覺化地圖編輯器 (`editor.html`)
-專案自帶無需安裝任何環境的完整視覺化編輯工具 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)：
-* **雙模式無縫切換**：編輯大地圖 (Overworld) 或戰術小地圖 (Battle Arena)。
-* **多功能工具組**：單格筆刷 (Brush)、區域填充 (Bucket Flood Fill)、地格吸管 (Eyedropper)、重設清空。
+### 3.3 本地視覺化地圖編輯器 (`editor.html` - 直存直取專案版)
+專案自帶無需配置任何第三方服務的專屬地圖編輯工具 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)：
+* **專案地圖選單 (Project Map Selector)**：下拉選單直接檢視並切換專案 `maps/` 目錄內現有的所有 `.tmj` / `.json` 地圖，切換即時載入編輯。
+* **一鍵新增地圖 (New Map Modal)**：自訂地圖檔名（如 `arena_cave.tmj` 或 `overworld_south.tmj`）與地圖類型（大地圖 / 戰術圖），自動生成標準初始版型並直接納入專案。
+* **直接保存至專案 (Direct Disk Persistence)**：
+  * 點擊「💾 直接保存至專案」或快捷鍵 <kbd>Ctrl+S</kbd>，直接將修改後的 Tiled JSON 寫入專案磁碟的 `maps/` 資料夾，免去手動下載、重命名與搬移檔案的繁瑣流程。
+  * **雙引擎持久化支援**：
+    * **本地開發伺服器模式**：執行 `npm start`（或 `node server.js`），編輯器透過 `/api/maps` REST API 直讀直寫專案磁碟。
+    * **瀏覽器原生 File System Access API 模式**：若直接以 Chrome/Edge 開啟檔案，點擊授權專案 `maps/` 目錄後，亦可直接以原生檔案控制代碼直寫磁碟。
+* **多功能繪圖工具組**：單格筆刷 (Brush)、區域填充 (Bucket Flood Fill)、地格吸管 (Eyedropper)、重設清空。
 * **調色盤直覺選色**：整合各類地貌、移動消耗 (小時 / 能量) 與對應圖示。
-* **標準 Tiled 互轉**：
-  * **一鍵導出**：生成標準 `.tmj` 檔案（可直接用桌面版 Tiled 打開或納入版本控制）。
-  * **一鍵載入**：點選載入任意本地 `.json` / `.tmj` 即時渲染到畫布進行塗刷修改。
-  * **代碼預覽**：右側即時生成格式化 Tiled JSON 代碼，支援一鍵複製。
 
-### 3.4 官方 Tiled 桌面版編輯器相容
+### 3.4 宏觀世界地圖編輯器 (`world_editor.html` - 最大 128x128 網格)
+專案提供掌管神州浩土宏觀佈局的專用編輯器 [world_editor.html](file:///d:/Repositories/game-jianghu/world_editor.html)：
+* **規格與規模**：支援最大 $128 \times 128$ 個大地圖區塊（即最多容納 $16,384$ 張獨立大地圖），預設規格為 $16 \times 16$ 區塊。
+* **嚴格唯一性排他約束 (Non-duplication Guarantee)**：
+  * 世界地圖上的每一個區塊代表一張專屬大地圖。
+  * 挑選專案現有大地圖時，編輯器演算法自動排除所有已被其他區塊佔用的檔案，嚴格杜絕重複指派。
+* **程序化隨機大地圖生成 (Procedural Biome Generator)**：
+  * 當專案現有大地圖不足或需開闢新疆土時，可一鍵隨機生成五大地貌風格的大地圖：
+    * **中原草莽 (Plains)**：綠茵遍野、官道縱橫、散落客棧與茶棚。
+    * **蜀道崇山 (Mountain)**：棧道險峰、高聳石壁阻絕、官道穿鑿峽谷。
+    * **苗疆毒沼 (Swamp)**：迷離泥沼、毒草密林、水泊遍布。
+    * **漠北荒原 (Desert)**：戈壁沙丘、碎石狂風、孤立驛站。
+    * **長白雪域 (Snow)**：積雪寒峰、霜凍徑道、極寒冰湖。
+  * 點擊「隨機生成新圖並指派入格」後，演算法直接產生相容 Tiled 1.10 的標準 16x16 JSON 結構，並即時寫入專案 `maps/` 目錄，自動完成格位綁定。
+* **視口虛擬化 (Viewport Culling) 與相機漫遊**：
+  * 在 128x128 ($16,384$ 格) 超大海量網格下，僅動態繪製視口可見區塊（Culling），縮放比例越小時自動過濾小字標籤，保持極限 60 FPS 流暢度。
+  * 支援滑鼠滾輪自由縮放 (12% ~ 400%)、滑鼠中鍵或空白鍵拖曳平移 (Pan/Zoom)。
+* **雙向無縫跳轉編輯**：
+  * 點選任意已指派區塊，右側檢測器即時渲染 16x16 迷你地貌縮圖。
+  * 點擊「進入此大地圖編輯」一鍵跳轉至 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)，帶入該地圖檔名並直接進行細節微雕。
+* **直存直取世界設定檔**：
+  * 快捷鍵 <kbd>Ctrl+S</kbd> 或點擊保存，直接將世界架構持久化至專案 [maps/world_default.json](file:///d:/Repositories/game-jianghu/maps/world_default.json)。
+
+### 3.5 本地極速開發伺服器 (`server.js`)
+專案提供零依賴原生 Node.js 開發伺服器 [server.js](file:///d:/Repositories/game-jianghu/server.js)：
+* 執行 `npm start` 即可同時啟動：
+  * 遊戲本體：`http://localhost:3000/index.html`
+  * 單地圖視覺化編輯器：`http://localhost:3000/editor.html`
+  * 宏觀世界地圖編輯器：`http://localhost:3000/world_editor.html`
+  * 專案地圖 API：提供 `GET /api/maps`、`GET /api/maps/:file` 與 `POST /api/maps/:file` 雙向讀寫支援。
+
+### 3.6 官方 Tiled 桌面版編輯器相容
 * 開發者若偏好 C++/Qt 桌面版大型工具，亦可直接使用官方開源 [Tiled Map Editor](https://www.mapeditor.org/) 開啟並編輯 `maps/` 目錄下的所有 `.tmj` 地圖。
 
 ### 2.2 核心排程器實作 (TypeScript)

@@ -1,0 +1,19 @@
+{
+  "name": "game-jianghu",
+  "version": "1.0.0",
+  "description": "浮世江湖 - 2D Web 回合制高自由度 RPG",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "rpg",
+    "wuxia",
+    "turn-based",
+    "pixijs",
+    "tiled"
+  ],
+  "author": "",
+  "license": "MIT"
+}

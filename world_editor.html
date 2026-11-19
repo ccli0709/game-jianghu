@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮世江湖 - 宏觀世界地圖編輯器 (最大 128x128)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #0b0c12;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background: #13151f;
+      border-bottom: 1px solid #232635;
+      padding: 9px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    h1 { font-size: 1.15rem; color: #f8fafc; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .badge-world {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #7c3aed;
+      color: #fff;
+      font-weight: bold;
+    }
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dim-control {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #191c28;
+      border: 1px solid #282d40;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    .dim-input {
+      width: 50px;
+      background: #0f111a;
+      border: 1px solid #374151;
+      color: #38bdf8;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 4px;
+      padding: 2px 4px;
+      outline: none;
+    }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+
+    .btn {
+      background: #1b1e2c;
+      border: 1px solid #2e354d;
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn:hover { background: #252b40; border-color: #455074; }
+    .btn.active { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
+    .btn-save { background: #065f46; border-color: #059669; color: #ecfdf5; font-weight: bold; }
+    .btn-save:hover { background: #047857; }
+    .btn-gen { background: #581c87; border-color: #7e22ce; color: #f3e8ff; font-weight: bold; }
+    .btn-gen:hover { background: #6b21a8; }
+    .btn-danger { background: #450a0a; border-color: #991b1b; color: #fecaca; }
+    .btn-danger:hover { background: #7f1d1d; }
+
+    .storage-status {
+      font-size: 0.74rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .status-api { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+    .status-fs { background: #1e3a8a; color: #93c5fd; border: 1px solid #3b82f6; }
+    .status-alert { background: #451a03; color: #fbbf24; border: 1px solid #b45309; cursor: pointer; }
+
+    main { display: flex; flex: 1; height: calc(100vh - 53px); }
+
+    /* 左側統計與地圖列表 */
+    #sidebar-left {
+      width: 290px;
+      background: #11131c;
+      border-right: 1px solid #212433;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      gap: 14px;
+      overflow-y: auto;
+    }
+    .sec-title {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat-card {
+      background: #181b26;
+      border: 1px solid #262b3c;
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.8rem;
+    }
+    .stat-row { display: flex; justify-content: space-between; }
+    .stat-val { font-weight: bold; color: #38bdf8; }
+
+    .assigned-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 380px;
+      overflow-y: auto;
+    }
+    .assigned-item {
+      background: #171924;
+      border: 1px solid #272d3f;
+      padding: 8px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .assigned-item:hover { background: #202434; border-color: #38425d; }
+    .assigned-item.active { border-color: #7c3aed; background: #26193d; }
+    .item-pos { font-size: 0.72rem; color: #c084fc; font-weight: bold; }
+    .item-name { font-size: 0.82rem; font-weight: 600; color: #f1f5f9; }
+    .item-file { font-size: 0.7rem; color: #64748b; font-family: monospace; }
+
+    /* 中央世界畫布 (虛擬化視口 + Pan/Zoom) */
+    #canvas-container {
+      flex: 1;
+      background: #08090d;
+      position: relative;
+      overflow: hidden;
+      cursor: grab;
+    }
+    #canvas-container.panning { cursor: grabbing; }
+    canvas#worldCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+    }
+
+    .viewport-controls {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      display: flex;
+      gap: 6px;
+      background: rgba(19, 21, 31, 0.92);
+      border: 1px solid #2d3348;
+      padding: 6px;
+      border-radius: 6px;
+      z-index: 10;
+    }
+
+    .canvas-hud {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(17, 19, 28, 0.9);
+      border: 1px solid #272c3d;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* 右側地塊檢測與隨機生成器 */
+    #sidebar-right {
+      width: 340px;
+      background: #11131c;
+      border-left: 1px solid #212433;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      gap: 14px;
+      overflow-y: auto;
+    }
+    .chunk-header {
+      background: #171a26;
+      border: 1px solid #272d40;
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chunk-coord { font-size: 1rem; font-weight: bold; color: #c084fc; }
+    .chunk-status-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
+    .tag-empty { background: #27272a; color: #a1a1aa; }
+    .tag-assigned { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+
+    .action-box {
+      background: #171a26;
+      border: 1px solid #262c3e;
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .select-input {
+      background: #0f111a;
+      border: 1px solid #374151;
+      color: #38bdf8;
+      padding: 7px 10px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      outline: none;
+      width: 100%;
+    }
+    .select-input:focus { border-color: #7c3aed; }
+
+    /* 迷你 16x16 預覽視窗 */
+    #mini-preview-box {
+      display: none;
+      background: #151824;
+      border: 1px solid #282e42;
+      border-radius: 6px;
+      padding: 10px;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    #miniCanvas {
+      border: 1px solid #374151;
+      background: #090a10;
+      image-rendering: pixelated;
+    }
+
+    .toast-msg {
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      display: none;
+      font-weight: 600;
+    }
+    .toast-success { background: #064e3b; color: #a7f3d0; border: 1px solid #059669; }
+    kbd {
+      background: #202330;
+      border: 1px solid #33384c;
+      border-radius: 4px;
+      padding: 2px 5px;
+      color: #f1f5f9;
+      font-size: 0.72rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <h1>浮世江湖 <span class="badge-world">世界地圖編輯器</span></h1>
+    </div>
+
+    <!-- 尺寸與規格配置 (最大 128x128) -->
+    <div class="header-center">
+      <div class="dim-control">
+        <span>世界規模:</span>
+        <input type="number" id="dim-w" class="dim-input" value="16" min="1" max="128" onchange="resizeWorldDimensions()">
+        <span>×</span>
+        <input type="number" id="dim-h" class="dim-input" value="16" min="1" max="128" onchange="resizeWorldDimensions()">
+        <span style="font-size:0.75rem; color:#64748b;">(最大 128×128)</span>
+      </div>
+      <button class="btn btn-save" onclick="saveWorldMapToProject()" title="快捷鍵: Ctrl+S">💾 直接保存世界地圖 (Ctrl+S)</button>
+    </div>
+
+    <div class="header-actions">
+      <span id="storage-badge" class="storage-status status-api">探測環境中...</span>
+      <button class="btn" onclick="window.location.href='editor.html'">🗺️ 大地圖編輯器</button>
+      <button class="btn" style="border-color:#38bdf8; color:#38bdf8;" onclick="window.location.href='index.html'">⚔️ 返回遊戲</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 左側面板：宏觀總覽與已指派清單 -->
+    <aside id="sidebar-left">
+      <div class="sec-title">世界宏觀指標</div>
+      <div class="stat-card">
+        <div class="stat-row"><span>世界總區塊數:</span><span id="stat-total-chunks" class="stat-val">256 格</span></div>
+        <div class="stat-row"><span>已指派大地圖:</span><span id="stat-assigned-chunks" class="stat-val" style="color:#6ee7b7;">1 格</span></div>
+        <div class="stat-row"><span>專案大地圖總量:</span><span id="stat-project-maps" class="stat-val">--</span></div>
+        <div class="stat-row"><span>大地圖重複限制:</span><span class="stat-val" style="color:#f59e0b;">嚴格唯一 (不可重複)</span></div>
+      </div>
+
+      <div class="sec-title">
+        <span>已配置地圖索引</span>
+        <span id="assigned-counter" style="font-size:0.72rem; color:#94a3b8;">1 / 256</span>
+      </div>
+      <div class="assigned-list" id="assigned-list-container">
+        <!-- 動態渲染已指派的 Chunk 列表 -->
+      </div>
+    </aside>
+
+    <!-- 中央世界畫布 -->
+    <section id="canvas-container">
+      <div class="canvas-hud">
+        <span>視角: <b id="hud-zoom">100%</b> | 鼠標懸停: <b id="hud-hover" style="color:#38bdf8;">(無)</b></span>
+      </div>
+
+      <canvas id="worldCanvas"></canvas>
+
+      <div class="viewport-controls">
+        <button class="btn" onclick="zoomView(1.2)" title="放大">+</button>
+        <button class="btn" onclick="zoomView(0.8)" title="縮小">-</button>
+        <button class="btn" onclick="resetView()" title="重置視角與居中">居中重置</button>
+      </div>
+    </section>
+
+    <!-- 右側面板：單一區塊詳細檢測與隨機生成器 -->
+    <aside id="sidebar-right">
+      <div class="sec-title">選中大地圖區塊 (Chunk)</div>
+
+      <div id="toast-bar" class="toast-msg toast-success"></div>
+
+      <div class="chunk-header">
+        <div>
+          <span style="font-size:0.75rem; color:#94a3b8;">座標 (X, Y):</span>
+          <div class="chunk-coord" id="cur-chunk-coord">未選取</div>
+        </div>
+        <div id="cur-chunk-tag" class="chunk-status-tag tag-empty">未指派</div>
+      </div>
+
+      <!-- 操作區 A：從既有挑選 (排他性限制：不能重複) -->
+      <div class="action-box">
+        <b style="font-size:0.83rem; color:#f1f5f9;">① 挑選專案現有大地圖</b>
+        <div style="font-size:0.73rem; color:#94a3b8;">依規則已過濾掉「已在其他區塊使用過」的地圖：</div>
+        <select id="select-existing-map" class="select-input">
+          <option value="">-- 請先選取目標區塊 --</option>
+        </select>
+        <button class="btn" style="justify-content:center; border-color:#38bdf8;" onclick="assignSelectedMap()">套用指定此地圖</button>
+      </div>
+
+      <!-- 操作區 B：隨機生成大地圖並指定使用 -->
+      <div class="action-box">
+        <b style="font-size:0.83rem; color:#f3e8ff;">② 隨機生成大地圖並直接指派</b>
+        <div style="font-size:0.73rem; color:#94a3b8;">演算法自動生成 16×16 Tiled 規格地圖並寫入專案：</div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span style="font-size:0.75rem; color:#94a3b8;">地貌風格主題:</span>
+          <select id="gen-biome-select" class="select-input">
+            <option value="PLAINS">中原草莽 (平原·城鎮·密林·官道)</option>
+            <option value="MOUNTAIN">蜀道崇山 (峻嶺·棧道·深谷·險峰)</option>
+            <option value="SWAMP">苗疆毒沼 (沼澤·泥濘·毒草·水泊)</option>
+            <option value="DESERT">漠北荒原 (戈壁·沙丘·碎石·驛站)</option>
+            <option value="SNOW">長白雪域 (冰湖·雪松·寒峰·霜徑)</option>
+            <option value="RANDOM">🎲 完全隨機奇異風格</option>
+          </select>
+        </div>
+        <button class="btn btn-gen" style="justify-content:center;" onclick="generateAndAssignMap()">🎲 隨機生成新圖並指派入格</button>
+      </div>
+
+      <!-- 區塊預覽與跳轉編輯 -->
+      <div id="mini-preview-box">
+        <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+          <b style="font-size:0.8rem; color:#f8fafc;" id="mini-map-name">地圖縮圖</b>
+          <button class="btn btn-danger" style="padding:2px 8px; font-size:0.72rem;" onclick="unassignCurrentChunk()">清除指派</button>
+        </div>
+        <canvas id="miniCanvas" width="160" height="160"></canvas>
+        <button class="btn" style="width:100%; justify-content:center; border-color:#7c3aed;" onclick="jumpToChunkEditor()">
+          🔍 進入此大地圖編輯 (開啟 editor.html)
+        </button>
+      </div>
+
+      <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
+        • <b>畫布導航</b>：滑鼠滾輪縮放視角，按住滑鼠中鍵（或空白鍵+左鍵）拖曳平移畫布。<br>
+        • <b>嚴格唯一規則</b>：同一張大地圖不可在世界多處重複放置，保證千山萬水各不相同！
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // ==========================================
+    // 世界地圖資料結構
+    // ==========================================
+    const WORLD_MAX_DIM = 128;
+    const CHUNK_BASE_PX = 48; // 預設視口單一 Chunk 像素尺寸
+
+    let worldData = {
+      id: "world_jianghu_main",
+      name: "神州浩土全圖",
+      width: 16,
+      height: 16,
+      cells: {} // "x,y" => { mapFile: "overworld_default.tmj", name: "...", biome: "..." }
+    };
+
+    // 專案現存所有大地圖列表 (從專案 maps/ 動態讀取)
+    let projectOverworldFiles = [];
+
+    // 視圖相機 (Pan / Zoom)
+    let camera = {
+      x: 0,
+      y: 0,
+      scale: 1.0,
+      isPanning: false,
+      panStartX: 0,
+      panStartY: 0
+    };
+
+    // 交互狀態
+    let selectedChunk = null; // { x, y }
+    let storageMode = 'API';
+    let projectDirHandle = null;
+
+    const CANVAS = document.getElementById('worldCanvas');
+    const CTX = CANVAS.getContext('2d');
+    const CONTAINER = document.getElementById('canvas-container');
+
+    // ==========================================
+    // 視窗自適應與渲染循環
+    // ==========================================
+    function resizeCanvas() {
+      CANVAS.width = CONTAINER.clientWidth;
+      CANVAS.height = CONTAINER.clientHeight;
+      renderWorld();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // ==========================================
+    // 世界地圖渲染 (視口虛擬化，極速 128x128 渲染)
+    // ==========================================
+    function renderWorld() {
+      CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+
+      const cellSize = CHUNK_BASE_PX * camera.scale;
+
+      // 視角平移矩陣
+      CTX.save();
+      CTX.translate(camera.x, camera.y);
+
+      // 計算可見範圍 (Culling)，避免在 128x128 (16384 格) 時卡頓
+      const minX = Math.max(0, Math.floor(-camera.x / cellSize));
+      const maxX = Math.min(worldData.width, Math.ceil((CANVAS.width - camera.x) / cellSize));
+      const minY = Math.max(0, Math.floor(-camera.y / cellSize));
+      const maxY = Math.min(worldData.height, Math.ceil((CANVAS.height - camera.y) / cellSize));
+
+      // 1. 繪製世界網格
+      for (let x = minX; x < maxX; x++) {
+        for (let y = minY; y < maxY; y++) {
+          const px = x * cellSize;
+          const py = y * cellSize;
+          const key = `${x},${y}`;
+          const chunk = worldData.cells[key];
+
+          if (chunk) {
+            // 已配置地圖
+            CTX.fillStyle = getBiomeColor(chunk.biome);
+            CTX.fillRect(px, py, cellSize, cellSize);
+
+            // 邊框
+            CTX.strokeStyle = '#6d28d9';
+            CTX.lineWidth = Math.max(1, 1.5 * camera.scale);
+            CTX.strokeRect(px, py, cellSize, cellSize);
+
+            // 標籤文字 (縮放過小時自動隱藏文字以維持效能)
+            if (cellSize >= 28) {
+              CTX.fillStyle = '#f8fafc';
+              CTX.font = `bold ${Math.max(9, Math.floor(10 * camera.scale))}px sans-serif`;
+              CTX.textAlign = 'center';
+              CTX.textBaseline = 'middle';
+              CTX.fillText(getBiomeIcon(chunk.biome), px + cellSize / 2, py + cellSize / 2 - 4 * camera.scale);
+
+              if (cellSize >= 45) {
+                CTX.fillStyle = '#cbd5e1';
+                CTX.font = `${Math.max(8, Math.floor(8 * camera.scale))}px sans-serif`;
+                CTX.fillText(`${x},${y}`, px + cellSize / 2, py + cellSize / 2 + 10 * camera.scale);
+              }
+            }
+          } else {
+            // 空白未配置
+            CTX.fillStyle = '#0f1118';
+            CTX.fillRect(px, py, cellSize, cellSize);
+
+            CTX.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            CTX.lineWidth = 1;
+            CTX.strokeRect(px, py, cellSize, cellSize);
+
+            if (cellSize >= 38) {
+              CTX.fillStyle = '#334155';
+              CTX.font = '9px monospace';
+              CTX.textAlign = 'center';
+              CTX.textBaseline = 'middle';
+              CTX.fillText(`${x},${y}`, px + cellSize / 2, py + cellSize / 2);
+            }
+          }
+        }
+      }
+
+      // 2. 繪製選中框高亮
+      if (selectedChunk) {
+        const sx = selectedChunk.x * cellSize;
+        const sy = selectedChunk.y * cellSize;
+        CTX.strokeStyle = '#f59e0b';
+        CTX.lineWidth = Math.max(2, 3 * camera.scale);
+        CTX.strokeRect(sx - 1, sy - 1, cellSize + 2, cellSize + 2);
+      }
+
+      CTX.restore();
+    }
+
+    function getBiomeColor(biome) {
+      switch(biome) {
+        case 'PLAINS': return '#143823';
+        case 'MOUNTAIN': return '#283548';
+        case 'SWAMP': return '#262412';
+        case 'DESERT': return '#452a12';
+        case 'SNOW': return '#1a3048';
+        default: return '#1f2937';
+      }
+    }
+
+    function getBiomeIcon(biome) {
+      switch(biome) {
+        case 'PLAINS': return '🌲 中原';
+        case 'MOUNTAIN': return '⛰️ 蜀道';
+        case 'SWAMP': return '〰 毒沼';
+        case 'DESERT': return '▲ 戈壁';
+        case 'SNOW': return '❄️ 雪域';
+        default: return '🗺️ 大地圖';
+      }
+    }
+
+    // ==========================================
+    // 視圖縮放與平移 (Pan & Zoom)
+    // ==========================================
+    function zoomView(factor) {
+      const newScale = Math.min(4.0, Math.max(0.12, camera.scale * factor));
+      // 依中心縮放
+      const cx = CANVAS.width / 2;
+      const cy = CANVAS.height / 2;
+      camera.x = cx - (cx - camera.x) * (newScale / camera.scale);
+      camera.y = cy - (cy - camera.y) * (newScale / camera.scale);
+      camera.scale = newScale;
+      document.getElementById('hud-zoom').innerText = `${Math.round(camera.scale * 100)}%`;
+      renderWorld();
+    }
+
+    function resetView() {
+      camera.scale = 1.0;
+      const totalW = worldData.width * CHUNK_BASE_PX;
+      const totalH = worldData.height * CHUNK_BASE_PX;
+      camera.x = (CANVAS.width - totalW) / 2;
+      camera.y = (CANVAS.height - totalH) / 2;
+      document.getElementById('hud-zoom').innerText = '100%';
+      renderWorld();
+    }
+
+    CONTAINER.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
+      const rect = CANVAS.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      const newScale = Math.min(4.0, Math.max(0.12, camera.scale * zoomFactor));
+      camera.x = mx - (mx - camera.x) * (newScale / camera.scale);
+      camera.y = my - (my - camera.y) * (newScale / camera.scale);
+      camera.scale = newScale;
+      document.getElementById('hud-zoom').innerText = `${Math.round(camera.scale * 100)}%`;
+      renderWorld();
+    });
+
+    let spacePressed = false;
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') spacePressed = true;
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        saveWorldMapToProject();
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      if (e.code === 'Space') spacePressed = false;
+    });
+
+    CONTAINER.addEventListener('mousedown', (e) => {
+      if (e.button === 1 || spacePressed || e.button === 2) { // 中鍵或空白拖曳
+        camera.isPanning = true;
+        camera.panStartX = e.clientX - camera.x;
+        camera.panStartY = e.clientY - camera.y;
+        CONTAINER.classList.add('panning');
+      } else if (e.button === 0) {
+        // 左鍵點擊選擇區塊
+        const rect = CANVAS.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const cellSize = CHUNK_BASE_PX * camera.scale;
+
+        const cellX = Math.floor((mx - camera.x) / cellSize);
+        const cellY = Math.floor((my - camera.y) / cellSize);
+
+        if (cellX >= 0 && cellX < worldData.width && cellY >= 0 && cellY < worldData.height) {
+          selectChunk(cellX, cellY);
+        }
+      }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (camera.isPanning) {
+        camera.x = e.clientX - camera.panStartX;
+        camera.y = e.clientY - camera.panStartY;
+        renderWorld();
+      } else {
+        const rect = CANVAS.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const cellSize = CHUNK_BASE_PX * camera.scale;
+        const cx = Math.floor((mx - camera.x) / cellSize);
+        const cy = Math.floor((my - camera.y) / cellSize);
+
+        if (cx >= 0 && cx < worldData.width && cy >= 0 && cy < worldData.height) {
+          const chunk = worldData.cells[`${cx},${cy}`];
+          document.getElementById('hud-hover').innerText = `(${cx}, ${cy}) ${chunk ? chunk.name : '[未配置]'}`;
+        } else {
+          document.getElementById('hud-hover').innerText = '(邊界外)';
+        }
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      camera.isPanning = false;
+      CONTAINER.classList.remove('panning');
+    });
+
+    CONTAINER.addEventListener('contextmenu', e => e.preventDefault());
+
+    // ==========================================
+    // 區塊選擇與右側檢測器
+    // ==========================================
+    function selectChunk(x, y) {
+      selectedChunk = { x, y };
+      document.getElementById('cur-chunk-coord').innerText = `(${x}, ${y})`;
+
+      const key = `${x},${y}`;
+      const chunk = worldData.cells[key];
+      const tag = document.getElementById('cur-chunk-tag');
+      const previewBox = document.getElementById('mini-preview-box');
+
+      if (chunk) {
+        tag.innerText = '已指派大地圖';
+        tag.className = 'chunk-status-tag tag-assigned';
+        previewBox.style.display = 'flex';
+        document.getElementById('mini-map-name').innerText = chunk.name;
+        renderMiniChunkPreview(chunk.mapFile);
+      } else {
+        tag.innerText = '未指派大地圖';
+        tag.className = 'chunk-status-tag tag-empty';
+        previewBox.style.display = 'none';
+      }
+
+      updateExistingMapDropdown();
+      renderWorld();
+    }
+
+    // 更新可選清單：嚴格排除「已被其他區塊使用過」的地圖
+    function updateExistingMapDropdown() {
+      const select = document.getElementById('select-existing-map');
+      select.innerHTML = '';
+
+      if (!selectedChunk) {
+        select.innerHTML = '<option value="">-- 請先選取目標區塊 --</option>';
+        return;
+      }
+
+      const currentKey = `${selectedChunk.x},${selectedChunk.y}`;
+      const currentAssigned = worldData.cells[currentKey]?.mapFile;
+
+      // 統計所有已使用的地圖檔案 (排他集合)
+      const usedMapSet = new Set();
+      for (const [k, v] of Object.entries(worldData.cells)) {
+        if (k !== currentKey && v.mapFile) {
+          usedMapSet.add(v.mapFile);
+        }
+      }
+
+      // 過濾出可用大地圖
+      const availableMaps = projectOverworldFiles.filter(f => !usedMapSet.has(f));
+
+      if (availableMaps.length === 0) {
+        select.innerHTML = '<option value="">⚠️ 專案大地圖已全數被指派！請隨機生成新圖</option>';
+        return;
+      }
+
+      availableMaps.forEach(file => {
+        const opt = document.createElement('option');
+        opt.value = file;
+        opt.innerText = file + (file === currentAssigned ? ' (目前指派中)' : '');
+        if (file === currentAssigned) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    // ==========================================
+    // 指派與移除邏輯
+    // ==========================================
+    function assignSelectedMap() {
+      if (!selectedChunk) return alert('請先在世界地圖點選欲指派的區塊格！');
+      const filename = document.getElementById('select-existing-map').value;
+      if (!filename) return alert('請選擇欲指派的大地圖檔案！');
+
+      const key = `${selectedChunk.x},${selectedChunk.y}`;
+      worldData.cells[key] = {
+        mapFile: filename,
+        name: filename.replace('.tmj', '').replace('.json', ''),
+        biome: filename.includes('desert') ? 'DESERT' : (filename.includes('snow') ? 'SNOW' : (filename.includes('mountain') ? 'MOUNTAIN' : 'PLAINS')),
+        assignedAt: new Date().toISOString()
+      };
+
+      showToast(`已成功指派 ${filename} 至區塊 (${selectedChunk.x}, ${selectedChunk.y})`);
+      selectChunk(selectedChunk.x, selectedChunk.y);
+      updateAssignedListUI();
+      renderWorld();
+    }
+
+    function unassignCurrentChunk() {
+      if (!selectedChunk) return;
+      const key = `${selectedChunk.x},${selectedChunk.y}`;
+      delete worldData.cells[key];
+      showToast(`已清除區塊 (${selectedChunk.x}, ${selectedChunk.y}) 的地圖指派`);
+      selectChunk(selectedChunk.x, selectedChunk.y);
+      updateAssignedListUI();
+      renderWorld();
+    }
+
+    // ==========================================
+    // 隨機生成大地圖並指定使用 (Procedural Generator)
+    // ==========================================
+    async function generateAndAssignMap() {
+      if (!selectedChunk) return alert('請先選取目標區塊格！');
+
+      const biome = document.getElementById('gen-biome-select').value;
+      const actualBiome = biome === 'RANDOM'
+        ? ['PLAINS', 'MOUNTAIN', 'SWAMP', 'DESERT', 'SNOW'][Math.floor(Math.random() * 5)]
+        : biome;
+
+      // 產生唯一檔名
+      const randHash = Math.random().toString(36).substring(2, 6);
+      const filename = `overworld_c${selectedChunk.x}_${selectedChunk.y}_${actualBiome.toLowerCase()}_${randHash}.tmj`;
+
+      // 演算法產生 16x16 Tiled 地形資料
+      const generatedTiledObj = createProceduralOverworldTiled(actualBiome, filename);
+
+      // 直接寫入專案磁碟
+      try {
+        const jsonStr = JSON.stringify(generatedTiledObj, null, 2);
+        if (storageMode === 'API') {
+          await fetch(`/api/maps/${filename}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: jsonStr
+          });
+        } else if (storageMode === 'FS' && projectDirHandle) {
+          const fileHandle = await projectDirHandle.getFileHandle(filename, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(jsonStr);
+          await writable.close();
+        }
+      } catch (err) {
+        alert('儲存新生成地圖至專案失敗：' + err.message);
+        return;
+      }
+
+      // 加入專案檔案清單
+      projectOverworldFiles.push(filename);
+
+      // 指派給選中區塊
+      const key = `${selectedChunk.x},${selectedChunk.y}`;
+      worldData.cells[key] = {
+        mapFile: filename,
+        name: getBiomeName(actualBiome) + ` (${selectedChunk.x}, ${selectedChunk.y})`,
+        biome: actualBiome,
+        assignedAt: new Date().toISOString()
+      };
+
+      showToast(`🎲 成功生成 ${filename} 並直接指派至 (${selectedChunk.x}, ${selectedChunk.y})！`);
+      selectChunk(selectedChunk.x, selectedChunk.y);
+      updateAssignedListUI();
+      renderWorld();
+    }
+
+    function getBiomeName(b) {
+      switch(b) {
+        case 'PLAINS': return '中原平原分境';
+        case 'MOUNTAIN': return '蜀道重巒分境';
+        case 'SWAMP': return '苗疆迷沼分境';
+        case 'DESERT': return '戈壁沙海分境';
+        case 'SNOW': return '雪域玉峰分境';
+        default: return '外邦荒野';
+      }
+    }
+
+    // 生成標準 16x16 Tiled JSON 規格
+    function createProceduralOverworldTiled(biome, filename) {
+      const grid = new Uint8Array(16 * 16);
+
+      // 依生態風格填充基礎 GID (1=平原, 2=高山, 3=密林, 4=城鎮, 5=客棧, 6=荒丘)
+      if (biome === 'PLAINS') {
+        grid.fill(1);
+        for (let i = 0; i < 25; i++) grid[Math.floor(Math.random() * 256)] = 3; // 密林
+        grid[8 * 16 + 8] = 5; // 客棧
+      } else if (biome === 'MOUNTAIN') {
+        grid.fill(6); // 荒丘
+        for (let i = 0; i < 45; i++) grid[Math.floor(Math.random() * 256)] = 2; // 崇山峻嶺
+        for (let x = 0; x < 16; x++) grid[8 * 16 + x] = 1; // 官道橫貫
+      } else if (biome === 'SWAMP') {
+        grid.fill(1);
+        for (let i = 0; i < 50; i++) grid[Math.floor(Math.random() * 256)] = 3;
+      } else if (biome === 'DESERT') {
+        grid.fill(6);
+        for (let i = 0; i < 30; i++) grid[Math.floor(Math.random() * 256)] = 2;
+        grid[7 * 16 + 7] = 5; // 荒漠驛站
+      } else if (biome === 'SNOW') {
+        grid.fill(6);
+        for (let i = 0; i < 40; i++) grid[Math.floor(Math.random() * 256)] = 2;
+      }
+
+      return {
+        compressionlevel: -1,
+        width: 16,
+        height: 16,
+        tilewidth: 40,
+        tileheight: 40,
+        infinite: false,
+        orientation: "orthogonal",
+        renderorder: "right-down",
+        tiledversion: "1.10.2",
+        version: "1.10",
+        type: "map",
+        tilesets: [{
+          firstgid: 1,
+          name: "Jianghu_Overworld_Tiles",
+          tilewidth: 40,
+          tileheight: 40,
+          tilecount: 6,
+          columns: 6,
+          tiles: [
+            { id: 0, properties: [{ name: "terrainType", type: "string", value: "PLAINS" }, { name: "hourCost", type: "int", value: 1 }] },
+            { id: 1, properties: [{ name: "terrainType", type: "string", value: "MOUNTAIN" }, { name: "hourCost", type: "int", value: 999 }] },
+            { id: 2, properties: [{ name: "terrainType", type: "string", value: "FOREST" }, { name: "hourCost", type: "int", value: 3 }] },
+            { id: 3, properties: [{ name: "terrainType", type: "string", value: "TOWN" }, { name: "hourCost", type: "int", value: 1 }] },
+            { id: 4, properties: [{ name: "terrainType", type: "string", value: "INN" }, { name: "hourCost", type: "int", value: 1 }] },
+            { id: 5, properties: [{ name: "terrainType", type: "string", value: "HILLS" }, { name: "hourCost", type: "int", value: 2 }] }
+          ]
+        }],
+        layers: [
+          {
+            id: 1,
+            name: "Terrain_Layer",
+            type: "tilelayer",
+            width: 16,
+            height: 16,
+            x: 0,
+            y: 0,
+            opacity: 1,
+            visible: true,
+            data: Array.from(grid)
+          },
+          {
+            id: 2,
+            name: "POIs_and_Entities",
+            type: "objectgroup",
+            opacity: 1,
+            visible: true,
+            x: 0,
+            y: 0,
+            objects: [
+              {
+                id: 1,
+                name: "荒野客棧據點",
+                type: "INN",
+                x: 280,
+                y: 280,
+                width: 40,
+                height: 40,
+                properties: [{ name: "services", type: "string", value: "REST,RUMOR" }]
+              }
+            ]
+          }
+        ]
+      };
+    }
+
+    // ==========================================
+    // 迷你 16x16 縮圖繪製
+    // ==========================================
+    async function renderMiniChunkPreview(mapFile) {
+      const mCanvas = document.getElementById('miniCanvas');
+      const mCtx = mCanvas.getContext('2d');
+      mCtx.clearRect(0, 0, 160, 160);
+
+      try {
+        let json = null;
+        if (storageMode === 'API') {
+          const res = await fetch(`/api/maps/${mapFile}`);
+          if (res.ok) json = await res.json();
+        } else if (storageMode === 'FS' && projectDirHandle) {
+          const fileHandle = await projectDirHandle.getFileHandle(mapFile);
+          const file = await fileHandle.getFile();
+          json = JSON.parse(await file.text());
+        }
+
+        if (json && json.layers && json.layers[0]?.data) {
+          const data = json.layers[0].data;
+          const colors = { 1: '#1a261f', 2: '#313845', 3: '#0e2015', 4: '#632b17', 5: '#8d3f0d', 6: '#27291e' };
+          for (let x = 0; x < 16; x++) {
+            for (let y = 0; y < 16; y++) {
+              const gid = data[y * 16 + x] || 1;
+              mCtx.fillStyle = colors[gid] || '#1a261f';
+              mCtx.fillRect(x * 10, y * 10, 10, 10);
+            }
+          }
+          return;
+        }
+      } catch (e) {
+        // 繪製占位預覽
+      }
+      mCtx.fillStyle = '#222634';
+      mCtx.fillRect(0, 0, 160, 160);
+      mCtx.fillStyle = '#64748b';
+      mCtx.font = '12px sans-serif';
+      mCtx.textAlign = 'center';
+      mCtx.fillText('大地圖數據載入中', 80, 85);
+    }
+
+    function jumpToChunkEditor() {
+      if (!selectedChunk) return;
+      const key = `${selectedChunk.x},${selectedChunk.y}`;
+      const chunk = worldData.cells[key];
+      if (chunk && chunk.mapFile) {
+        window.location.href = `editor.html?map=${chunk.mapFile}`;
+      }
+    }
+
+    // ==========================================
+    // 世界尺寸調整 (最大 128x128)
+    // ==========================================
+    function resizeWorldDimensions() {
+      const w = Math.min(WORLD_MAX_DIM, Math.max(1, parseInt(document.getElementById('dim-w').value) || 16));
+      const h = Math.min(WORLD_MAX_DIM, Math.max(1, parseInt(document.getElementById('dim-h').value) || 16));
+
+      worldData.width = w;
+      worldData.height = h;
+
+      document.getElementById('dim-w').value = w;
+      document.getElementById('dim-h').value = h;
+
+      updateStatsUI();
+      renderWorld();
+      showToast(`世界地圖規模調整為 ${w} × ${h} 區塊 (最大 128x128)`);
+    }
+
+    function updateStatsUI() {
+      const total = worldData.width * worldData.height;
+      const assignedCount = Object.keys(worldData.cells).length;
+
+      document.getElementById('stat-total-chunks').innerText = `${total} 格`;
+      document.getElementById('stat-assigned-chunks').innerText = `${assignedCount} 格`;
+      document.getElementById('assigned-counter').innerText = `${assignedCount} / ${total}`;
+    }
+
+    function updateAssignedListUI() {
+      updateStatsUI();
+      const container = document.getElementById('assigned-list-container');
+      container.innerHTML = '';
+
+      const entries = Object.entries(worldData.cells);
+      if (entries.length === 0) {
+        container.innerHTML = '<div style="font-size:0.75rem; color:#64748b; padding:10px;">尚未指派任何大地圖</div>';
+        return;
+      }
+
+      entries.forEach(([key, cell]) => {
+        const [x, y] = key.split(',').map(Number);
+        const item = document.createElement('div');
+        item.className = `assigned-item ${selectedChunk && selectedChunk.x === x && selectedChunk.y === y ? 'active' : ''}`;
+        item.onclick = () => {
+          selectChunk(x, y);
+          // 聚焦相機至此格
+          const cellSize = CHUNK_BASE_PX * camera.scale;
+          camera.x = CANVAS.width / 2 - (x + 0.5) * cellSize;
+          camera.y = CANVAS.height / 2 - (y + 0.5) * cellSize;
+          renderWorld();
+        };
+
+        item.innerHTML = `
+          <div style="display:flex; justify-content:space-between;">
+            <span class="item-pos">[${x}, ${y}]</span>
+            <span style="font-size:0.7rem; color:#a7f3d0;">${getBiomeIcon(cell.biome)}</span>
+          </div>
+          <div class="item-name">${cell.name}</div>
+          <div class="item-file">${cell.mapFile}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // ==========================================
+    // 儲存世界地圖至專案磁碟
+    // ==========================================
+    async function saveWorldMapToProject() {
+      const jsonStr = JSON.stringify(worldData, null, 2);
+      const filename = 'world_default.json';
+
+      try {
+        if (storageMode === 'API') {
+          const res = await fetch(`/api/maps/${filename}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: jsonStr
+          });
+          if (res.ok) {
+            showToast(`✅ [${new Date().toLocaleTimeString()}] 已成功寫入專案: maps/${filename}`);
+            return;
+          }
+        } else if (storageMode === 'FS' && projectDirHandle) {
+          const fileHandle = await projectDirHandle.getFileHandle(filename, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(jsonStr);
+          await writable.close();
+          showToast(`✅ [${new Date().toLocaleTimeString()}] 已直接寫入專案磁碟: maps/${filename}`);
+          return;
+        }
+      } catch (err) {
+        alert('保存世界地圖失敗：' + err.message);
+        return;
+      }
+
+      showToast('目前為預覽模式，建議啟動 npm start 啟用直讀直寫');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast-bar');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 4000);
+    }
+
+    // ==========================================
+    // 初始化專案讀取
+    // ==========================================
+    async function initWorldEditor() {
+      resizeCanvas();
+
+      // 探測伺服器 API
+      try {
+        const res = await fetch('/api/maps');
+        if (res.ok) {
+          storageMode = 'API';
+          const files = await res.json();
+          // 過濾出大地圖檔案 (排除戰術圖與世界設定檔)
+          projectOverworldFiles = files.filter(f => !f.includes('arena') && !f.includes('world_'));
+          document.getElementById('stat-project-maps').innerText = `${projectOverworldFiles.length} 張`;
+          document.getElementById('storage-badge').className = 'storage-status status-api';
+          document.getElementById('storage-badge').innerText = '🟢 專案伺服器連線 (直存 maps/)';
+
+          // 載入世界地圖
+          const worldRes = await fetch('/api/maps/world_default.json');
+          if (worldRes.ok) {
+            worldData = await worldRes.json();
+            worldData.width = worldData.width || worldData.dimensions?.width || 16;
+            worldData.height = worldData.height || worldData.dimensions?.height || 16;
+            document.getElementById('dim-w').value = worldData.width;
+            document.getElementById('dim-h').value = worldData.height;
+          }
+          updateAssignedListUI();
+          resetView();
+          selectChunk(7, 7);
+          return;
+        }
+      } catch (e) { }
+
+      // 離線預設
+      projectOverworldFiles = ['overworld_default.tmj'];
+      document.getElementById('stat-project-maps').innerText = '1 張';
+      document.getElementById('storage-badge').className = 'storage-status status-alert';
+      document.getElementById('storage-badge').innerText = '📁 點此連線專案 maps/ 目錄';
+      document.getElementById('storage-badge').onclick = async () => {
+        if (window.showDirectoryPicker) {
+          projectDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          storageMode = 'FS';
+          document.getElementById('storage-badge').className = 'storage-status status-fs';
+          document.getElementById('storage-badge').innerText = `📁 已連線: ${projectDirHandle.name}`;
+
+          projectOverworldFiles = [];
+          for await (const entry of projectDirHandle.values()) {
+            if (entry.kind === 'file' && (entry.name.endsWith('.tmj') || entry.name.endsWith('.json')) && !entry.name.includes('arena') && !entry.name.includes('world_')) {
+              projectOverworldFiles.push(entry.name);
+            }
+          }
+          document.getElementById('stat-project-maps').innerText = `${projectOverworldFiles.length} 張`;
+          updateExistingMapDropdown();
+          showToast(`已連線專案目錄，共載入 ${projectOverworldFiles.length} 張大地圖！`);
+        }
+      };
+
+      updateAssignedListUI();
+      resetView();
+      selectChunk(7, 7);
+    }
+
+    window.onload = initWorldEditor;
+  </script>
+</body>
+</html>

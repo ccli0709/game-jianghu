@@ -56,10 +56,21 @@
 
 ## 視覺化地圖編輯器 (Visual Map Editor)
 
-專案自帶無需配置的離線地圖編輯工具：[editor.html](file:///d:/Repositories/game-jianghu/editor.html)
+專案自帶兩款專屬地圖編輯工具，均支援直讀直寫專案 `maps/` 目錄：
 
-* **編輯大地圖 / 戰術圖**：支援筆刷 (Brush)、油漆桶填充 (Bucket) 與吸管 (Picker)。
-* **工業標準 Tiled 相容**：直接導出與載入標準 `.tmj` / `.json` 格式，亦可搭配官方 [Tiled Map Editor](https://www.mapeditor.org/) 桌面端無縫協同開發。
-* **預設地圖規格**：
-  * 大地圖範本：[maps/overworld_default.tmj](file:///d:/Repositories/game-jianghu/maps/overworld_default.tmj)
-  * 戰術伏擊陣：[maps/arena_forest_ambush.tmj](file:///d:/Repositories/game-jianghu/maps/arena_forest_ambush.tmj)
+### 1. 宏觀世界地圖編輯器：[world_editor.html](file:///d:/Repositories/game-jianghu/world_editor.html)
+* **規格與規模**：支援最大 **128×128** 區塊（即最多 16,384 格），每格代表一張獨立大地圖。
+* **嚴格唯一性排他約束**：挑選專案現有大地圖時，系統自動過濾已在其他區塊使用過的地圖，保證每塊天地獨一無二。
+* **隨機大地圖生成器**：提供五大生態主題（中原草莽、蜀道崇山、苗疆毒沼、漠北荒原、長白雪域），演算法直接產出標準 16×16 Tiled 格式檔案並即時寫入專案磁碟。
+* **視口虛擬化 (Culling) 與順暢導航**：在 16,384 格海量視圖下仍極速流暢；滾輪自由縮放視角（12% ~ 400%），滑鼠中鍵或空白鍵拖曳平移。
+* **無縫銜接單圖編輯**：選中區塊即時呈現 16×16 迷你預覽，點擊一鍵跳轉至單圖編輯器進行細節打磨。
+* **直接保存至專案**：點擊「💾 保存世界配置」或按 <kbd>Ctrl+S</kbd>，直接寫入專案 `maps/world_default.json`。
+
+### 2. 單圖視覺化編輯器：[editor.html](file:///d:/Repositories/game-jianghu/editor.html)
+
+* **選擇專案地圖**：頂部下拉選單自動列出專案 `maps/` 目錄內現存地圖，切換即時載入。
+* **一鍵新增地圖**：點擊「＋ 新增地圖」輸入檔名與類型（大地圖 / 戰術圖），直接生成並存入專案。
+* **修改後直接保存至專案**：點擊「💾 直接保存至專案」或按 <kbd>Ctrl+S</kbd>，直接覆寫專案磁碟 `maps/` 目錄檔案，無需手動下載或搬移！
+* **雙模式支援**：
+  * **推薦方式 (本地伺服器)**：在專案根目錄終端機執行 `npm start`，訪問 `http://localhost:3000/editor.html`，透過 REST API 直讀直存。
+  * **直接瀏覽器開啟 (File System Access)**：若以 Chrome/Edge 直接雙擊打開 `editor.html`，可授權專案 `maps/` 目錄直接讀寫。
