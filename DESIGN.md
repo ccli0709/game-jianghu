@@ -38,6 +38,18 @@
 2. **戰術小地圖能源輪循制 (Energy/Tick Loop)**：
    * 進入戰鬥後時間切換為毫秒級動作能量（基準 100 能量行動一次），由 Speed 決定行動頻率。
 
+### 2.2 跨區塊漫遊與 3×3 世界邊界雷達 (Seamless Transition & Boundary Radar)
+1. **大地圖相鄰跨區漫遊 (Chunk Transition)**：
+   * 當俠客在大地圖（16×16）移動抵達邊界時（如 $x=15$ 再向東、$y=15$ 再向南）：
+     * 系統自動計算相鄰世界區塊坐標 $(targetChunkX, targetChunkY)$。
+     * 若世界地圖 [world_default.json](file:///d:/Repositories/game-jianghu/maps/world_default.json) 中已配置該相鄰大地圖，無縫執行跨界漫遊，消耗 1 小時旅途時序，出現在新大地圖之對應對側邊緣（如東出西進、南出北進），並即時載入該分境之 Tiled 地形與遊蕩生態。
+     * 若相鄰區塊未開闢或超出世界極限邊界（$<0$ 或 $\ge 128$），觸發阻絕警告並播放雷達紅光閃爍，杜絕穿模。
+2. **世界地圖 3×3 邊界略縮雷達 (Mini-World Boundary Radar)**：
+   * 懸浮於遊戲畫布右上角，動態以當前玩家所在的區塊為中心繪製 9 個格子：
+     * **中心格**：金色高亮顯示當前區塊坐標與名號。
+     * **相鄰格**：顯示該分境風貌圖示（🌲中原、⛰️蜀道、❄️雪域、〰毒沼、▲荒漠）與坐標，綠色代表可直接跨越通行。
+     * **未拓荒原 / 極限邊界**：以虛線灰格（未拓）或暗紅實框（界）明確標示，狀態列即時提示「邊界阻絕（如北、西無路）」，供玩家即時確認是否已抵達世界疆界。
+
 ---
 
 ## 3. 模組化架構準備 (Modular Architecture & Asset Pipeline)
@@ -65,11 +77,15 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
 專案自帶無需配置任何第三方服務的專屬地圖編輯工具 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)：
 * **專案地圖選單 (Project Map Selector)**：下拉選單直接檢視並切換專案 `maps/` 目錄內現有的所有 `.tmj` / `.json` 地圖，切換即時載入編輯。
 * **一鍵新增地圖 (New Map Modal)**：自訂地圖檔名（如 `arena_cave.tmj` 或 `overworld_south.tmj`）與地圖類型（大地圖 / 戰術圖），自動生成標準初始版型並直接納入專案。
+* **江湖情報與城鎮任務配置 (Map Meta & Quest Pipeline)**：
+  * **地圖簡介 (Description)**：自訂區域背景故事、地理險阻與風土傳聞。
+  * **危險難度設定 (Difficulty)**：1~5 星級別評定（初入江湖、略有凶險、風雲變幻、凶險萬分、九死一生）。
+  * **特殊地圖設定 (Special Map Types & Faction)**：標註特殊地圖類型（門派總壇、綠林匪寨、繁華城鎮、隱世秘境、荒野客棧）及其所屬勢力（如少林派、黑風寨、五毒教）。
+  * **可能出現任務池 (Possible Quests)**：設定該分境可觸發的懸賞任務（如緝拿匪首、探尋信物、商隊押鏢），作為城鎮客棧告示牌隨機懸賞的資料來源。
+  * **可能掉落寶物 (Possible Loot)**：定義戰鬥或探索可能搜獲的神兵利刃、靈丹妙藥與秘笈殘卷。
 * **直接保存至專案 (Direct Disk Persistence)**：
-  * 點擊「💾 直接保存至專案」或快捷鍵 <kbd>Ctrl+S</kbd>，直接將修改後的 Tiled JSON 寫入專案磁碟的 `maps/` 資料夾，免去手動下載、重命名與搬移檔案的繁瑣流程。
-  * **雙引擎持久化支援**：
-    * **本地開發伺服器模式**：執行 `npm start`（或 `node server.js`），編輯器透過 `/api/maps` REST API 直讀直寫專案磁碟。
-    * **瀏覽器原生 File System Access API 模式**：若直接以 Chrome/Edge 開啟檔案，點擊授權專案 `maps/` 目錄後，亦可直接以原生檔案控制代碼直寫磁碟。
+  * 點擊「💾 直接保存至專案」或快捷鍵 <kbd>Ctrl+S</kbd>，直接將地圖數據與自訂 properties 屬性寫入專案磁碟的 `maps/` 資料夾，免去手動下載搬移流程。
+  * **雙引擎持久化支援**：本地開發伺服器模式（REST API）與瀏覽器原生 File System Access API 模式。
 * **多功能繪圖工具組**：單格筆刷 (Brush)、區域填充 (Bucket Flood Fill)、地格吸管 (Eyedropper)、重設清空。
 * **調色盤直覺選色**：整合各類地貌、移動消耗 (小時 / 能量) 與對應圖示。
 

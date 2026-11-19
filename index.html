@@ -266,6 +266,149 @@
       justify-content: space-between;
     }
 
+    /* 世界地圖 3x3 邊界雷達略縮圖 HUD */
+    #world-radar-hud {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(13, 16, 26, 0.92);
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      pointer-events: auto;
+      transition: all 0.2s ease;
+    }
+
+    .radar-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .radar-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      letter-spacing: 0.5px;
+    }
+
+    .radar-chunk-badge {
+      font-size: 0.7rem;
+      background: #1e293b;
+      color: #38bdf8;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      border: 1px solid #334155;
+    }
+
+    .radar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 44px);
+      grid-template-rows: repeat(3, 44px);
+      gap: 4px;
+    }
+
+    .radar-cell {
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      position: relative;
+      cursor: default;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+      line-height: 1.1;
+      padding: 2px;
+      text-align: center;
+    }
+
+    /* 格子狀態樣式 */
+    .radar-cell-center {
+      background: #1e3a8a;
+      border: 2px solid #f59e0b;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
+      color: #fef08a;
+      font-weight: bold;
+    }
+
+    .radar-cell-connected {
+      background: #142820;
+      border: 1px solid #059669;
+      color: #6ee7b7;
+    }
+
+    .radar-cell-empty {
+      background: #0f1118;
+      border: 1px dashed #334155;
+      color: #64748b;
+    }
+
+    .radar-cell-border {
+      background: #200f13;
+      border: 1px solid #991b1b;
+      color: #f87171;
+    }
+
+    .radar-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      padding-top: 3px;
+      border-top: 1px solid #1f293d;
+      font-weight: 600;
+    }
+
+    .radar-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .dot-green {
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    .dot-yellow {
+      background: #f59e0b;
+      box-shadow: 0 0 6px #f59e0b;
+    }
+
+    .dot-red {
+      background: #ef4444;
+      box-shadow: 0 0 6px #ef4444;
+    }
+
+    .radar-alert-flash {
+      animation: radarFlash 0.5s ease 2;
+    }
+
+    @keyframes radarFlash {
+      0% {
+        box-shadow: 0 0 0 rgba(239, 68, 68, 0);
+      }
+
+      50% {
+        box-shadow: 0 0 25px rgba(239, 68, 68, 0.9);
+        border-color: #ef4444;
+      }
+
+      100% {
+        box-shadow: 0 0 0 rgba(239, 68, 68, 0);
+      }
+    }
+
     #town-dialog {
       display: none;
       position: absolute;
@@ -500,6 +643,21 @@
     <div id="canvas-wrapper">
       <div id="pixi-viewport"></div>
 
+      <!-- 世界地圖 3x3 邊界雷達略縮圖 -->
+      <div id="world-radar-hud">
+        <div class="radar-top">
+          <span class="radar-title">🌍 世界邊界雷達 (3×3)</span>
+          <span class="radar-chunk-badge" id="hud-chunk-coord">區塊 [7, 7]</span>
+        </div>
+        <div class="radar-grid" id="radar-cells-grid">
+          <!-- 3x3 共 9 格動態繪製 -->
+        </div>
+        <div class="radar-status" id="hud-boundary-status">
+          <span class="radar-dot dot-green"></span>
+          <span id="hud-boundary-text">四周疆土相連</span>
+        </div>
+      </div>
+
       <!-- 人物詳細屬性與裝備視窗 -->
       <div id="char-dialog">
         <div class="char-header">
@@ -584,8 +742,10 @@
           <b style="color:#e2e8f0;">【懸賞告示榜】</b>
           <div class="quest-card">
             <div>
-              <div style="font-weight:700; color:#f87171; font-size:0.92rem;">【通緝】黑風寨大當家【連震天】</div>
-              <div style="font-size:0.78rem; color:#94a3b8; margin-top:3px;">盤踞座標：西北荒丘 (4, 3) | 備有火油與護體硬功</div>
+              <div style="font-weight:700; color:#f87171; font-size:0.92rem;" id="town-quest-title">【通緝】黑風寨大當家【連震天】
+              </div>
+              <div style="font-size:0.78rem; color:#94a3b8; margin-top:3px;" id="town-quest-desc">盤踞座標：西北荒丘 (4, 3) |
+                備有火油與護體硬功</div>
             </div>
             <button class="btn" id="btn-accept-quest" onclick="acceptBounty()" style="align-items:center;">揭榜追兇</button>
           </div>
@@ -603,6 +763,11 @@
         <div class="panel-title">
           <span>大地圖目標與行囊</span>
           <span id="ui-lighting-tag" style="color:#fbbf24; font-size:0.75rem;">☼ 晨光熹微</span>
+        </div>
+
+        <div class="tip-box">
+          <span>世界分境: <b id="ow-tip-chunk" style="color:#38bdf8;">中原核心郡縣 (7, 7)</b></span>
+          <span>邊界狀態: <b id="ow-tip-border" style="color:#34d399;">四方暢通</b></span>
         </div>
 
         <div class="tip-box">
@@ -901,7 +1066,18 @@
 
       // 支援原生解析 Tiled JSON (.tmj) 視覺地圖格式
       loadFromTiled(tiledJson) {
+        this.setFromTiled(tiledJson);
+      }
+
+      setFromTiled(tiledJson) {
         if (!tiledJson || !tiledJson.layers) return;
+        this.properties = {};
+        if (Array.isArray(tiledJson.properties)) {
+          tiledJson.properties.forEach(p => { if (p && p.name) this.properties[p.name] = p.value; });
+        } else if (typeof tiledJson.properties === 'object' && tiledJson.properties !== null) {
+          this.properties = tiledJson.properties;
+        }
+
         const layer = tiledJson.layers.find(l => l.type === 'tilelayer');
         if (layer && layer.data) {
           const gidMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5 };
@@ -910,6 +1086,74 @@
             this.tiles[i] = gidMap[gid] !== undefined ? gidMap[gid] : 0;
           }
         }
+        // 重設遊蕩怪
+        this.roamingEnemies = [];
+        const objLayer = tiledJson.layers.find(l => l.type === 'objectgroup');
+        let spawnEnemy = true;
+        if (objLayer && objLayer.objects) {
+          // 若有定義 INN / TOWN 等 POI
+          for (const obj of objLayer.objects) {
+            if (obj.type === 'SPAWNER' || obj.name.includes('怪') || obj.name.includes('寨')) {
+              this.roamingEnemies.push({
+                id: `enemy_${obj.id || Date.now()}`,
+                name: obj.name || '荒野悍匪',
+                x: Math.floor(obj.x / TILE_PX),
+                y: Math.floor(obj.y / TILE_PX),
+                isBoss: false,
+                color: 0xf87171,
+                visualX: obj.x,
+                visualY: obj.y
+              });
+              spawnEnemy = false;
+            }
+          }
+        }
+        if (spawnEnemy) {
+          // 隨機產生一位遊蕩散客
+          this.roamingEnemies.push({
+            id: `enemy_rand_${Date.now()}`,
+            name: '荒野巡山嘍囉',
+            x: 6,
+            y: 6,
+            isBoss: false,
+            color: 0xf87171,
+            visualX: 6 * TILE_PX,
+            visualY: 6 * TILE_PX
+          });
+        }
+      }
+
+      initBiome(biome) {
+        this.tiles.fill(this.defs.PLAINS.id);
+        if (biome === 'MOUNTAIN') {
+          this.tiles.fill(this.defs.HILLS.id);
+          for (let i = 0; i < 45; i++) this.tiles[Math.floor(Math.random() * 256)] = this.defs.MOUNTAIN.id;
+          for (let x = 0; x < 16; x++) this.tiles[this.idx(x, 8)] = this.defs.PLAINS.id;
+          this.tiles[this.idx(8, 8)] = this.defs.INN.id;
+        } else if (biome === 'SNOW') {
+          this.tiles.fill(this.defs.HILLS.id);
+          for (let i = 0; i < 35; i++) this.tiles[Math.floor(Math.random() * 256)] = this.defs.MOUNTAIN.id;
+          for (let i = 0; i < 25; i++) this.tiles[Math.floor(Math.random() * 256)] = this.defs.FOREST.id;
+          this.tiles[this.idx(8, 8)] = this.defs.INN.id;
+        } else if (biome === 'SWAMP') {
+          this.tiles.fill(this.defs.PLAINS.id);
+          for (let i = 0; i < 50; i++) this.tiles[Math.floor(Math.random() * 256)] = this.defs.FOREST.id;
+          this.tiles[this.idx(8, 8)] = this.defs.TOWN.id;
+        } else if (biome === 'DESERT') {
+          this.tiles.fill(this.defs.HILLS.id);
+          for (let i = 0; i < 30; i++) this.tiles[Math.floor(Math.random() * 256)] = this.defs.MOUNTAIN.id;
+          this.tiles[this.idx(8, 8)] = this.defs.INN.id;
+        }
+        this.roamingEnemies = [{
+          id: `enemy_biome_${Date.now()}`,
+          name: '荒野異域巡客',
+          x: 4,
+          y: 4,
+          isBoss: false,
+          color: 0xf87171,
+          visualX: 4 * TILE_PX,
+          visualY: 4 * TILE_PX
+        }];
       }
     }
 
@@ -1097,6 +1341,13 @@
         this.overworld = new OverworldManager(DEFAULT_OVERWORLD_DATA);
         this.activeQuest = null;
 
+        // 世界地圖當前區塊與巨觀資料
+        this.curChunkX = 7;
+        this.curChunkY = 7;
+        this.currentChunkName = '中原核心郡縣 (洛陽·龍門)';
+        this.currentMapFile = 'overworld_default.tmj';
+        this.worldData = null;
+
         this.battleArena = null;
         this.battleEnemies = [];
         this.selectedBattleAction = 'MOVE';
@@ -1105,6 +1356,7 @@
         this.initSceneGraph();
         this.initInput();
         this.initTicker();
+        this.initWorldSystem();
 
         this.addLog('<span class="log-world">【Pixi.js 2D 引擎啟動】</span>硬體 WebGL 渲染管線與動畫插值已就緒。');
         this.updateUI();
@@ -1416,9 +1668,12 @@
           pBattle.style.display = 'none';
 
           const currentTile = this.overworld.getTileData(this.player.owX, this.player.owY);
-          document.getElementById('ui-pos').innerText = `${currentTile.name} (${this.player.owX}, ${this.player.owY})`;
+          document.getElementById('ui-pos').innerText = `${this.currentChunkName} [${this.curChunkX}, ${this.curChunkY}] · ${currentTile.name} (${this.player.owX}, ${this.player.owY})`;
           document.getElementById('ow-tip-name').innerText = currentTile.name;
           document.getElementById('ow-tip-cost').innerText = `${currentTile.hourCost} 小時`;
+
+          const chunkTip = document.getElementById('ow-tip-chunk');
+          if (chunkTip) chunkTip.innerText = `${this.currentChunkName} (${this.curChunkX}, ${this.curChunkY})`;
 
           const lighting = this.clock.getLighting();
           document.getElementById('ui-lighting-tag').innerText = lighting.isNight ? `☽ ${lighting.name}` : `☼ ${lighting.name}`;
@@ -1436,11 +1691,18 @@
         }
       }
 
-      // --- 大地圖旅行 ---
+      // --- 大地圖旅行與跨區塊漫遊 ---
       moveOverworld(dx, dy) {
         const nx = this.player.owX + dx;
         const ny = this.player.owY + dy;
 
+        // 1. 檢測是否跨越當前 16x16 大地圖邊緣 -> 觸發世界地圖相鄰區塊漫遊
+        if (nx < 0 || nx >= this.overworld.w || ny < 0 || ny >= this.overworld.h) {
+          this.attemptChunkTransition(dx, dy, nx, ny);
+          return;
+        }
+
+        // 2. 當前大地圖內部地格通行性判斷
         if (!this.overworld.isPassable(nx, ny)) {
           this.addLog('<span class="log-warn">【阻礙】</span>崇山峻嶺，無法翻越！');
           return;
@@ -1468,6 +1730,230 @@
         this.updateUI();
       }
 
+      // --- 世界地圖 3x3 系統與相鄰跨區漫遊核心邏輯 ---
+      async initWorldSystem() {
+        // 預設保底世界資料 (支援離線直接遊玩)
+        this.worldData = {
+          width: 16,
+          height: 16,
+          cells: {
+            '7,7': { mapFile: 'overworld_default.tmj', name: '中原核心郡縣 (洛陽·龍門)', biome: 'PLAINS' },
+            '8,7': { mapFile: 'overworld_c8_7_plains_1uxj.tmj', name: '中原平原分境 (8, 7)', biome: 'PLAINS' },
+            '9,7': { mapFile: 'overworld_c9_7_plains_v4vu.tmj', name: '中原平原分境 (9, 7)', biome: 'PLAINS' },
+            '7,8': { mapFile: 'overworld_c7_8_mountain.tmj', name: '蜀道重巒分境 (7, 8)', biome: 'MOUNTAIN' },
+            '7,6': { mapFile: 'overworld_c7_6_snow.tmj', name: '長白雪域分境 (7, 6)', biome: 'SNOW' },
+            '6,7': { mapFile: 'overworld_c6_7_swamp.tmj', name: '苗疆迷沼分境 (6, 7)', biome: 'SWAMP' }
+          }
+        };
+
+        try {
+          const res = await fetch('/api/maps/world_default.json');
+          if (res.ok) {
+            const json = await res.json();
+            if (json && json.cells) {
+              this.worldData = json;
+              this.worldData.width = json.width || json.dimensions?.width || 16;
+              this.worldData.height = json.height || json.dimensions?.height || 16;
+            }
+          }
+        } catch (e) { }
+
+        const curCell = this.worldData.cells[`${this.curChunkX},${this.curChunkY}`];
+        if (curCell) {
+          this.currentMapFile = curCell.mapFile;
+          this.currentChunkName = curCell.name;
+        }
+
+        // 載入當前大地圖檔案
+        await this.loadOverworldChunk(this.currentMapFile, curCell?.biome);
+
+        this.updateWorldRadarUI();
+        this.updateUI();
+        this.rebuildOverworldDisplay();
+      }
+
+      // 嘗試跨越大地圖邊界
+      async attemptChunkTransition(dx, dy, nx, ny) {
+        let targetChunkX = this.curChunkX;
+        let targetChunkY = this.curChunkY;
+        let enterX = this.player.owX;
+        let enterY = this.player.owY;
+
+        if (dx > 0) { targetChunkX += 1; enterX = 0; }
+        else if (dx < 0) { targetChunkX -= 1; enterX = this.overworld.w - 1; }
+
+        if (dy > 0) { targetChunkY += 1; enterY = 0; }
+        else if (dy < 0) { targetChunkY -= 1; enterY = this.overworld.h - 1; }
+
+        const maxW = this.worldData?.width || 16;
+        const maxH = this.worldData?.height || 16;
+
+        // 1. 檢測極限世界疆界
+        if (targetChunkX < 0 || targetChunkX >= maxW || targetChunkY < 0 || targetChunkY >= maxH) {
+          this.addLog(`<span class="log-warn">【世界極限疆界】</span>前方已抵達神州浩土之混沌天塹邊界 (${targetChunkX}, ${targetChunkY})，無法再行跨越！`);
+          this.flashRadarAlert();
+          return;
+        }
+
+        // 2. 檢測世界地圖中是否有相鄰大地圖
+        const cellKey = `${targetChunkX},${targetChunkY}`;
+        const targetCell = this.worldData?.cells?.[cellKey];
+        if (!targetCell || !targetCell.mapFile) {
+          this.addLog(`<span class="log-warn">【世界邊界阻絕】</span>相鄰區塊 (${targetChunkX}, ${targetChunkY}) 尚未開闢大地圖，無路可通！可於【世界地圖編輯器】中指派大地圖。`);
+          this.flashRadarAlert();
+          return;
+        }
+
+        // 3. 通過檢驗，執行跨區塊切換
+        await this.performChunkTransition(targetChunkX, targetChunkY, enterX, enterY, targetCell);
+      }
+
+      async performChunkTransition(targetChunkX, targetChunkY, enterX, enterY, targetCell) {
+        const oldName = this.currentChunkName;
+        this.curChunkX = targetChunkX;
+        this.curChunkY = targetChunkY;
+        this.currentMapFile = targetCell.mapFile;
+        this.currentChunkName = targetCell.name;
+
+        // 更新俠客進入新地圖之坐標
+        this.player.owX = enterX;
+        this.player.owY = enterY;
+        this.player.visualX = enterX * TILE_PX;
+        this.player.visualY = enterY * TILE_PX;
+
+        // 跨越界碑耗時 1 小時
+        this.clock.advance(1);
+
+        // 載入目標大地圖資料
+        await this.loadOverworldChunk(targetCell.mapFile, targetCell.biome);
+
+        this.addLog(`<span class="log-world">【跨界漫遊】</span>跨過界碑，自「${oldName}」踏入【${targetCell.name}】(${targetChunkX}, ${targetChunkY})！時序推移至 ${this.clock.getShichenName()}。`);
+
+        this.rebuildOverworldDisplay();
+        this.updateWorldRadarUI();
+        this.updateUI();
+      }
+
+      async loadOverworldChunk(mapFile, biome) {
+        try {
+          const res = await fetch(`/api/maps/${mapFile}`);
+          if (res.ok) {
+            const tiledJson = await res.json();
+            this.overworld.setFromTiled(tiledJson);
+            return;
+          }
+        } catch (e) { }
+
+        // 若伺服器未連線則根據 biome 風格初始化，確保遊戲持續順暢運行
+        this.overworld.initBiome(biome || 'PLAINS');
+      }
+
+      // 更新世界地圖 3x3 邊界雷達略縮圖
+      updateWorldRadarUI() {
+        const gridEl = document.getElementById('radar-cells-grid');
+        const badgeEl = document.getElementById('hud-chunk-coord');
+        const statusEl = document.getElementById('hud-boundary-status');
+        const textEl = document.getElementById('hud-boundary-text');
+        const borderTipEl = document.getElementById('ow-tip-border');
+        if (!gridEl) return;
+
+        badgeEl.innerText = `[${this.curChunkX}, ${this.curChunkY}] ${this.currentChunkName || ''}`.substring(0, 16);
+        gridEl.innerHTML = '';
+
+        const worldW = this.worldData?.width || 16;
+        const worldH = this.worldData?.height || 16;
+
+        let blockedDirections = []; // 統計四正方向 (北, 南, 西, 東)
+
+        // 雙層迴圈遍歷 3x3 (以 curChunkX, curChunkY 為中心)
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const cx = this.curChunkX + dx;
+            const cy = this.curChunkY + dy;
+            const isCenter = (dx === 0 && dy === 0);
+            const isCard = (dx === 0 || dy === 0) && !isCenter; // 四正向
+
+            const cell = document.createElement('div');
+            cell.className = 'radar-cell';
+
+            const isOutOfBounds = (cx < 0 || cx >= worldW || cy < 0 || cy >= worldH);
+
+            if (isOutOfBounds) {
+              cell.className += ' radar-cell-border';
+              cell.innerHTML = '<span style="font-size:0.6rem; opacity:0.6;">界</span><span style="font-size:0.55rem; color:#ef4444;">邊界</span>';
+              cell.title = `(${cx}, ${cy}) 世界極限疆界 (無法通行)`;
+              if (isCard) blockedDirections.push(this.getDirectionName(dx, dy));
+            } else {
+              const cellKey = `${cx},${cy}`;
+              const chunkInfo = this.worldData?.cells?.[cellKey];
+
+              if (isCenter) {
+                cell.className += ' radar-cell-center';
+                cell.innerHTML = `<span>★</span><span style="font-size:0.58rem;">${cx},${cy}</span>`;
+                cell.title = `【當前所在大地圖】(${cx}, ${cy}) ${this.currentChunkName}`;
+              } else if (chunkInfo) {
+                cell.className += ' radar-cell-connected';
+                const icon = this.getBiomeIcon(chunkInfo.biome);
+                cell.innerHTML = `<span>${icon}</span><span style="font-size:0.55rem;">${cx},${cy}</span>`;
+                cell.title = `[相鄰大地圖] (${cx}, ${cy}) ${chunkInfo.name} - 可直接漫遊跨越`;
+              } else {
+                cell.className += ' radar-cell-empty';
+                cell.innerHTML = '<span style="font-size:0.55rem; opacity:0.4;">—</span><span style="font-size:0.55rem; color:#64748b;">未拓</span>';
+                cell.title = `(${cx}, ${cy}) 未開闢大地圖 (無法通行)`;
+                if (isCard) blockedDirections.push(this.getDirectionName(dx, dy));
+              }
+            }
+            gridEl.appendChild(cell);
+          }
+        }
+
+        // 狀態指示燈與邊界警告文字
+        if (blockedDirections.length === 0) {
+          statusEl.querySelector('.radar-dot').className = 'radar-dot dot-green';
+          textEl.innerText = '四方相連，可自由漫遊';
+          textEl.style.color = '#6ee7b7';
+          if (borderTipEl) {
+            borderTipEl.innerText = '四方暢通';
+            borderTipEl.style.color = '#34d399';
+          }
+        } else {
+          statusEl.querySelector('.radar-dot').className = 'radar-dot dot-yellow';
+          textEl.innerText = `邊界阻絕: ${blockedDirections.join('、')}無路`;
+          textEl.style.color = '#fbbf24';
+          if (borderTipEl) {
+            borderTipEl.innerText = `處於邊界 (${blockedDirections.join('、')}阻絕)`;
+            borderTipEl.style.color = '#fbbf24';
+          }
+        }
+      }
+
+      getDirectionName(dx, dy) {
+        if (dy === -1 && dx === 0) return '北';
+        if (dy === 1 && dx === 0) return '南';
+        if (dx === -1 && dy === 0) return '西';
+        if (dx === 1 && dy === 0) return '東';
+        return '';
+      }
+
+      getBiomeIcon(biome) {
+        switch (biome) {
+          case 'PLAINS': return '🌲';
+          case 'MOUNTAIN': return '⛰️';
+          case 'SWAMP': return '〰';
+          case 'DESERT': return '▲';
+          case 'SNOW': return '❄️';
+          default: return '🗺️';
+        }
+      }
+
+      flashRadarAlert() {
+        const hud = document.getElementById('world-radar-hud');
+        if (!hud) return;
+        hud.classList.remove('radar-alert-flash');
+        void hud.offsetWidth; // 強制重繪觸發動畫
+        hud.classList.add('radar-alert-flash');
+      }
+
       // --- 進入戰術死鬥 ---
       startBattle(enemyData, enemyListIndex) {
         this.mode = MODE.BATTLE;
@@ -1475,6 +1961,9 @@
 
         this.overworldContainer.visible = false;
         this.battleContainer.visible = true;
+
+        const radarHud = document.getElementById('world-radar-hud');
+        if (radarHud) radarHud.style.display = 'none';
 
         this.addLog(`<span class="log-combat">【狹路相逢】</span>與「${enemyData.name}」在${this.clock.getShichenName()}展開死鬥！`);
 
@@ -1667,6 +2156,8 @@
             this.mode = MODE.OVERWORLD;
             this.battleContainer.visible = false;
             this.overworldContainer.visible = true;
+            const radarHud = document.getElementById('world-radar-hud');
+            if (radarHud) radarHud.style.display = 'flex';
           }
           enemy.energy -= 100;
           return;
@@ -1721,6 +2212,8 @@
           this.mode = MODE.OVERWORLD;
           this.battleContainer.visible = false;
           this.overworldContainer.visible = true;
+          const radarHud = document.getElementById('world-radar-hud');
+          if (radarHud) radarHud.style.display = 'flex';
           this.updateOverworldEnemiesDisplay();
           this.updateUI();
         }
@@ -1879,11 +2372,44 @@
       }
     }
 
+    let currentBountyQuest = null;
+
     function openCurrentTownDialog() {
       if (!game || game.mode !== MODE.OVERWORLD) return;
       const tile = game.overworld.getTileData(game.player.owX, game.player.owY);
       if (tile.id === 4 || tile.id === 3) {
         document.getElementById('town-title').innerText = tile.id === 4 ? '🍶 龍門客棧' : '🏯 洛陽大城官府';
+
+        // 1. 江湖說書打聽情報：直接取自大地圖的簡介與勢力設定
+        const props = game.overworld.properties || {};
+        const rumorP = document.getElementById('rumor-text');
+        if (rumorP) {
+          const desc = props.description || '神州浩土風雲變幻，近日各路好手紛至沓來...';
+          const faction = props.faction ? `【盤踞勢力：${props.faction}】` : '';
+          rumorP.innerText = `「${faction} ${desc}」`;
+        }
+
+        // 2. 懸賞告示榜：隨機抽取大地圖設定的可能出現任務
+        const questsText = props.possibleQuests || '';
+        const questList = questsText.split('\n').map(q => q.trim()).filter(Boolean);
+        const questTitle = questList.length > 0
+          ? questList[Math.floor(Math.random() * questList.length)]
+          : '【通緝】黑風寨大當家【連震天】 (賞金 100 兩)';
+
+        const difficulty = parseInt(props.difficulty) || 2;
+        const starStr = '★'.repeat(difficulty) + '☆'.repeat(Math.max(0, 5 - difficulty));
+
+        document.getElementById('town-quest-title').innerText = questTitle;
+        document.getElementById('town-quest-desc').innerText = `危險評級：${starStr} ｜ 所在分境：${game.currentChunkName || '周邊疆土'} (4, 3)`;
+
+        currentBountyQuest = {
+          title: questTitle,
+          difficulty: difficulty,
+          reward: difficulty * 40,
+          targetX: 4,
+          targetY: 3
+        };
+
         document.getElementById('town-dialog').style.display = 'block';
       } else {
         game.addLog('<span class="log-warn">【提示】</span>此處非客棧或官府，無法入內打聽。');
@@ -1895,28 +2421,28 @@
     }
 
     function acceptBounty() {
-      if (!game) return;
+      if (!game || !currentBountyQuest) return;
       game.activeQuest = {
-        title: '緝拿黑風寨大當家',
-        targetX: 4,
-        targetY: 3,
+        title: currentBountyQuest.title,
+        targetX: currentBountyQuest.targetX,
+        targetY: currentBountyQuest.targetY,
         completed: false
       };
       game.overworld.roamingEnemies.push({
         id: 'bounty_boss',
-        name: '黑風寨大當家【連震天】',
-        x: 4,
-        y: 3,
+        name: currentBountyQuest.title.replace(/【.*?】/, '').replace(/\(.*?\)/, '').trim() || '綠林悍匪首領',
+        x: currentBountyQuest.targetX,
+        y: currentBountyQuest.targetY,
         isBoss: true,
         color: 0xef4444,
-        visualX: 4 * TILE_PX,
-        visualY: 3 * TILE_PX
+        visualX: currentBountyQuest.targetX * TILE_PX,
+        visualY: currentBountyQuest.targetY * TILE_PX
       });
-      game.addLog('<span class="log-rumor">【揭榜】</span>已接下通緝令！目標【連震天】正盤踞在西北荒丘 (4, 3)。');
+      game.addLog(`<span class="log-rumor">【揭榜】</span>已接下通緝令！目標【${game.activeQuest.title}】正盤踞在分境坐標 (${currentBountyQuest.targetX}, ${currentBountyQuest.targetY})。`);
       document.getElementById('quest-status').innerHTML = `
-        <b style="color:#f87171;">【進行中】緝拿黑風寨大當家</b><br>
-        目標座標：西北荒丘 (4, 3)<br>
-        賞金：100 兩碎銀
+        <b style="color:#f87171;">【進行中】${currentBountyQuest.title}</b><br>
+        目標座標：荒野據點 (${currentBountyQuest.targetX}, ${currentBountyQuest.targetY})<br>
+        賞金：${currentBountyQuest.reward} 兩碎銀
       `;
       closeTownDialog();
       game.updateOverworldEnemiesDisplay();

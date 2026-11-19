@@ -19,6 +19,36 @@
       "name": "中原核心郡縣 (洛陽·龍門)",
       "biome": "PLAINS",
       "assignedAt": "2026-11-20T07:20:00.000Z"
+    },
+    "8,7": {
+      "mapFile": "overworld_c8_7_plains_1uxj.tmj",
+      "name": "中原平原分境 (8, 7)",
+      "biome": "PLAINS",
+      "assignedAt": "2026-11-19T23:30:44.277Z"
+    },
+    "9,7": {
+      "mapFile": "overworld_c9_7_plains_v4vu.tmj",
+      "name": "中原平原分境 (9, 7)",
+      "biome": "PLAINS",
+      "assignedAt": "2026-11-19T23:30:49.629Z"
+    },
+    "7,8": {
+      "mapFile": "overworld_c7_8_mountain.tmj",
+      "name": "蜀道重巒分境 (7, 8)",
+      "biome": "MOUNTAIN",
+      "assignedAt": "2026-11-19T23:35:59.095Z"
+    },
+    "7,6": {
+      "mapFile": "overworld_c7_6_snow.tmj",
+      "name": "長白雪域分境 (7, 6)",
+      "biome": "SNOW",
+      "assignedAt": "2026-11-19T23:35:59.108Z"
+    },
+    "6,7": {
+      "mapFile": "overworld_c6_7_swamp.tmj",
+      "name": "苗疆迷沼分境 (6, 7)",
+      "biome": "SWAMP",
+      "assignedAt": "2026-11-19T23:35:59.108Z"
     }
   }
 }

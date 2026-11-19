@@ -425,5 +425,42 @@
         }
       ]
     }
+  ],
+  "properties": [
+    {
+      "name": "mapName",
+      "type": "string",
+      "value": "中原核心郡縣 (洛陽·龍門)"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "value": "神州腹地，官道暢通，客棧市鎮繁華，名門正派與各路遊俠雲集之處。"
+    },
+    {
+      "name": "difficulty",
+      "type": "int",
+      "value": 1
+    },
+    {
+      "name": "specialType",
+      "type": "string",
+      "value": "TOWN_MARKET"
+    },
+    {
+      "name": "faction",
+      "type": "string",
+      "value": "洛陽府尹"
+    },
+    {
+      "name": "possibleQuests",
+      "type": "string",
+      "value": "【通緝】捉拿西郊流竄毛賊 (賞金 25 兩)\n【押鏢】護送洛陽商隊平安出關 (賞金 60 兩)\n【尋人】探訪龍門客棧隱世神醫"
+    },
+    {
+      "name": "possibleLoot",
+      "type": "string",
+      "value": "青鋼長劍 (凡品兵刃)\n金瘡藥膏 (外傷靈藥)\n精緻行軍乾糧"
+    }
   ]
 }
