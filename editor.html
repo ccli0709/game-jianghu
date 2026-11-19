@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮世江湖 - 視覺化地圖編輯器 (Tiled 相容版)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #0d0f17;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background: #151824;
+      border-bottom: 1px solid #232738;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    h1 { font-size: 1.15rem; color: #f8fafc; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .badge-tiled {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #0284c7;
+      color: #fff;
+      font-weight: bold;
+    }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+
+    main { display: flex; flex: 1; height: calc(100vh - 54px); }
+
+    /* 左側調色盤 */
+    #palette-sidebar {
+      width: 290px;
+      background: #131520;
+      border-right: 1px solid #232738;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      gap: 14px;
+      overflow-y: auto;
+    }
+    .sec-title {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .mode-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .btn {
+      background: #1b1e2c;
+      border: 1px solid #2d3348;
+      color: #e2e8f0;
+      padding: 7px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+    .btn:hover { background: #24293c; border-color: #434c6b; }
+    .btn.active { background: #1e3a8a; border-color: #3b82f6; color: #fff; box-shadow: 0 0 0 1px #3b82f6; }
+    .btn-action { background: #047857; border-color: #059669; }
+    .btn-action:hover { background: #059669; }
+
+    .tile-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .tile-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1a1d2b;
+      border: 1px solid #262c3e;
+      padding: 7px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tile-item:hover { background: #222739; border-color: #38415c; }
+    .tile-item.active { border-color: #38bdf8; background: #18283f; }
+    .tile-color-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .tile-meta { flex: 1; }
+    .tile-name { font-size: 0.82rem; font-weight: 600; color: #f1f5f9; }
+    .tile-cost { font-size: 0.7rem; color: #94a3b8; }
+
+    /* 中央畫布區域 */
+    #canvas-area {
+      flex: 1;
+      background: #090a10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    #canvas-container {
+      box-shadow: 0 15px 45px rgba(0,0,0,0.9);
+      border: 1px solid #2a2f42;
+      border-radius: 4px;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      background: #11131a;
+      image-rendering: pixelated;
+    }
+    .canvas-status {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: #64748b;
+      display: flex;
+      gap: 16px;
+    }
+
+    /* 右側屬性與導出面板 */
+    #inspector-sidebar {
+      width: 320px;
+      background: #131520;
+      border-left: 1px solid #232738;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      gap: 14px;
+      overflow-y: auto;
+    }
+    .code-box {
+      flex: 1;
+      background: #0c0e14;
+      border: 1px solid #232738;
+      border-radius: 6px;
+      color: #93c5fd;
+      font-family: ui-monospace, SFMono-Regular, "Cascadia Code", monospace;
+      font-size: 0.74rem;
+      padding: 10px;
+      resize: none;
+      white-space: pre;
+      line-height: 1.4;
+      outline: none;
+    }
+    input[type="file"] { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <h1>浮世江湖 <span class="badge-tiled">Tiled 相容可視化編輯器</span></h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="document.getElementById('file-input').click()">📂 載入 Tiled JSON (.tmj/.json)</button>
+      <input type="file" id="file-input" accept=".json,.tmj" onchange="importTiledJSON(event)">
+      <button class="btn btn-action" onclick="exportTiledJSON()">💾 導出 Tiled 規格地圖 (.tmj)</button>
+      <button class="btn" onclick="copyJSON()">📋 複製 JSON 代碼</button>
+      <button class="btn" style="border-color:#38bdf8; color:#38bdf8;" onclick="window.location.href='index.html'">⚔️ 返回遊戲</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 左側面板：地圖模式與調色盤 -->
+    <aside id="palette-sidebar">
+      <div>
+        <div class="sec-title">地圖編輯目標</div>
+        <div class="mode-selector">
+          <button class="btn active" id="btn-mode-ow" onclick="switchMapType('OVERWORLD')">大地圖 (16x16)</button>
+          <button class="btn" id="btn-mode-ba" onclick="switchMapType('BATTLE')">戰術地圖 (16x16)</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-title">繪圖工具</div>
+        <div class="tool-grid">
+          <button class="btn active" id="tool-brush" onclick="setTool('BRUSH')" title="筆刷">筆刷</button>
+          <button class="btn" id="tool-bucket" onclick="setTool('BUCKET')" title="油漆桶填滿">填充</button>
+          <button class="btn" id="tool-picker" onclick="setTool('PICKER')" title="吸管採集">吸管</button>
+          <button class="btn" id="tool-clear" onclick="clearMap()" title="清空地圖">重設</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-title" id="palette-title">地貌圖塊調色盤</div>
+        <div class="tile-list" id="tile-list"></div>
+      </div>
+    </aside>
+
+    <!-- 中央繪圖畫布 -->
+    <section id="canvas-area">
+      <div id="canvas-container">
+        <canvas id="editorCanvas" width="640" height="640"></canvas>
+      </div>
+      <div class="canvas-status">
+        <span>鼠標座標: <b id="coord-tip" style="color:#e2e8f0;">(0, 0)</b></span>
+        <span>當前地貌: <b id="tile-tip" style="color:#38bdf8;">平原官道</b></span>
+        <span>標準規格: <b>Tiled JSON v1.10 (Orthogonal 40x40)</b></span>
+      </div>
+    </section>
+
+    <!-- 右側面板：屬性檢測與 JSON 即時預覽 -->
+    <aside id="inspector-sidebar">
+      <div class="sec-title">即時 Tiled JSON 數據預覽</div>
+      <textarea id="json-preview" class="code-box" readonly></textarea>
+      <div style="font-size:0.75rem; color:#64748b; line-height:1.4;">
+        • 導出之 <code>.tmj</code> 檔案可直接由官方 <b>Tiled Map Editor</b> 桌面版無失真開啟與二次編輯。<br>
+        • 圖層包含標準 <code>tilelayer</code> 與 <code>objectgroup</code> (含客棧據點、遊蕩強盜出生點自訂屬性)。
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const TILE_PX = 40;
+    const GRID_SIZE = 16;
+    const CANVAS = document.getElementById('editorCanvas');
+    const CTX = CANVAS.getContext('2d');
+
+    // ==========================================
+    // 編輯器地塊規格定義 (對齊 Tiled GID)
+    // ==========================================
+    const PALETTES = {
+      OVERWORLD: [
+        { gid: 1, key: 'PLAINS',   name: '平原官道', cost: '1 小時', color: '#1a261f', icon: '·' },
+        { gid: 2, key: 'MOUNTAIN', name: '高聳崇山', cost: '不可通行', color: '#313845', icon: '⛰️' },
+        { gid: 3, key: 'FOREST',   name: '黑風密林', cost: '3 小時', color: '#0e2015', icon: '🌲' },
+        { gid: 4, key: 'TOWN',     name: '洛陽古城', cost: '1 小時/城鎮', color: '#632b17', icon: '🏯' },
+        { gid: 5, key: 'INN',      name: '龍門客棧', cost: '1 小時/客棧', color: '#8d3f0d', icon: '🍶' },
+        { gid: 6, key: 'HILLS',    name: '崎嶇荒丘', cost: '2 小時', color: '#27291e', icon: '▲' }
+      ],
+      BATTLE: [
+        { gid: 1, key: 'FLOOR',  name: '青石地面', cost: '100 能量', color: '#161922', icon: '' },
+        { gid: 2, key: 'MUD',    name: '泥濘沼澤', cost: '160 能量', color: '#261e16', icon: '〰' },
+        { gid: 3, key: 'WATER',  name: '深水淺灘', cost: '200 能量', color: '#132338', icon: '≈' },
+        { gid: 4, key: 'RUBBLE', name: '碎石陡坡', cost: '130 能量', color: '#23252d', icon: '▲' },
+        { gid: 5, key: 'WALL',   name: '堅石掩體', cost: '9999 (阻擋)', color: '#383c48', icon: '■' }
+      ]
+    };
+
+    // 編輯器狀態
+    let currentMapType = 'OVERWORLD';
+    let currentTool = 'BRUSH';
+    let selectedTileGid = 1;
+    let isMouseDown = false;
+
+    // 16x16 網格資料庫 (1-indexed GID)
+    let mapGrid = new Uint8Array(GRID_SIZE * GRID_SIZE);
+
+    // 初始化預設大地圖佈局
+    function initDefaultMap() {
+      if (currentMapType === 'OVERWORLD') {
+        mapGrid.fill(1); // 預設平原
+        // 崇山
+        for (let x = 6; x < 10; x++) mapGrid[5 * 16 + x] = 2;
+        for (let y = 5; y < 11; y++) mapGrid[y * 16 + 9] = 2;
+        // 密林
+        for (let x = 1; x < 5; x++) {
+          for (let y = 8; y < 14; y++) {
+            if (Math.random() < 0.7) mapGrid[y * 16 + x] = 3;
+          }
+        }
+        // 荒丘
+        for (let x = 3; x < 6; x++) {
+          for (let y = 2; y < 5; y++) mapGrid[y * 16 + x] = 6;
+        }
+        mapGrid[3 * 16 + 7] = 5;  // 客棧
+        mapGrid[11 * 16 + 13] = 4; // 洛陽
+      } else {
+        mapGrid.fill(1); // 預設青石
+        for (let x = 0; x < 16; x++) {
+          mapGrid[0 * 16 + x] = 5;
+          mapGrid[15 * 16 + x] = 5;
+          mapGrid[x * 16 + 0] = 5;
+          mapGrid[x * 16 + 15] = 5;
+        }
+        // 掩體與泥地
+        mapGrid[6 * 16 + 7] = 5; mapGrid[7 * 16 + 7] = 5;
+        mapGrid[8 * 16 + 7] = 5; mapGrid[9 * 16 + 7] = 5;
+        mapGrid[4 * 16 + 5] = 2; mapGrid[4 * 16 + 6] = 2;
+        mapGrid[8 * 16 + 9] = 3; mapGrid[8 * 16 + 10] = 3;
+      }
+      renderCanvas();
+      updateJsonPreview();
+    }
+
+    // 建立調色盤 UI
+    function buildPaletteUI() {
+      const container = document.getElementById('tile-list');
+      container.innerHTML = '';
+      const list = PALETTES[currentMapType];
+
+      list.forEach(t => {
+        const item = document.createElement('div');
+        item.className = `tile-item ${t.gid === selectedTileGid ? 'active' : ''}`;
+        item.onclick = () => selectTile(t.gid);
+
+        item.innerHTML = `
+          <div class="tile-color-box" style="background:${t.color};">${t.icon}</div>
+          <div class="tile-meta">
+            <div class="tile-name">${t.name}</div>
+            <div class="tile-cost">消耗: ${t.cost}</div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function selectTile(gid) {
+      selectedTileGid = gid;
+      buildPaletteUI();
+      const current = PALETTES[currentMapType].find(t => t.gid === gid);
+      if (current) document.getElementById('tile-tip').innerText = current.name;
+    }
+
+    function switchMapType(type) {
+      currentMapType = type;
+      selectedTileGid = 1;
+      document.getElementById('btn-mode-ow').classList.toggle('active', type === 'OVERWORLD');
+      document.getElementById('btn-mode-ba').classList.toggle('active', type === 'BATTLE');
+      document.getElementById('palette-title').innerText = type === 'OVERWORLD' ? '大地圖圖塊調色盤' : '戰術地格調色盤';
+      buildPaletteUI();
+      initDefaultMap();
+    }
+
+    function setTool(tool) {
+      currentTool = tool;
+      document.getElementById('tool-brush').classList.toggle('active', tool === 'BRUSH');
+      document.getElementById('tool-bucket').classList.toggle('active', tool === 'BUCKET');
+      document.getElementById('tool-picker').classList.toggle('active', tool === 'PICKER');
+    }
+
+    function clearMap() {
+      if (confirm('確定清空目前畫布嗎？')) {
+        mapGrid.fill(1);
+        renderCanvas();
+        updateJsonPreview();
+      }
+    }
+
+    // ==========================================
+    // 畫布繪製系統
+    // ==========================================
+    function renderCanvas() {
+      CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+      const palette = PALETTES[currentMapType];
+
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let y = 0; y < GRID_SIZE; y++) {
+          const gid = mapGrid[y * GRID_SIZE + x];
+          const t = palette.find(p => p.gid === gid) || palette[0];
+          const px = x * TILE_PX;
+          const py = y * TILE_PX;
+
+          CTX.fillStyle = t.color;
+          CTX.fillRect(px, py, TILE_PX, TILE_PX);
+
+          CTX.strokeStyle = 'rgba(255,255,255,0.06)';
+          CTX.strokeRect(px + 0.5, py + 0.5, TILE_PX - 1, TILE_PX - 1);
+
+          if (t.icon) {
+            CTX.fillStyle = '#f8fafc';
+            CTX.font = '13px "PingFang TC", "Microsoft JhengHei", sans-serif';
+            CTX.textAlign = 'center';
+            CTX.textBaseline = 'middle';
+            CTX.fillText(t.icon, px + 20, py + 20);
+          }
+        }
+      }
+    }
+
+    // ==========================================
+    // 畫布操作交互 (點繪、吸管、油漆桶)
+    // ==========================================
+    function handleCanvasDraw(e) {
+      const rect = CANVAS.getBoundingClientRect();
+      const x = Math.floor((e.clientX - rect.left) / TILE_PX);
+      const y = Math.floor((e.clientY - rect.top) / TILE_PX);
+
+      if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
+
+      document.getElementById('coord-tip').innerText = `(${x}, ${y})`;
+
+      if (currentTool === 'PICKER') {
+        const pickedGid = mapGrid[y * GRID_SIZE + x];
+        selectTile(pickedGid);
+        setTool('BRUSH');
+        return;
+      }
+
+      if (currentTool === 'BRUSH') {
+        mapGrid[y * GRID_SIZE + x] = selectedTileGid;
+        renderCanvas();
+        updateJsonPreview();
+      } else if (currentTool === 'BUCKET') {
+        floodFill(x, y, selectedTileGid);
+        renderCanvas();
+        updateJsonPreview();
+      }
+    }
+
+    function floodFill(startX, startY, newGid) {
+      const targetGid = mapGrid[startY * GRID_SIZE + startX];
+      if (targetGid === newGid) return;
+
+      const queue = [[startX, startY]];
+      const visited = new Uint8Array(GRID_SIZE * GRID_SIZE);
+
+      while (queue.length > 0) {
+        const [x, y] = queue.pop();
+        const idx = y * GRID_SIZE + x;
+        if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) continue;
+        if (visited[idx] || mapGrid[idx] !== targetGid) continue;
+
+        visited[idx] = 1;
+        mapGrid[idx] = newGid;
+
+        queue.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+      }
+    }
+
+    CANVAS.addEventListener('mousedown', (e) => {
+      isMouseDown = true;
+      handleCanvasDraw(e);
+    });
+
+    window.addEventListener('mouseup', () => isMouseDown = false);
+
+    CANVAS.addEventListener('mousemove', (e) => {
+      const rect = CANVAS.getBoundingClientRect();
+      const x = Math.floor((e.clientX - rect.left) / TILE_PX);
+      const y = Math.floor((e.clientY - rect.top) / TILE_PX);
+      if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+        document.getElementById('coord-tip').innerText = `(${x}, ${y})`;
+      }
+      if (isMouseDown && currentTool === 'BRUSH') {
+        handleCanvasDraw(e);
+      }
+    });
+
+    // ==========================================
+    // 標準 Tiled JSON 導出與轉換器
+    // ==========================================
+    function buildTiledJsonObject() {
+      const isOverworld = currentMapType === 'OVERWORLD';
+      const tilesetDef = isOverworld ? {
+        firstgid: 1,
+        name: "Jianghu_Overworld_Tiles",
+        tilewidth: 40,
+        tileheight: 40,
+        tilecount: 6,
+        columns: 6,
+        tiles: PALETTES.OVERWORLD.map((p, i) => ({
+          id: i,
+          properties: [
+            { name: "terrainType", type: "string", value: p.key },
+            { name: "hourCost", type: "int", value: p.key === 'MOUNTAIN' ? 999 : (p.key === 'FOREST' ? 3 : (p.key === 'HILLS' ? 2 : 1)) }
+          ]
+        }))
+      } : {
+        firstgid: 1,
+        name: "Jianghu_Battle_Tiles",
+        tilewidth: 40,
+        tileheight: 40,
+        tilecount: 5,
+        columns: 5,
+        tiles: PALETTES.BATTLE.map((p, i) => ({
+          id: i,
+          properties: [
+            { name: "type", type: "string", value: p.key },
+            { name: "moveCost", type: "int", value: p.key === 'WALL' ? 9999 : (p.key === 'WATER' ? 200 : (p.key === 'MUD' ? 160 : (p.key === 'RUBBLE' ? 130 : 100))) }
+          ]
+        }))
+      };
+
+      // 提取據點與特定物件 (ObjectGroup)
+      const objects = [];
+      let objId = 1;
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let y = 0; y < GRID_SIZE; y++) {
+          const gid = mapGrid[y * GRID_SIZE + x];
+          if (isOverworld) {
+            if (gid === 4) { // 洛陽
+              objects.push({ id: objId++, name: "洛陽大城", type: "TOWN", x: x * 40, y: y * 40, width: 40, height: 40, properties: [{ name: "services", type: "string", value: "REST,TRADE,BOUNTY" }] });
+            } else if (gid === 5) { // 客棧
+              objects.push({ id: objId++, name: "龍門客棧", type: "INN", x: x * 40, y: y * 40, width: 40, height: 40, properties: [{ name: "services", type: "string", value: "REST,RUMOR,BOUNTY" }] });
+            }
+          }
+        }
+      }
+
+      return {
+        compressionlevel: -1,
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        tilewidth: TILE_PX,
+        tileheight: TILE_PX,
+        infinite: false,
+        orientation: "orthogonal",
+        renderorder: "right-down",
+        tiledversion: "1.10.2",
+        version: "1.10",
+        type: "map",
+        tilesets: [tilesetDef],
+        layers: [
+          {
+            id: 1,
+            name: "Terrain_Layer",
+            type: "tilelayer",
+            width: GRID_SIZE,
+            height: GRID_SIZE,
+            x: 0,
+            y: 0,
+            opacity: 1,
+            visible: true,
+            data: Array.from(mapGrid)
+          },
+          {
+            id: 2,
+            name: "Entities_and_POIs",
+            type: "objectgroup",
+            opacity: 1,
+            visible: true,
+            x: 0,
+            y: 0,
+            objects: objects
+          }
+        ]
+      };
+    }
+
+    function updateJsonPreview() {
+      const obj = buildTiledJsonObject();
+      document.getElementById('json-preview').value = JSON.stringify(obj, null, 2);
+    }
+
+    function exportTiledJSON() {
+      const obj = buildTiledJsonObject();
+      const jsonStr = JSON.stringify(obj, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = currentMapType === 'OVERWORLD' ? 'overworld_map.tmj' : 'arena_map.tmj';
+      a.click();
+    }
+
+    function copyJSON() {
+      const txt = document.getElementById('json-preview').value;
+      navigator.clipboard.writeText(txt).then(() => alert('已將完整 Tiled JSON 代碼複製至剪貼簿！'));
+    }
+
+    function importTiledJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          if (json.layers && json.layers[0] && json.layers[0].data) {
+            const data = json.layers[0].data;
+            for (let i = 0; i < Math.min(data.length, mapGrid.length); i++) {
+              mapGrid[i] = data[i];
+            }
+            renderCanvas();
+            updateJsonPreview();
+            alert(`成功載入地圖：${file.name}！`);
+          } else {
+            alert('地圖格式無效：缺少 layers[0].data 圖層資料！');
+          }
+        } catch (err) {
+          alert('解析 JSON 檔案失敗：' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // 初始化載入
+    window.onload = () => {
+      buildPaletteUI();
+      initDefaultMap();
+    };
+  </script>
+</body>
+</html>

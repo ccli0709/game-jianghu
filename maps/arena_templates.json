@@ -1,0 +1,44 @@
+{
+  "templates": {
+    "arena_forest_ambush": {
+      "id": "arena_forest_ambush",
+      "name": "黑風密林伏擊陣",
+      "dimensions": { "width": 16, "height": 16 },
+      "ambientLighting": "dappled_sunlight",
+      "defaultTile": "FLOOR",
+      "specialZones": [
+        { "type": "MUD", "rect": { "x": 5, "y": 4, "w": 2, "h": 2 } },
+        { "type": "WATER", "rect": { "x": 9, "y": 8, "w": 2, "h": 2 } },
+        { "type": "RUBBLE", "rect": { "x": 10, "y": 4, "w": 2, "h": 1 } }
+      ],
+      "structures": [
+        { "type": "WALL", "coords": [[7, 6], [7, 7], [7, 8], [7, 9]] }
+      ],
+      "initialSurfaces": [
+        { "type": "OIL", "x": 6, "y": 8, "duration": 99 }
+      ],
+      "spawnPositions": {
+        "player": { "x": 3, "y": 8 },
+        "enemies": [{ "x": 12, "y": 7 }, { "x": 12, "y": 9 }]
+      }
+    },
+    "arena_mountain_pass": {
+      "id": "arena_mountain_pass",
+      "name": "斷魂谷狹道死鬥",
+      "dimensions": { "width": 16, "height": 16 },
+      "ambientLighting": "misty_cliff",
+      "defaultTile": "RUBBLE",
+      "specialZones": [
+        { "type": "MUD", "rect": { "x": 4, "y": 7, "w": 8, "h": 2 } }
+      ],
+      "structures": [
+        { "type": "WALL", "coords": [[5, 3], [5, 4], [10, 11], [10, 12]] }
+      ],
+      "initialSurfaces": [],
+      "spawnPositions": {
+        "player": { "x": 2, "y": 8 },
+        "enemies": [{ "x": 13, "y": 8 }]
+      }
+    }
+  }
+}

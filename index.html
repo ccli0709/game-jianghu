@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮世江湖 - Pixi.js 2D 引擎版本 (PoC)</title>
+  <!-- 本地優先載入 Pixi.js v7，若本地未就緒則自動回退至 CDN -->
+  <script src="libs/pixi.min.js"></script>
+  <script>
+    if (typeof PIXI === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"><\/script>');
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: #0b0c10;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      background: #13141c;
+      border-bottom: 1px solid #232534;
+      padding: 10px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 1.18rem;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+
+    .engine-badge {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #e11d48;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .mode-tag {
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-overworld {
+      background: #064e3b;
+      color: #6ee7b7;
+      border: 1px solid #059669;
+    }
+
+    .tag-battle {
+      background: #450a0a;
+      color: #fca5a5;
+      border: 1px solid #dc2626;
+    }
+
+    .status-bar {
+      display: flex;
+      gap: 20px;
+      font-size: 0.88rem;
+    }
+
+    .status-item {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .status-val {
+      font-weight: 700;
+    }
+
+    .val-hp {
+      color: #f87171;
+    }
+
+    .val-gold {
+      color: #fbbf24;
+    }
+
+    .val-time {
+      color: #a5b4fc;
+    }
+
+    main {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 55px);
+    }
+
+    #canvas-wrapper {
+      flex: 1;
+      background: #06070a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    #pixi-viewport {
+      width: 640px;
+      height: 640px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95);
+      border: 1px solid #262939;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #08090d;
+    }
+
+    #pixi-viewport canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    #sidebar {
+      width: 410px;
+      background: #12131b;
+      border-left: 1px solid #212330;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .panel {
+      padding: 14px 18px;
+      border-bottom: 1px solid #1c1e2a;
+    }
+
+    .panel-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #94a3b8;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn {
+      background: #181a24;
+      border: 1px solid #2c3042;
+      color: #f1f5f9;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .btn:hover {
+      background: #222534;
+      border-color: #424962;
+    }
+
+    .btn.active {
+      border-color: #60a5fa;
+      background: #1c2738;
+      box-shadow: 0 0 0 1px #60a5fa;
+    }
+
+    .btn-danger {
+      border-color: #7f1d1d;
+      background: #251215;
+    }
+
+    .btn-danger:hover {
+      background: #35151a;
+    }
+
+    #log-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #combat-log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 18px;
+      font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .log-entry {
+      color: #94a3b8;
+    }
+
+    .log-world {
+      color: #34d399;
+    }
+
+    .log-combat {
+      color: #f87171;
+    }
+
+    .log-rumor {
+      color: #fbbf24;
+    }
+
+    .log-time {
+      color: #c084fc;
+      font-weight: 600;
+    }
+
+    .log-warn {
+      color: #ef4444;
+      font-weight: bold;
+    }
+
+    .tip-box {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      background: #161822;
+      border: 1px solid #292e40;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #town-dialog {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #151620;
+      border: 1px solid #33394c;
+      border-radius: 8px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.96);
+      width: 500px;
+      padding: 22px;
+      z-index: 100;
+    }
+
+    #town-dialog h2 {
+      font-size: 1.15rem;
+      color: #f8fafc;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #262a3a;
+      padding-bottom: 8px;
+    }
+
+    .town-section {
+      margin-bottom: 16px;
+      font-size: 0.86rem;
+    }
+
+    .quest-card {
+      background: #1c1e2a;
+      border: 1px solid #2f3446;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kbd-tip {
+      font-size: 0.76rem;
+      color: #64748b;
+      background: #0e0f15;
+      padding: 12px 18px;
+      line-height: 1.5;
+    }
+
+    kbd {
+      background: #202330;
+      border: 1px solid #33384c;
+      border-radius: 4px;
+      padding: 2px 6px;
+      color: #f1f5f9;
+      font-size: 0.72rem;
+      font-family: inherit;
+    }
+
+    /* 人物詳細屬性與裝備模態視窗 */
+    #char-dialog {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #141620;
+      border: 1px solid #333a4e;
+      border-radius: 8px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.96);
+      width: 620px;
+      padding: 22px;
+      z-index: 100;
+    }
+
+    .char-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #242938;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .char-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1e293b;
+      border: 2px solid #60a5fa;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.15rem;
+    }
+
+    .char-body {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 16px;
+    }
+
+    .char-col {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .char-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #232838;
+      padding-bottom: 4px;
+      margin-bottom: 2px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      background: #1a1c29;
+      padding: 5px 10px;
+      border-radius: 4px;
+      border: 1px solid #272d3f;
+    }
+
+    .stat-row span {
+      color: #94a3b8;
+    }
+
+    .stat-row b {
+      color: #f1f5f9;
+    }
+
+    .equip-slot {
+      background: #1a1c29;
+      border: 1px solid #272d3f;
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .equip-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .equip-type {
+      font-size: 0.72rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .equip-name {
+      font-size: 0.88rem;
+      font-weight: bold;
+      color: #f8fafc;
+    }
+
+    .equip-tier {
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    .tier-purple {
+      background: #3b185f;
+      color: #c084fc;
+      border: 1px solid #7e22ce;
+    }
+
+    .tier-green {
+      background: #064e3b;
+      color: #6ee7b7;
+      border: 1px solid #059669;
+    }
+
+    .tier-gold {
+      background: #451a03;
+      color: #fbbf24;
+      border: 1px solid #b45309;
+    }
+
+    .equip-stat {
+      font-size: 0.75rem;
+      color: #38bdf8;
+      line-height: 1.3;
+    }
+
+    .equip-desc {
+      font-size: 0.72rem;
+      color: #64748b;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      浮世江湖
+      <span class="engine-badge">Pixi.js v7 WebGL</span>
+      <span id="ui-mode-tag" class="mode-tag tag-overworld">大地圖漫遊</span>
+    </h1>
+    <div class="status-bar">
+      <div class="status-item"><button class="btn"
+          style="padding:4px 10px; font-size:0.78rem; border-color:#0284c7; background:#0c2340;"
+          onclick="window.location.href='editor.html'">🗺️ 地圖編輯器</button></div>
+      <div class="status-item"><button class="btn"
+          style="padding:4px 10px; font-size:0.78rem; border-color:#3b82f6; background:#1a2333;"
+          onclick="toggleCharacterDialog()"><kbd>C</kbd> 人物屬性與裝備</button></div>
+      <div class="status-item">名號: <span class="status-val" style="color:#60a5fa;" id="ui-hero-name">李暮雲</span></div>
+      <div class="status-item">氣血: <span id="ui-hp" class="status-val val-hp">100/100</span></div>
+      <div class="status-item">碎銀: <span id="ui-gold" class="status-val val-gold">50 兩</span></div>
+      <div class="status-item">時序: <span id="ui-time-str" class="status-val val-time">第 1 日 辰時 (08:00)</span></div>
+      <div class="status-item">位置: <span id="ui-pos" class="status-val">中原腹地</span></div>
+    </div>
+  </header>
+
+  <main>
+    <div id="canvas-wrapper">
+      <div id="pixi-viewport"></div>
+
+      <!-- 人物詳細屬性與裝備視窗 -->
+      <div id="char-dialog">
+        <div class="char-header">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="char-avatar">俠</div>
+            <div>
+              <div style="font-size:1.15rem; font-weight:bold; color:#f8fafc;" id="char-name">李暮雲</div>
+              <div style="font-size:0.76rem; color:#94a3b8; margin-top:2px;">
+                <span style="color:#60a5fa;" id="char-title">初入江湖的無名散客</span> ·
+                <span style="color:#fbbf24; font-weight:bold;" id="char-realm">二流高手</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn" style="padding:5px 12px;" onclick="closeCharacterDialog()">關閉 (ESC / C)</button>
+        </div>
+
+        <div class="char-body">
+          <!-- 左側：核心六維與修為數值 -->
+          <div class="char-col">
+            <div class="char-section-title">核心修為與六維指標</div>
+            <div class="stat-row"><span>氣血 (生命儲備)</span><b id="c-hp" style="color:#f87171;">100 / 100</b></div>
+            <div class="stat-row"><span>真氣 (內力池)</span><b id="c-qi" style="color:#60a5fa;">80 / 80</b></div>
+            <div class="stat-row"><span>身法速度 (Speed)</span><b id="c-speed" style="color:#34d399;">100 點</b></div>
+            <div class="stat-row"><span>臂力 (破外功/增傷)</span><b id="c-str">24</b></div>
+            <div class="stat-row"><span>身法 (身形/閃避)</span><b id="c-agi">28</b></div>
+            <div class="stat-row"><span>根骨 (抗打擊/氣血)</span><b id="c-con">22</b></div>
+            <div class="stat-row"><span>悟性 (省真氣/演武)</span><b id="c-wis">26</b></div>
+            <div class="stat-row"><span>福緣 (機緣/暴擊)</span><b id="c-lck">18</b></div>
+            <div class="stat-row"><span>江湖聲望 (威名)</span><b id="c-rep" style="color:#fbbf24;">15 (籍籍無名)</b></div>
+            <div class="stat-row"><span>經脈負荷 (內傷)</span><b id="c-strain" style="color:#34d399;">0% (安好無損)</b></div>
+          </div>
+
+          <!-- 右側：身上裝備武器防具 -->
+          <div class="char-col">
+            <div class="char-section-title">佩戴兵刃與隨身防具</div>
+
+            <!-- 主手兵刃 -->
+            <div class="equip-slot">
+              <div class="equip-top">
+                <span class="equip-type">主手兵刃</span>
+                <span class="equip-tier tier-purple" id="eq-weapon-tier">上品</span>
+              </div>
+              <div class="equip-name" id="eq-weapon-name">寒鐵青鋒劍</div>
+              <div class="equip-stat" id="eq-weapon-stat">攻擊 +25 ｜ 招式速度 +5% ｜ 15% 觸發【霜凍】</div>
+              <div class="equip-desc" id="eq-weapon-desc">長白山地底寒鐵鍛造，劍身清幽，出鞘生霜。</div>
+            </div>
+
+            <!-- 貼身防具 -->
+            <div class="equip-slot">
+              <div class="equip-top">
+                <span class="equip-type">貼身防具</span>
+                <span class="equip-tier tier-green" id="eq-armor-tier">良品</span>
+              </div>
+              <div class="equip-name" id="eq-armor-name">流雲夜行袍</div>
+              <div class="equip-stat" id="eq-armor-stat">防禦 +14 ｜ 夜間旅行隱匿度 +25%</div>
+              <div class="equip-desc" id="eq-armor-desc">墨蠶生絲混編，輕如蟬翼，極利於夜行暗伏。</div>
+            </div>
+
+            <!-- 隨身靈寶 -->
+            <div class="equip-slot">
+              <div class="equip-top">
+                <span class="equip-type">腰佩靈寶</span>
+                <span class="equip-tier tier-gold" id="eq-trinket-tier">寶器</span>
+              </div>
+              <div class="equip-name" id="eq-trinket-name">白玉長生珮</div>
+              <div class="equip-stat" id="eq-trinket-stat">生命上限 +20 ｜ 大地圖行進真氣自回 +2/h</div>
+              <div class="equip-desc" id="eq-trinket-desc">溫潤羊脂古玉，暗藏靜氣凝神之微光。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 客棧/城鎮互動視窗 -->
+      <div id="town-dialog">
+        <h2 id="town-title">🍶 龍門客棧</h2>
+        <div class="town-section" id="town-rumors">
+          <b style="color:#e2e8f0;">【江湖說書 / 打聽情報】</b>
+          <p id="rumor-text" style="color:#fbbf24; margin-top:6px; line-height:1.5;">
+            「聽聞黑風寨大當家近日在西北古道掠奪了一批官府暗鏢，各路好手正欲除之...」</p>
+        </div>
+        <div class="town-section">
+          <b style="color:#e2e8f0;">【懸賞告示榜】</b>
+          <div class="quest-card">
+            <div>
+              <div style="font-weight:700; color:#f87171; font-size:0.92rem;">【通緝】黑風寨大當家【連震天】</div>
+              <div style="font-size:0.78rem; color:#94a3b8; margin-top:3px;">盤踞座標：西北荒丘 (4, 3) | 備有火油與護體硬功</div>
+            </div>
+            <button class="btn" id="btn-accept-quest" onclick="acceptBounty()" style="align-items:center;">揭榜追兇</button>
+          </div>
+        </div>
+        <div class="town-section" style="display:flex; justify-content:space-between; margin-top:22px;">
+          <button class="btn" onclick="restAtInn()">打尖投宿 (耗費 8 小時 / 10 兩碎銀 / 氣血全滿)</button>
+          <button class="btn" onclick="closeTownDialog()">離開此地 (ESC)</button>
+        </div>
+      </div>
+    </div>
+
+    <aside id="sidebar">
+      <!-- 大地圖面板 -->
+      <div class="panel" id="panel-overworld">
+        <div class="panel-title">
+          <span>大地圖目標與行囊</span>
+          <span id="ui-lighting-tag" style="color:#fbbf24; font-size:0.75rem;">☼ 晨光熹微</span>
+        </div>
+
+        <div class="tip-box">
+          <span>腳下地貌: <b id="ow-tip-name" style="color:#6ee7b7;">平原官道</b></span>
+          <span>行路耗時: <b id="ow-tip-cost" style="color:#fbbf24;">1 小時</b></span>
+        </div>
+
+        <div id="quest-status" style="font-size:0.84rem; color:#94a3b8; line-height:1.5;">
+          暫無揭榜任務。前往客棧或市鎮【打聽消息】接取懸賞。
+        </div>
+        <div style="margin-top:14px; display:flex; flex-direction:column; gap:8px;">
+          <button class="btn" onclick="openCurrentTownDialog()">
+            <span><kbd>E</kbd> 進入眼前據點 (客棧/城鎮)</span>
+          </button>
+          <button class="btn" onclick="toggleCharacterDialog()">
+            <span><kbd>C</kbd> 檢視人物詳細屬性與裝備</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 戰鬥面板 -->
+      <div class="panel" id="panel-battle" style="display:none;">
+        <div class="panel-title">
+          <span>戰術招式決策</span>
+          <span id="ui-energy" style="color:#60a5fa; font-weight:bold;">能量: 100</span>
+        </div>
+
+        <div class="tip-box">
+          <span>戰場地格: <b id="tip-tile-name" style="color:#6ee7b7;">青石地面</b></span>
+          <span>移動耗能: <b id="tip-tile-cost" style="color:#fbbf24;">100</b></span>
+        </div>
+
+        <div class="skills-grid">
+          <button class="btn active" id="btn-move" onclick="selectBattleAction('MOVE')">
+            <b>[W/A/S/D] 挪移身法</b>
+            <span style="font-size:0.7rem; color:#94a3b8;">消耗地格能量 | 近身平A</span>
+          </button>
+          <button class="btn" id="btn-fire" onclick="selectBattleAction('FIRE_PALM')">
+            <b style="color:#f87171;">[1] 烈陽神掌</b>
+            <span style="font-size:0.7rem; color:#94a3b8;">耗能: 120 | 擊退+爆燃</span>
+          </button>
+          <button class="btn" id="btn-frost" onclick="selectBattleAction('FROST_FINGER')">
+            <b style="color:#93c5fd;">[2] 玄冥神指</b>
+            <span style="font-size:0.7rem; color:#94a3b8;">耗能: 90 | 4格封穴+結冰</span>
+          </button>
+          <button class="btn" id="btn-oil" onclick="selectBattleAction('THROW_OIL')">
+            <b style="color:#d97706;">[3] 擲火油罈</b>
+            <span style="font-size:0.7rem; color:#94a3b8;">耗能: 80 | 鋪設易燃面</span>
+          </button>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px;">
+          <button class="btn btn-danger" style="flex:1;" onclick="triggerOverdraw()">
+            <b>[Space] 經脈透支</b>
+            <span style="font-size:0.7rem;">借支 100 能量 (次回合力竭)</span>
+          </button>
+          <button class="btn" style="width:80px; align-items:center; justify-content:center;"
+            onclick="playerBattleWait()">
+            <b>調息</b>
+          </button>
+        </div>
+      </div>
+
+      <!-- 戰報大事記 -->
+      <div id="log-container">
+        <div class="panel-title" style="padding:10px 18px 0 18px; margin-bottom:0;">江湖見聞與戰報</div>
+        <div id="combat-log"></div>
+      </div>
+
+      <div class="kbd-tip">
+        • <b>Pixi.js WebGL 驅動</b>：平滑補間插值（Lerp Animation）＋ 晝夜混合遮罩。<br>
+        • <b>模組化</b>：地圖與陣地支援外部 JSON 宣告式範本；渲染層全數掛載於 SceneGraph。
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // ==========================================
+    // 遊戲常數與地圖定義
+    // ==========================================
+    const TILE_PX = 40;
+    const GRID_SIZE = 16;
+    const VIEW_SIZE = 640;
+
+    const MODE = { OVERWORLD: 'OVERWORLD', BATTLE: 'BATTLE' };
+
+    const DEFAULT_OVERWORLD_DATA = {
+      w: 16,
+      h: 16,
+      terrainDefs: {
+        PLAINS: { id: 0, name: '平原官道', hourCost: 1, color: 0x1a261f, icon: '' },
+        MOUNTAIN: { id: 1, name: '高聳崇山', hourCost: 999, color: 0x313845, icon: '⛰️' },
+        FOREST: { id: 2, name: '黑風密林', hourCost: 3, color: 0x0e2015, icon: '🌲' },
+        HILLS: { id: 5, name: '崎嶇荒丘', hourCost: 2, color: 0x27291e, icon: '▲' },
+        TOWN: { id: 3, name: '洛陽古城', hourCost: 1, color: 0x632b17, icon: '🏯' },
+        INN: { id: 4, name: '龍門客棧', hourCost: 1, color: 0x8d3f0d, icon: '🍶' }
+      }
+    };
+
+    const BATTLE_TILE = {
+      FLOOR: { id: 0, name: '青石地面', cost: 100, color: 0x161922, border: 0x252936, icon: '' },
+      MUD: { id: 1, name: '泥濘沼澤', cost: 160, color: 0x261e16, border: 0x3b2f23, icon: '〰' },
+      WATER: { id: 2, name: '深水淺灘', cost: 200, color: 0x132338, border: 0x1e3857, icon: '≈' },
+      RUBBLE: { id: 3, name: '碎石陡坡', cost: 130, color: 0x23252d, border: 0x363946, icon: '▲' },
+      WALL: { id: 4, name: '岩壁掩體', cost: 9999, color: 0x383c48, border: 0x1b1d22, icon: '■' }
+    };
+
+    const BATTLE_SURFACE = { NONE: 0, OIL: 1, FIRE: 2, ICE: 3 };
+
+    // ==========================================
+    // 時鐘與十二時辰系統 (WorldClock)
+    // ==========================================
+    class WorldClock {
+      constructor(day = 1, hour = 8) {
+        this.day = day;
+        this.hour = hour;
+      }
+
+      advance(hours) {
+        this.hour += hours;
+        while (this.hour >= 24) {
+          this.hour -= 24;
+          this.day += 1;
+        }
+      }
+
+      getShichenName() {
+        const h = this.hour;
+        if (h === 23 || h === 0) return '子時 (半夜)';
+        if (h >= 1 && h < 3) return '丑時 (雞鳴)';
+        if (h >= 3 && h < 5) return '寅時 (平旦)';
+        if (h >= 5 && h < 7) return '卯時 (日出)';
+        if (h >= 7 && h < 9) return '辰時 (食時)';
+        if (h >= 9 && h < 11) return '巳時 (隅中)';
+        if (h >= 11 && h < 13) return '午時 (正午)';
+        if (h >= 13 && h < 15) return '未時 (日昳)';
+        if (h >= 15 && h < 17) return '申時 (晡時)';
+        if (h >= 17 && h < 19) return '酉時 (日暮)';
+        if (h >= 19 && h < 21) return '戌時 (掌燈)';
+        return '亥時 (夜闌)';
+      }
+
+      getFormattedString() {
+        const hh = this.hour.toString().padStart(2, '0');
+        return `第 ${this.day} 日 ${this.getShichenName()} (${hh}:00)`;
+      }
+
+      getLighting() {
+        const h = this.hour;
+        if (h >= 6 && h < 16) {
+          return { name: '白晝麗日', color: 0x000000, alpha: 0.0, isNight: false };
+        } else if (h >= 16 && h < 18) {
+          return { name: '夕陽晚霞', color: 0xd97706, alpha: 0.18, isNight: false };
+        } else if (h >= 18 && h < 20) {
+          return { name: '掌燈黃昏', color: 0x4c1d95, alpha: 0.28, isNight: false };
+        } else if (h >= 20 || h < 5) {
+          return { name: '月黑風高', color: 0x080a14, alpha: 0.72, isNight: true };
+        } else {
+          return { name: '拂曉破曉', color: 0x3b82f6, alpha: 0.18, isNight: false };
+        }
+      }
+    }
+
+    // ==========================================
+    // A* 尋路演算法
+    // ==========================================
+    class PathFinder {
+      static findPath(arena, startX, startY, targetX, targetY, isBlockedCallback) {
+        if (startX === targetX && startY === targetY) return [];
+
+        const openSet = [];
+        const closedSet = new Uint8Array(arena.w * arena.h);
+        const cameFrom = new Map();
+        const gScore = new Float32Array(arena.w * arena.h).fill(Infinity);
+        const fScore = new Float32Array(arena.w * arena.h).fill(Infinity);
+
+        const startIdx = arena.idx(startX, startY);
+        gScore[startIdx] = 0;
+        fScore[startIdx] = Math.abs(startX - targetX) + Math.abs(startY - targetY);
+
+        openSet.push({ x: startX, y: startY, f: fScore[startIdx] });
+
+        while (openSet.length > 0) {
+          openSet.sort((a, b) => a.f - b.f);
+          const current = openSet.shift();
+          const currIdx = arena.idx(current.x, current.y);
+
+          const distToTarget = Math.abs(current.x - targetX) + Math.abs(current.y - targetY);
+          if (distToTarget <= 1) {
+            const path = [];
+            let currKey = `${current.x},${current.y}`;
+            while (cameFrom.has(currKey)) {
+              const prev = cameFrom.get(currKey);
+              path.unshift({ x: parseInt(currKey.split(',')[0]), y: parseInt(currKey.split(',')[1]) });
+              currKey = `${prev.x},${prev.y}`;
+            }
+            return path;
+          }
+
+          closedSet[currIdx] = 1;
+
+          const neighbors = [
+            { x: current.x, y: current.y - 1 },
+            { x: current.x, y: current.y + 1 },
+            { x: current.x - 1, y: current.y },
+            { x: current.x + 1, y: current.y }
+          ];
+
+          for (const nb of neighbors) {
+            if (nb.x < 0 || nb.x >= arena.w || nb.y < 0 || nb.y >= arena.h) continue;
+            const nbIdx = arena.idx(nb.x, nb.y);
+            if (closedSet[nbIdx]) continue;
+
+            const moveCost = arena.getMovementCost(nb.x, nb.y);
+            if (moveCost >= 9999) continue;
+            if (isBlockedCallback(nb.x, nb.y) && !(nb.x === targetX && nb.y === targetY)) continue;
+
+            const tentativeG = gScore[currIdx] + moveCost;
+            if (tentativeG < gScore[nbIdx]) {
+              cameFrom.set(`${nb.x},${nb.y}`, current);
+              gScore[nbIdx] = tentativeG;
+              const h = (Math.abs(nb.x - targetX) + Math.abs(nb.y - targetY)) * 100;
+              fScore[nbIdx] = tentativeG + h;
+
+              if (!openSet.some(n => n.x === nb.x && n.y === nb.y)) {
+                openSet.push({ x: nb.x, y: nb.y, f: fScore[nbIdx] });
+              }
+            }
+          }
+        }
+        return [];
+      }
+    }
+
+    // ==========================================
+    // 大地圖管理器
+    // ==========================================
+    class OverworldManager {
+      constructor(mapData) {
+        this.w = mapData.w;
+        this.h = mapData.h;
+        this.defs = mapData.terrainDefs;
+        this.tiles = new Uint8Array(this.w * this.h);
+        this.roamingEnemies = [];
+        this.initWorld();
+      }
+
+      idx(x, y) { return y * this.w + x; }
+
+      initWorld() {
+        this.tiles.fill(this.defs.PLAINS.id);
+
+        for (let x = 6; x < 10; x++) this.tiles[this.idx(x, 5)] = this.defs.MOUNTAIN.id;
+        for (let y = 5; y < 11; y++) this.tiles[this.idx(9, y)] = this.defs.MOUNTAIN.id;
+
+        for (let x = 1; x < 5; x++) {
+          for (let y = 8; y < 14; y++) {
+            if (Math.random() < 0.7) this.tiles[this.idx(x, y)] = this.defs.FOREST.id;
+          }
+        }
+
+        for (let x = 3; x < 6; x++) {
+          for (let y = 2; y < 5; y++) {
+            if (this.tiles[this.idx(x, y)] === this.defs.PLAINS.id) {
+              this.tiles[this.idx(x, y)] = this.defs.HILLS.id;
+            }
+          }
+        }
+
+        this.tiles[this.idx(7, 3)] = this.defs.INN.id;
+        this.tiles[this.idx(13, 11)] = this.defs.TOWN.id;
+
+        this.roamingEnemies.push({
+          id: 'bandit_scout',
+          name: '黑風寨巡山嘍囉',
+          x: 4,
+          y: 3,
+          isBoss: false,
+          color: 0xf87171,
+          visualX: 4 * TILE_PX,
+          visualY: 3 * TILE_PX
+        });
+      }
+
+      getTileData(x, y) {
+        const id = this.tiles[this.idx(x, y)];
+        for (const k in this.defs) {
+          if (this.defs[k].id === id) return this.defs[k];
+        }
+        return this.defs.PLAINS;
+      }
+
+      isPassable(x, y) {
+        if (x < 0 || x >= this.w || y < 0 || y >= this.h) return false;
+        return this.getTileData(x, y).hourCost < 900;
+      }
+
+      // 支援原生解析 Tiled JSON (.tmj) 視覺地圖格式
+      loadFromTiled(tiledJson) {
+        if (!tiledJson || !tiledJson.layers) return;
+        const layer = tiledJson.layers.find(l => l.type === 'tilelayer');
+        if (layer && layer.data) {
+          const gidMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5 };
+          for (let i = 0; i < Math.min(layer.data.length, this.tiles.length); i++) {
+            const gid = layer.data[i];
+            this.tiles[i] = gidMap[gid] !== undefined ? gidMap[gid] : 0;
+          }
+        }
+      }
+    }
+
+    // ==========================================
+    // 戰術小地圖
+    // ==========================================
+    class BattleArena {
+      constructor(w, h, envTypeId) {
+        this.w = w;
+        this.h = h;
+        this.tiles = new Uint8Array(w * h);
+        this.surfaces = new Uint8Array(w * h);
+        this.duration = new Int16Array(w * h);
+        this.initArena(envTypeId);
+      }
+
+      idx(x, y) { return y * this.w + x; }
+
+      initArena(envTypeId) {
+        this.tiles.fill(BATTLE_TILE.FLOOR.id);
+
+        for (let x = 0; x < this.w; x++) {
+          for (let y = 0; y < this.h; y++) {
+            if (x === 0 || x === this.w - 1 || y === 0 || y === this.h - 1) {
+              this.tiles[this.idx(x, y)] = BATTLE_TILE.WALL.id;
+            }
+          }
+        }
+
+        // 掩體
+        this.tiles[this.idx(7, 6)] = BATTLE_TILE.WALL.id;
+        this.tiles[this.idx(7, 7)] = BATTLE_TILE.WALL.id;
+        this.tiles[this.idx(7, 8)] = BATTLE_TILE.WALL.id;
+        this.tiles[this.idx(7, 9)] = BATTLE_TILE.WALL.id;
+
+        // 泥濘
+        this.tiles[this.idx(5, 4)] = BATTLE_TILE.MUD.id;
+        this.tiles[this.idx(6, 4)] = BATTLE_TILE.MUD.id;
+        this.tiles[this.idx(5, 5)] = BATTLE_TILE.MUD.id;
+
+        // 深水
+        this.tiles[this.idx(9, 8)] = BATTLE_TILE.WATER.id;
+        this.tiles[this.idx(10, 8)] = BATTLE_TILE.WATER.id;
+        this.tiles[this.idx(9, 9)] = BATTLE_TILE.WATER.id;
+
+        // 碎石坡
+        this.tiles[this.idx(10, 4)] = BATTLE_TILE.RUBBLE.id;
+        this.tiles[this.idx(11, 4)] = BATTLE_TILE.RUBBLE.id;
+
+        // 火油
+        this.surfaces[this.idx(6, 8)] = BATTLE_SURFACE.OIL;
+        this.duration[this.idx(6, 8)] = 99;
+      }
+
+      getTileData(x, y) {
+        const id = this.tiles[this.idx(x, y)];
+        for (const k in BATTLE_TILE) {
+          if (BATTLE_TILE[k].id === id) return BATTLE_TILE[k];
+        }
+        return BATTLE_TILE.FLOOR;
+      }
+
+      getMovementCost(x, y) {
+        const tile = this.getTileData(x, y);
+        if (tile.cost >= 9999) return 9999;
+        const surf = this.surfaces[this.idx(x, y)];
+        if (surf === BATTLE_SURFACE.ICE) return 40;
+        return tile.cost;
+      }
+
+      tickEnvironment(log) {
+        const nextSurf = new Uint8Array(this.surfaces);
+        const nextDur = new Int16Array(this.duration);
+
+        for (let x = 1; x < this.w - 1; x++) {
+          for (let y = 1; y < this.h - 1; y++) {
+            const i = this.idx(x, y);
+            if (this.surfaces[i] === BATTLE_SURFACE.FIRE) {
+              nextDur[i]--;
+              const neighbors = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]];
+              for (const [nx, ny] of neighbors) {
+                const ni = this.idx(nx, ny);
+                if (this.surfaces[ni] === BATTLE_SURFACE.OIL) {
+                  nextSurf[ni] = BATTLE_SURFACE.FIRE;
+                  nextDur[ni] = 4;
+                  log(`<span class="log-combat">【爆燃】</span>火勢順著油面迅速引爆蔓延！`);
+                }
+              }
+              if (nextDur[i] <= 0) nextSurf[i] = BATTLE_SURFACE.NONE;
+            } else if (this.surfaces[i] === BATTLE_SURFACE.ICE) {
+              nextDur[i]--;
+              if (nextDur[i] <= 0) nextSurf[i] = BATTLE_SURFACE.NONE;
+            }
+          }
+        }
+        this.surfaces = nextSurf;
+        this.duration = nextDur;
+      }
+
+      // 支援原生解析戰術小地圖 Tiled JSON
+      loadFromTiled(tiledJson) {
+        if (!tiledJson || !tiledJson.layers) return;
+        const layer = tiledJson.layers.find(l => l.type === 'tilelayer');
+        if (layer && layer.data) {
+          for (let i = 0; i < Math.min(layer.data.length, this.tiles.length); i++) {
+            this.tiles[i] = Math.max(0, (layer.data[i] - 1));
+          }
+        }
+      }
+    }
+
+    // ==========================================
+    // Pixi.js 遊戲主引擎 (WebGL Rendering Engine)
+    // ==========================================
+    class PixiGameEngine {
+      constructor() {
+        // 初始化 Pixi Application
+        this.app = new PIXI.Application({
+          width: VIEW_SIZE,
+          height: VIEW_SIZE,
+          backgroundColor: 0x08090d,
+          resolution: window.devicePixelRatio || 1,
+          autoDensity: true,
+          antialias: true
+        });
+
+        document.getElementById('pixi-viewport').appendChild(this.app.view);
+
+        this.mode = MODE.OVERWORLD;
+        this.clock = new WorldClock(1, 8);
+
+        this.player = {
+          name: '李暮雲',
+          title: '初入江湖的無名散客',
+          realm: '二流高手',
+          hp: 100,
+          maxHp: 100,
+          qi: 80,
+          maxQi: 80,
+          gold: 50,
+          speed: 100,
+          energy: 100,
+          stunnedTurns: 0,
+          owX: 7,
+          owY: 4,
+          bx: 3,
+          by: 8,
+          // 平滑動畫座標
+          visualX: 7 * TILE_PX,
+          visualY: 4 * TILE_PX,
+          attributes: {
+            str: 24,       // 臂力
+            agi: 28,       // 身法
+            con: 22,       // 根骨
+            wis: 26,       // 悟性
+            lck: 18,       // 福緣
+            rep: 15,       // 江湖聲望
+            strain: 0      // 經脈負荷
+          },
+          equipment: {
+            weapon: {
+              name: '寒鐵青鋒劍',
+              tier: '上品',
+              tierClass: 'tier-purple',
+              stat: '攻擊 +25 ｜ 招式速度 +5% ｜ 15% 觸發【霜凍】',
+              desc: '長白山地底寒鐵鍛造，劍身清幽，出鞘生霜。'
+            },
+            armor: {
+              name: '流雲夜行袍',
+              tier: '良品',
+              tierClass: 'tier-green',
+              stat: '防禦 +14 ｜ 夜間旅行隱匿度 +25%',
+              desc: '墨蠶生絲混編，輕如蟬翼，極利於夜行暗伏。'
+            },
+            trinket: {
+              name: '白玉長生珮',
+              tier: '寶器',
+              tierClass: 'tier-gold',
+              stat: '生命上限 +20 ｜ 大地圖行進真氣自回 +2/h',
+              desc: '溫潤羊脂古玉，暗藏靜氣凝神之微光。'
+            }
+          }
+        };
+
+        this.overworld = new OverworldManager(DEFAULT_OVERWORLD_DATA);
+        this.activeQuest = null;
+
+        this.battleArena = null;
+        this.battleEnemies = [];
+        this.selectedBattleAction = 'MOVE';
+        this.waitingBattlePlayer = true;
+
+        this.initSceneGraph();
+        this.initInput();
+        this.initTicker();
+
+        this.addLog('<span class="log-world">【Pixi.js 2D 引擎啟動】</span>硬體 WebGL 渲染管線與動畫插值已就緒。');
+        this.updateUI();
+        this.rebuildOverworldDisplay();
+      }
+
+      addLog(msg) {
+        const box = document.getElementById('combat-log');
+        if (!box) return;
+        const line = document.createElement('div');
+        line.className = 'log-entry';
+        line.innerHTML = msg;
+        // 最新訊息插入在最上方 (由新到舊)
+        box.prepend(line);
+
+        // 維持最多 200 筆 (移除最底層最舊訊息)
+        while (box.children.length > 200) {
+          box.removeChild(box.lastChild);
+        }
+
+        box.scrollTop = 0;
+      }
+
+      // 建立 Pixi.js 場景圖 (SceneGraph)
+      initSceneGraph() {
+        this.overworldContainer = new PIXI.Container();
+        this.battleContainer = new PIXI.Container();
+        this.battleContainer.visible = false;
+
+        // 大地圖圖層
+        this.owTileGraphics = new PIXI.Graphics();
+        this.owLabelsContainer = new PIXI.Container();
+        this.owEnemiesContainer = new PIXI.Container();
+        this.owPlayerGraphic = new PIXI.Graphics();
+        this.owLightingGraphic = new PIXI.Graphics();
+
+        this.overworldContainer.addChild(this.owTileGraphics);
+        this.overworldContainer.addChild(this.owLabelsContainer);
+        this.overworldContainer.addChild(this.owEnemiesContainer);
+        this.overworldContainer.addChild(this.owPlayerGraphic);
+        this.overworldContainer.addChild(this.owLightingGraphic);
+
+        // 戰術小地圖圖層
+        this.battleTileGraphics = new PIXI.Graphics();
+        this.battleSurfacesGraphics = new PIXI.Graphics();
+        this.battleEntitiesContainer = new PIXI.Container();
+        this.battlePlayerGraphic = new PIXI.Graphics();
+
+        this.battleContainer.addChild(this.battleTileGraphics);
+        this.battleContainer.addChild(this.battleSurfacesGraphics);
+        this.battleContainer.addChild(this.battleEntitiesContainer);
+        this.battleContainer.addChild(this.battlePlayerGraphic);
+
+        this.app.stage.addChild(this.overworldContainer);
+        this.app.stage.addChild(this.battleContainer);
+      }
+
+      // 每幀動畫更新與平滑插值 (Ticker Loop)
+      initTicker() {
+        this.app.ticker.add((delta) => {
+          const lerpFactor = 0.22 * delta;
+
+          if (this.mode === MODE.OVERWORLD) {
+            // 平滑插值玩家視覺座標
+            const targetX = this.player.owX * TILE_PX;
+            const targetY = this.player.owY * TILE_PX;
+            this.player.visualX += (targetX - this.player.visualX) * lerpFactor;
+            this.player.visualY += (targetY - this.player.visualY) * lerpFactor;
+
+            this.drawOverworldPlayer();
+            this.drawOverworldLighting();
+          } else if (this.mode === MODE.BATTLE) {
+            const targetX = this.player.bx * TILE_PX;
+            const targetY = this.player.by * TILE_PX;
+            this.player.visualX += (targetX - this.player.visualX) * lerpFactor;
+            this.player.visualY += (targetY - this.player.visualY) * lerpFactor;
+
+            this.drawBattlePlayer();
+            this.updateBattleEntitiesDisplay(lerpFactor);
+          }
+        });
+      }
+
+      // 重繪大地圖底層網格與據點文字
+      rebuildOverworldDisplay() {
+        this.owTileGraphics.clear();
+        this.owLabelsContainer.removeChildren();
+
+        for (let x = 0; x < this.overworld.w; x++) {
+          for (let y = 0; y < this.overworld.h; y++) {
+            const tile = this.overworld.getTileData(x, y);
+            const px = x * TILE_PX;
+            const py = y * TILE_PX;
+
+            this.owTileGraphics.beginFill(tile.color);
+            this.owTileGraphics.lineStyle(1, 0xffffff, 0.04);
+            this.owTileGraphics.drawRect(px, py, TILE_PX, TILE_PX);
+            this.owTileGraphics.endFill();
+
+            if (tile.icon) {
+              const text = new PIXI.Text(tile.icon, {
+                fontFamily: 'PingFang TC, Microsoft JhengHei, sans-serif',
+                fontSize: 12,
+                fill: 0xf8fafc,
+                fontWeight: 'bold'
+              });
+              text.anchor.set(0.5);
+              text.x = px + 20;
+              text.y = py + 20;
+              this.owLabelsContainer.addChild(text);
+            }
+          }
+        }
+        this.updateOverworldEnemiesDisplay();
+      }
+
+      updateOverworldEnemiesDisplay() {
+        this.owEnemiesContainer.removeChildren();
+        for (const e of this.overworld.roamingEnemies) {
+          const g = new PIXI.Graphics();
+          g.beginFill(e.color);
+          g.drawCircle(0, 0, 13);
+          g.endFill();
+          g.x = e.x * TILE_PX + 20;
+          g.y = e.y * TILE_PX + 20;
+
+          const nameText = new PIXI.Text(e.isBoss ? '首領' : '盜匪', {
+            fontFamily: 'sans-serif',
+            fontSize: 10,
+            fill: 0xffffff,
+            fontWeight: 'bold'
+          });
+          nameText.anchor.set(0.5);
+          nameText.y = -18;
+          g.addChild(nameText);
+
+          this.owEnemiesContainer.addChild(g);
+        }
+      }
+
+      drawOverworldPlayer() {
+        const g = this.owPlayerGraphic;
+        g.clear();
+        const px = this.player.visualX + 20;
+        const py = this.player.visualY + 20;
+
+        // 俠客主體
+        g.beginFill(0x60a5fa);
+        g.lineStyle(2, 0xbfdbfe, 1);
+        g.drawCircle(px, py, 15);
+        g.endFill();
+      }
+
+      drawOverworldLighting() {
+        const g = this.owLightingGraphic;
+        g.clear();
+        const light = this.clock.getLighting();
+
+        if (light.alpha > 0) {
+          if (light.isNight) {
+            // 深夜：四周黑暗，玩家提燈照明
+            const px = this.player.visualX + 20;
+            const py = this.player.visualY + 20;
+
+            // 繪製黑夜遮罩
+            g.beginFill(0x080a14, 0.75);
+            g.drawRect(0, 0, VIEW_SIZE, VIEW_SIZE);
+            // 提燈破開黑暗
+            g.beginHole();
+            g.drawCircle(px, py, 110);
+            g.endHole();
+            g.endFill();
+
+            // 提燈柔和光暈圈
+            g.lineStyle(3, 0xfbbf24, 0.25);
+            g.drawCircle(px, py, 108);
+          } else {
+            // 黃昏/破曉濾鏡
+            g.beginFill(light.color, light.alpha);
+            g.drawRect(0, 0, VIEW_SIZE, VIEW_SIZE);
+            g.endFill();
+          }
+        }
+      }
+
+      // 重繪戰鬥網格
+      rebuildBattleDisplay() {
+        const a = this.battleArena;
+        this.battleTileGraphics.clear();
+
+        for (let x = 0; x < a.w; x++) {
+          for (let y = 0; y < a.h; y++) {
+            const px = x * TILE_PX;
+            const py = y * TILE_PX;
+            const tile = a.getTileData(x, y);
+
+            this.battleTileGraphics.beginFill(tile.color);
+            this.battleTileGraphics.lineStyle(1, tile.border, 1);
+            this.battleTileGraphics.drawRect(px, py, TILE_PX, TILE_PX);
+            this.battleTileGraphics.endFill();
+          }
+        }
+        this.redrawBattleSurfaces();
+      }
+
+      redrawBattleSurfaces() {
+        const a = this.battleArena;
+        const g = this.battleSurfacesGraphics;
+        g.clear();
+
+        for (let x = 0; x < a.w; x++) {
+          for (let y = 0; y < a.h; y++) {
+            const s = a.surfaces[a.idx(x, y)];
+            const px = x * TILE_PX;
+            const py = y * TILE_PX;
+
+            if (s === BATTLE_SURFACE.FIRE) {
+              g.beginFill(0xef4444, 0.72);
+              g.drawRect(px + 3, py + 3, TILE_PX - 6, TILE_PX - 6);
+              g.endFill();
+            } else if (s === BATTLE_SURFACE.OIL) {
+              g.beginFill(0xb45309, 0.65);
+              g.drawRect(px + 3, py + 3, TILE_PX - 6, TILE_PX - 6);
+              g.endFill();
+            } else if (s === BATTLE_SURFACE.ICE) {
+              g.beginFill(0x93c5fd, 0.65);
+              g.drawRect(px + 3, py + 3, TILE_PX - 6, TILE_PX - 6);
+              g.endFill();
+            }
+          }
+        }
+      }
+
+      drawBattlePlayer() {
+        const g = this.battlePlayerGraphic;
+        g.clear();
+        const px = this.player.visualX + 20;
+        const py = this.player.visualY + 20;
+
+        g.beginFill(0x60a5fa);
+        g.lineStyle(1.5, 0xffffff, 1);
+        g.drawCircle(px, py, 14);
+        g.endFill();
+      }
+
+      updateBattleEntitiesDisplay(lerpFactor) {
+        this.battleEntitiesContainer.removeChildren();
+
+        for (const e of this.battleEnemies) {
+          if (e.hp <= 0) continue;
+
+          // 平滑插值
+          const targetX = e.x * TILE_PX;
+          const targetY = e.y * TILE_PX;
+          if (e.visualX === undefined) { e.visualX = targetX; e.visualY = targetY; }
+          e.visualX += (targetX - e.visualX) * lerpFactor;
+          e.visualY += (targetY - e.visualY) * lerpFactor;
+
+          const g = new PIXI.Graphics();
+          const ex = e.visualX + 20;
+          const ey = e.visualY + 20;
+
+          g.beginFill(e.color);
+          g.drawCircle(ex, ey, 14);
+          g.endFill();
+
+          if (e.stunnedTurns > 0) {
+            g.lineStyle(3, 0xfbbf24, 1);
+            g.drawCircle(ex, ey, 14);
+          }
+
+          // 血量條
+          g.beginFill(0x000000, 0.7);
+          g.drawRect(ex - 17, ey - 22, 34, 4);
+          g.endFill();
+
+          g.beginFill(0xef4444, 1);
+          g.drawRect(ex - 17, ey - 22, 34 * Math.max(0, e.hp / e.maxHp), 4);
+          g.endFill();
+
+          const nameText = new PIXI.Text(e.name, {
+            fontFamily: 'sans-serif',
+            fontSize: 10,
+            fill: 0xf8fafc,
+            fontWeight: 'bold'
+          });
+          nameText.anchor.set(0.5);
+          nameText.x = ex;
+          nameText.y = ey - 27;
+
+          this.battleEntitiesContainer.addChild(g);
+          this.battleEntitiesContainer.addChild(nameText);
+        }
+      }
+
+      updateUI() {
+        document.getElementById('ui-hp').innerText = `${this.player.hp}/${this.player.maxHp}`;
+        document.getElementById('ui-gold').innerText = `${this.player.gold} 兩`;
+        document.getElementById('ui-time-str').innerText = this.clock.getFormattedString();
+
+        const modeTag = document.getElementById('ui-mode-tag');
+        const pOverworld = document.getElementById('panel-overworld');
+        const pBattle = document.getElementById('panel-battle');
+
+        if (this.mode === MODE.OVERWORLD) {
+          modeTag.innerText = '大地圖漫遊';
+          modeTag.className = 'mode-tag tag-overworld';
+          pOverworld.style.display = 'block';
+          pBattle.style.display = 'none';
+
+          const currentTile = this.overworld.getTileData(this.player.owX, this.player.owY);
+          document.getElementById('ui-pos').innerText = `${currentTile.name} (${this.player.owX}, ${this.player.owY})`;
+          document.getElementById('ow-tip-name').innerText = currentTile.name;
+          document.getElementById('ow-tip-cost').innerText = `${currentTile.hourCost} 小時`;
+
+          const lighting = this.clock.getLighting();
+          document.getElementById('ui-lighting-tag').innerText = lighting.isNight ? `☽ ${lighting.name}` : `☼ ${lighting.name}`;
+        } else {
+          modeTag.innerText = '戰術小地圖交鋒';
+          modeTag.className = 'mode-tag tag-battle';
+          pOverworld.style.display = 'none';
+          pBattle.style.display = 'block';
+          document.getElementById('ui-energy').innerText = `能量: ${this.player.energy}/100`;
+
+          const tile = this.battleArena.getTileData(this.player.bx, this.player.by);
+          const cost = this.battleArena.getMovementCost(this.player.bx, this.player.by);
+          document.getElementById('tip-tile-name').innerText = tile.name;
+          document.getElementById('tip-tile-cost').innerText = cost;
+        }
+      }
+
+      // --- 大地圖旅行 ---
+      moveOverworld(dx, dy) {
+        const nx = this.player.owX + dx;
+        const ny = this.player.owY + dy;
+
+        if (!this.overworld.isPassable(nx, ny)) {
+          this.addLog('<span class="log-warn">【阻礙】</span>崇山峻嶺，無法翻越！');
+          return;
+        }
+
+        const destTile = this.overworld.getTileData(nx, ny);
+        const hoursConsumed = destTile.hourCost;
+
+        this.player.owX = nx;
+        this.player.owY = ny;
+
+        this.clock.advance(hoursConsumed);
+        this.addLog(`<span class="log-time">【跋涉】</span>穿越${destTile.name}，耗時 ${hoursConsumed} 個時辰。時序來到 ${this.clock.getShichenName()}。`);
+
+        const enemyIdx = this.overworld.roamingEnemies.findIndex(e => e.x === nx && e.y === ny);
+        if (enemyIdx !== -1) {
+          this.startBattle(this.overworld.roamingEnemies[enemyIdx], enemyIdx);
+          return;
+        }
+
+        if (destTile.id === 4 || destTile.id === 3) {
+          this.addLog(`<span class="log-world">【抵達】</span>抵達了 ${destTile.name}，可按 <kbd>E</kbd> 投宿歇息或打聽消息。`);
+        }
+
+        this.updateUI();
+      }
+
+      // --- 進入戰術死鬥 ---
+      startBattle(enemyData, enemyListIndex) {
+        this.mode = MODE.BATTLE;
+        this.currentEnemyIndex = enemyListIndex;
+
+        this.overworldContainer.visible = false;
+        this.battleContainer.visible = true;
+
+        this.addLog(`<span class="log-combat">【狹路相逢】</span>與「${enemyData.name}」在${this.clock.getShichenName()}展開死鬥！`);
+
+        const currentTile = this.overworld.getTileData(this.player.owX, this.player.owY);
+        this.battleArena = new BattleArena(16, 16, currentTile.id);
+
+        this.player.bx = 3;
+        this.player.by = 8;
+        this.player.visualX = 3 * TILE_PX;
+        this.player.visualY = 8 * TILE_PX;
+        this.player.energy = 100;
+        this.player.stunnedTurns = 0;
+
+        this.battleEnemies = [{
+          id: enemyData.id,
+          name: enemyData.name,
+          x: 12,
+          y: 7,
+          visualX: 12 * TILE_PX,
+          visualY: 7 * TILE_PX,
+          hp: enemyData.isBoss ? 160 : 75,
+          maxHp: enemyData.isBoss ? 160 : 75,
+          speed: enemyData.isBoss ? 110 : 85,
+          energy: 0,
+          stunnedTurns: 0,
+          color: enemyData.color
+        }];
+
+        this.selectedBattleAction = 'MOVE';
+        this.waitingBattlePlayer = true;
+        this.rebuildBattleDisplay();
+        this.updateUI();
+      }
+
+      // --- 戰鬥行動處理 ---
+      handleBattleAction(dx, dy) {
+        if (!this.waitingBattlePlayer) return;
+        const p = this.player;
+
+        if (this.selectedBattleAction === 'MOVE') {
+          const tx = p.bx + dx;
+          const ty = p.by + dy;
+          const target = this.battleEnemies.find(e => e.x === tx && e.y === ty && e.hp > 0);
+
+          if (target) {
+            target.hp -= 20;
+            this.addLog(`<span class="log-combat">【出拳】</span>掌風正中 ${target.name}，造成 20 點傷害！`);
+            p.energy -= 100;
+            this.checkBattleStatus();
+            this.advanceBattleTime();
+            return;
+          }
+
+          const moveCost = this.battleArena.getMovementCost(tx, ty);
+          if (moveCost >= 9999) {
+            this.addLog('<span class="log-warn">【阻擋】</span>此處為堅實岩壁，無法穿透！');
+            return;
+          }
+
+          p.bx = tx;
+          p.by = ty;
+          p.energy -= moveCost;
+
+          const tile = this.battleArena.getTileData(tx, ty);
+          if (moveCost > 100) {
+            this.addLog(`<span class="log-warn">【艱難跋涉】</span>踏入${tile.name}，耗費 ${moveCost} 點能量！`);
+          } else if (moveCost < 100) {
+            this.addLog(`<span class="log-world">【如履薄冰】</span>踏上冰面順勢疾行，僅耗費 ${moveCost} 能量！`);
+          }
+
+          this.advanceBattleTime();
+        } else if (this.selectedBattleAction === 'FIRE_PALM') {
+          const tx = p.bx + dx;
+          const ty = p.by + dy;
+          const target = this.battleEnemies.find(e => e.x === tx && e.y === ty && e.hp > 0);
+
+          if (target) {
+            target.hp -= 35;
+            this.addLog(`<span class="log-combat">【烈陽神掌】</span>陽勁震退 ${target.name} 並引發爆燃！`);
+            for (let k = 0; k < 2; k++) {
+              const kx = target.x + dx;
+              const ky = target.y + dy;
+              if (this.battleArena.getMovementCost(kx, ky) < 9999) {
+                target.x = kx;
+                target.y = ky;
+              } else {
+                target.hp -= 15;
+                target.stunnedTurns = 1;
+                this.addLog(`<span class="log-warn">【撞擊震傷】</span>${target.name} 撞擊岩壁暈眩 1 回合！`);
+                break;
+              }
+            }
+            const sidx = this.battleArena.idx(target.x, target.y);
+            this.battleArena.surfaces[sidx] = BATTLE_SURFACE.FIRE;
+            this.battleArena.duration[sidx] = 4;
+            this.redrawBattleSurfaces();
+          }
+          p.energy -= 120;
+          this.selectedBattleAction = 'MOVE';
+          this.checkBattleStatus();
+          this.advanceBattleTime();
+        } else if (this.selectedBattleAction === 'FROST_FINGER') {
+          this.addLog(`<span class="log-combat">【玄冥指】</span>陰寒指力破空，凍結直線 4 格！`);
+          for (let step = 1; step <= 4; step++) {
+            const rx = p.bx + dx * step;
+            const ry = p.by + dy * step;
+            if (this.battleArena.getMovementCost(rx, ry) >= 9999) break;
+
+            const idx = this.battleArena.idx(rx, ry);
+            this.battleArena.surfaces[idx] = BATTLE_SURFACE.ICE;
+            this.battleArena.duration[idx] = 6;
+
+            const target = this.battleEnemies.find(e => e.x === rx && e.y === ry && e.hp > 0);
+            if (target) {
+              target.hp -= 25;
+              target.stunnedTurns = 1;
+              this.addLog(`<span class="log-combat">【寒冰透穴】</span>${target.name} 穴道受制，凍結暈眩 1 回合！`);
+              break;
+            }
+          }
+          this.redrawBattleSurfaces();
+          p.energy -= 90;
+          this.selectedBattleAction = 'MOVE';
+          this.checkBattleStatus();
+          this.advanceBattleTime();
+        } else if (this.selectedBattleAction === 'THROW_OIL') {
+          const ox = p.bx + dx * 2;
+          const oy = p.by + dy * 2;
+          if (this.battleArena.getMovementCost(ox, oy) < 9999) {
+            const oidx = this.battleArena.idx(ox, oy);
+            this.battleArena.surfaces[oidx] = BATTLE_SURFACE.OIL;
+            this.battleArena.duration[oidx] = 99;
+            this.addLog(`<span class="log-combat">【潑油】</span>油罈碎裂，鋪滿易燃火油！`);
+            this.redrawBattleSurfaces();
+          }
+          p.energy -= 80;
+          this.selectedBattleAction = 'MOVE';
+          this.advanceBattleTime();
+        }
+      }
+
+      advanceBattleTime() {
+        this.waitingBattlePlayer = false;
+
+        while (!this.waitingBattlePlayer && this.mode === MODE.BATTLE) {
+          const readyEnemy = this.battleEnemies.find(e => e.energy >= 100 && e.hp > 0);
+          if (readyEnemy) {
+            this.executeEnemyAction(readyEnemy);
+            continue;
+          }
+
+          if (this.player.energy >= 100) {
+            if (this.player.stunnedTurns > 0) {
+              this.player.stunnedTurns--;
+              this.player.energy -= 100;
+              this.addLog('<span class="log-warn">【脫力】</span>氣血逆流，無法出招！');
+              continue;
+            }
+            this.waitingBattlePlayer = true;
+            this.updateUI();
+            return;
+          }
+
+          this.player.energy += this.player.speed;
+          for (const e of this.battleEnemies) {
+            if (e.hp > 0) e.energy += e.speed;
+          }
+          this.battleArena.tickEnvironment(msg => this.addLog(msg));
+          this.redrawBattleSurfaces();
+        }
+
+        this.updateUI();
+      }
+
+      executeEnemyAction(enemy) {
+        if (enemy.stunnedTurns > 0) {
+          enemy.stunnedTurns--;
+          enemy.energy -= 100;
+          return;
+        }
+
+        const dist = Math.abs(this.player.bx - enemy.x) + Math.abs(this.player.by - enemy.y);
+        if (dist === 1) {
+          const dmg = 18;
+          this.player.hp -= dmg;
+          this.addLog(`<span class="log-combat">${enemy.name}</span> 施展毒刃，造成 ${dmg} 點傷害！`);
+          if (this.player.hp <= 0) {
+            alert('你已受重創，被同福鏢局救回客棧...');
+            this.player.hp = 100;
+            this.mode = MODE.OVERWORLD;
+            this.battleContainer.visible = false;
+            this.overworldContainer.visible = true;
+          }
+          enemy.energy -= 100;
+          return;
+        }
+
+        const path = PathFinder.findPath(
+          this.battleArena,
+          enemy.x,
+          enemy.y,
+          this.player.bx,
+          this.player.by,
+          (cx, cy) => this.battleEnemies.some(o => o !== enemy && o.x === cx && o.y === cy && o.hp > 0)
+        );
+
+        if (path.length > 0) {
+          const nextStep = path[0];
+          const moveCost = this.battleArena.getMovementCost(nextStep.x, nextStep.y);
+
+          if (enemy.energy >= moveCost) {
+            enemy.x = nextStep.x;
+            enemy.y = nextStep.y;
+            enemy.energy -= moveCost;
+
+            if (this.battleArena.surfaces[this.battleArena.idx(enemy.x, enemy.y)] === BATTLE_SURFACE.FIRE) {
+              enemy.hp -= 15;
+              this.addLog(`<span class="log-warn">【焦灼】</span>${enemy.name} 穿過火海受 15 點灼燒傷害！`);
+              if (enemy.hp <= 0) this.checkBattleStatus();
+            }
+          } else {
+            enemy.energy -= 50;
+          }
+        } else {
+          enemy.energy -= 100;
+        }
+      }
+
+      checkBattleStatus() {
+        const aliveEnemies = this.battleEnemies.filter(e => e.hp > 0);
+        if (aliveEnemies.length === 0) {
+          this.addLog('<span class="log-world">【大獲全勝】</span>敵手伏誅！搜得碎銀 35 兩。');
+          this.player.gold += 35;
+
+          if (this.activeQuest && this.overworld.roamingEnemies[this.currentEnemyIndex]?.isBoss) {
+            this.addLog('<span class="log-world">【懸賞達成】</span>通緝犯已伏法，可回客棧領取巨額賞金！');
+            this.activeQuest.completed = true;
+          }
+
+          if (this.currentEnemyIndex !== undefined) {
+            this.overworld.roamingEnemies.splice(this.currentEnemyIndex, 1);
+          }
+
+          this.mode = MODE.OVERWORLD;
+          this.battleContainer.visible = false;
+          this.overworldContainer.visible = true;
+          this.updateOverworldEnemiesDisplay();
+          this.updateUI();
+        }
+      }
+
+      initInput() {
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            closeTownDialog();
+            closeCharacterDialog();
+            return;
+          }
+
+          if (e.key === 'c' || e.key === 'C') {
+            toggleCharacterDialog();
+            return;
+          }
+
+          if (this.mode === MODE.OVERWORLD) {
+            switch (e.key) {
+              case 'w': case 'W': case 'ArrowUp': this.moveOverworld(0, -1); break;
+              case 's': case 'S': case 'ArrowDown': this.moveOverworld(0, 1); break;
+              case 'a': case 'A': case 'ArrowLeft': this.moveOverworld(-1, 0); break;
+              case 'd': case 'D': case 'ArrowRight': this.moveOverworld(1, 0); break;
+              case 'e': case 'E': case 'Enter': openCurrentTownDialog(); break;
+            }
+          } else if (this.mode === MODE.BATTLE) {
+            switch (e.key) {
+              case 'w': case 'W': case 'ArrowUp': this.handleBattleAction(0, -1); break;
+              case 's': case 'S': case 'ArrowDown': this.handleBattleAction(0, 1); break;
+              case 'a': case 'A': case 'ArrowLeft': this.handleBattleAction(-1, 0); break;
+              case 'd': case 'D': case 'ArrowRight': this.handleBattleAction(1, 0); break;
+              case '1': selectBattleAction('FIRE_PALM'); break;
+              case '2': selectBattleAction('FROST_FINGER'); break;
+              case '3': selectBattleAction('THROW_OIL'); break;
+              case ' ': triggerOverdraw(); break;
+            }
+          }
+        });
+      }
+    }
+
+    let game;
+    window.onload = () => {
+      game = new PixiGameEngine();
+    };
+
+    // 人物詳細屬性與裝備介面控制
+    function toggleCharacterDialog() {
+      const dlg = document.getElementById('char-dialog');
+      if (dlg.style.display === 'block') {
+        closeCharacterDialog();
+      } else {
+        openCharacterDialog();
+      }
+    }
+
+    function openCharacterDialog() {
+      document.getElementById('char-dialog').style.display = 'block';
+      updateCharacterUI();
+    }
+
+    function closeCharacterDialog() {
+      document.getElementById('char-dialog').style.display = 'none';
+    }
+
+    function updateCharacterUI() {
+      if (!game) return;
+      const p = game.player;
+
+      const setTxt = (id, txt) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = txt;
+      };
+
+      setTxt('char-name', p.name);
+      setTxt('char-title', p.title);
+      setTxt('char-realm', p.realm);
+
+      setTxt('c-hp', `${p.hp} / ${p.maxHp}`);
+      setTxt('c-qi', `${p.qi} / ${p.maxQi}`);
+      setTxt('c-speed', `${p.speed} 點`);
+      if (p.attributes) {
+        setTxt('c-str', p.attributes.str);
+        setTxt('c-agi', p.attributes.agi);
+        setTxt('c-con', p.attributes.con);
+        setTxt('c-wis', p.attributes.wis);
+        setTxt('c-lck', p.attributes.lck);
+        setTxt('c-rep', `${p.attributes.rep} (籍籍無名)`);
+
+        const strainEl = document.getElementById('c-strain');
+        if (strainEl) {
+          if (p.attributes.strain > 0) {
+            strainEl.innerText = `${p.attributes.strain}% (經脈受創)`;
+            strainEl.style.color = '#f87171';
+          } else {
+            strainEl.innerText = '0% (安好無損)';
+            strainEl.style.color = '#34d399';
+          }
+        }
+      }
+
+      // 裝備卡片更新
+      const eq = p.equipment;
+      if (eq) {
+        if (eq.weapon) {
+          setTxt('eq-weapon-name', eq.weapon.name);
+          setTxt('eq-weapon-tier', eq.weapon.tier);
+          const el = document.getElementById('eq-weapon-tier');
+          if (el) el.className = `equip-tier ${eq.weapon.tierClass}`;
+          setTxt('eq-weapon-stat', eq.weapon.stat);
+          setTxt('eq-weapon-desc', eq.weapon.desc);
+        }
+        if (eq.armor) {
+          setTxt('eq-armor-name', eq.armor.name);
+          setTxt('eq-armor-tier', eq.armor.tier);
+          const el = document.getElementById('eq-armor-tier');
+          if (el) el.className = `equip-tier ${eq.armor.tierClass}`;
+          setTxt('eq-armor-stat', eq.armor.stat);
+          setTxt('eq-armor-desc', eq.armor.desc);
+        }
+        if (eq.trinket) {
+          setTxt('eq-trinket-name', eq.trinket.name);
+          setTxt('eq-trinket-tier', eq.trinket.tier);
+          const el = document.getElementById('eq-trinket-tier');
+          if (el) el.className = `equip-tier ${eq.trinket.tierClass}`;
+          setTxt('eq-trinket-stat', eq.trinket.stat);
+          setTxt('eq-trinket-desc', eq.trinket.desc);
+        }
+      }
+    }
+
+    function selectBattleAction(type) {
+      if (game && game.mode === MODE.BATTLE) {
+        game.selectedBattleAction = type;
+        const map = { 'MOVE': 'btn-move', 'FIRE_PALM': 'btn-fire', 'FROST_FINGER': 'btn-frost', 'THROW_OIL': 'btn-oil' };
+        for (const [k, id] of Object.entries(map)) {
+          document.getElementById(id).classList.toggle('active', k === type);
+        }
+      }
+    }
+
+    function triggerOverdraw() {
+      if (game && game.mode === MODE.BATTLE && game.waitingBattlePlayer) {
+        game.player.energy += 100;
+        game.player.stunnedTurns = 2;
+        game.addLog('<span class="log-warn">【經脈暴走】</span>強行借支 100 能量！下回合將進入脫力！');
+        game.updateUI();
+      }
+    }
+
+    function playerBattleWait() {
+      if (game && game.mode === MODE.BATTLE && game.waitingBattlePlayer) {
+        game.player.energy -= 100;
+        game.advanceBattleTime();
+      }
+    }
+
+    function openCurrentTownDialog() {
+      if (!game || game.mode !== MODE.OVERWORLD) return;
+      const tile = game.overworld.getTileData(game.player.owX, game.player.owY);
+      if (tile.id === 4 || tile.id === 3) {
+        document.getElementById('town-title').innerText = tile.id === 4 ? '🍶 龍門客棧' : '🏯 洛陽大城官府';
+        document.getElementById('town-dialog').style.display = 'block';
+      } else {
+        game.addLog('<span class="log-warn">【提示】</span>此處非客棧或官府，無法入內打聽。');
+      }
+    }
+
+    function closeTownDialog() {
+      document.getElementById('town-dialog').style.display = 'none';
+    }
+
+    function acceptBounty() {
+      if (!game) return;
+      game.activeQuest = {
+        title: '緝拿黑風寨大當家',
+        targetX: 4,
+        targetY: 3,
+        completed: false
+      };
+      game.overworld.roamingEnemies.push({
+        id: 'bounty_boss',
+        name: '黑風寨大當家【連震天】',
+        x: 4,
+        y: 3,
+        isBoss: true,
+        color: 0xef4444,
+        visualX: 4 * TILE_PX,
+        visualY: 3 * TILE_PX
+      });
+      game.addLog('<span class="log-rumor">【揭榜】</span>已接下通緝令！目標【連震天】正盤踞在西北荒丘 (4, 3)。');
+      document.getElementById('quest-status').innerHTML = `
+        <b style="color:#f87171;">【進行中】緝拿黑風寨大當家</b><br>
+        目標座標：西北荒丘 (4, 3)<br>
+        賞金：100 兩碎銀
+      `;
+      closeTownDialog();
+      game.updateOverworldEnemiesDisplay();
+    }
+
+    function restAtInn() {
+      if (!game) return;
+      if (game.player.gold >= 10) {
+        game.player.gold -= 10;
+        game.player.hp = game.player.maxHp;
+        game.clock.advance(8);
+        game.addLog(`<span class="log-world">【打尖投宿】</span>在客棧酣睡一宿(8小時)，氣血全滿。醒來已是 ${game.clock.getFormattedString()}。`);
+        game.updateUI();
+        closeTownDialog();
+      } else {
+        game.addLog('<span class="log-warn">【盤纏不足】</span>碎銀不足 10 兩，店家將你轟了出來。');
+      }
+    }
+  </script>
+</body>
+
+</html>
