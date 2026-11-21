@@ -266,21 +266,19 @@
       justify-content: space-between;
     }
 
-    /* 世界地圖 3x3 邊界雷達略縮圖 HUD */
+    /* 世界地圖 3x3 邊界雷達略縮圖 HUD (嵌入右側面板) */
     #world-radar-hud {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: rgba(13, 16, 26, 0.92);
-      border: 1px solid #2d3748;
-      border-radius: 8px;
-      padding: 10px 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 50;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      background: #161822;
+      border: 1px solid #282d3f;
+      border-radius: 6px;
+      padding: 9px 11px;
+      margin-bottom: 12px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 6px;
       pointer-events: auto;
       transition: all 0.2s ease;
     }
@@ -289,7 +287,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .radar-title {
@@ -311,13 +309,14 @@
 
     .radar-grid {
       display: grid;
-      grid-template-columns: repeat(3, 44px);
-      grid-template-rows: repeat(3, 44px);
+      grid-template-columns: repeat(3, 1fr);
       gap: 4px;
+      margin: 2px 0;
     }
 
     .radar-cell {
       border-radius: 4px;
+      height: 38px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -643,21 +642,6 @@
     <div id="canvas-wrapper">
       <div id="pixi-viewport"></div>
 
-      <!-- 世界地圖 3x3 邊界雷達略縮圖 -->
-      <div id="world-radar-hud">
-        <div class="radar-top">
-          <span class="radar-title">🌍 世界邊界雷達 (3×3)</span>
-          <span class="radar-chunk-badge" id="hud-chunk-coord">區塊 [7, 7]</span>
-        </div>
-        <div class="radar-grid" id="radar-cells-grid">
-          <!-- 3x3 共 9 格動態繪製 -->
-        </div>
-        <div class="radar-status" id="hud-boundary-status">
-          <span class="radar-dot dot-green"></span>
-          <span id="hud-boundary-text">四周疆土相連</span>
-        </div>
-      </div>
-
       <!-- 人物詳細屬性與裝備視窗 -->
       <div id="char-dialog">
         <div class="char-header">
@@ -760,6 +744,21 @@
     <aside id="sidebar">
       <!-- 大地圖面板 -->
       <div class="panel" id="panel-overworld">
+        <!-- 世界地圖 3x3 邊界雷達略縮圖 (獨立置於側邊欄，不遮擋遊戲畫布) -->
+        <div id="world-radar-hud">
+          <div class="radar-top">
+            <span class="radar-title">🌍 世界邊界雷達 (3×3)</span>
+            <span class="radar-chunk-badge" id="hud-chunk-coord">區塊 [7, 7]</span>
+          </div>
+          <div class="radar-grid" id="radar-cells-grid">
+            <!-- 3x3 共 9 格動態繪製 -->
+          </div>
+          <div class="radar-status" id="hud-boundary-status">
+            <span class="radar-dot dot-green"></span>
+            <span id="hud-boundary-text">四周疆土相連</span>
+          </div>
+        </div>
+
         <div class="panel-title">
           <span>大地圖目標與行囊</span>
           <span id="ui-lighting-tag" style="color:#fbbf24; font-size:0.75rem;">☼ 晨光熹微</span>
@@ -1301,6 +1300,7 @@
           owY: 4,
           bx: 3,
           by: 8,
+          currentMoveCost: 1, // 最近一次移動耗費的時辰 (用於動態移動速度)
           // 平滑動畫座標
           visualX: 7 * TILE_PX,
           visualY: 4 * TILE_PX,
@@ -1417,9 +1417,12 @@
       // 每幀動畫更新與平滑插值 (Ticker Loop)
       initTicker() {
         this.app.ticker.add((delta) => {
-          const lerpFactor = 0.22 * delta;
-
           if (this.mode === MODE.OVERWORLD) {
+            // 依據地格耗時 (hourCost) 動態調整移動補間速度: 1h -> 快速 (0.24), 2h -> 稍慢 (0.13), 3h+ -> 沉重緩步 (0.065)
+            const cost = this.player.currentMoveCost || 1;
+            const baseLerp = cost === 1 ? 0.24 : (cost === 2 ? 0.13 : 0.065);
+            const lerpFactor = baseLerp * delta;
+
             // 平滑插值玩家視覺座標
             const targetX = this.player.owX * TILE_PX;
             const targetY = this.player.owY * TILE_PX;
@@ -1429,6 +1432,7 @@
             this.drawOverworldPlayer();
             this.drawOverworldLighting();
           } else if (this.mode === MODE.BATTLE) {
+            const lerpFactor = 0.22 * delta;
             const targetX = this.player.bx * TILE_PX;
             const targetY = this.player.by * TILE_PX;
             this.player.visualX += (targetX - this.player.visualX) * lerpFactor;
@@ -1693,6 +1697,12 @@
 
       // --- 大地圖旅行與跨區塊漫遊 ---
       moveOverworld(dx, dy) {
+        // 行走補間防抖鎖定：若上一格補間視覺未完成，暫緩連續跳步，確保跋涉沉浸節奏
+        const curDist = Math.hypot(this.player.visualX - this.player.owX * TILE_PX, this.player.visualY - this.player.owY * TILE_PX);
+        if (curDist > 5) {
+          return;
+        }
+
         const nx = this.player.owX + dx;
         const ny = this.player.owY + dy;
 
@@ -1713,6 +1723,7 @@
 
         this.player.owX = nx;
         this.player.owY = ny;
+        this.player.currentMoveCost = hoursConsumed; // 記錄本次移動消耗時辰，驅動 Ticker 移動補間速度
 
         this.clock.advance(hoursConsumed);
         this.addLog(`<span class="log-time">【跋涉】</span>穿越${destTile.name}，耗時 ${hoursConsumed} 個時辰。時序來到 ${this.clock.getShichenName()}。`);
@@ -1820,6 +1831,7 @@
         this.player.owY = enterY;
         this.player.visualX = enterX * TILE_PX;
         this.player.visualY = enterY * TILE_PX;
+        this.player.currentMoveCost = 1;
 
         // 跨越界碑耗時 1 小時
         this.clock.advance(1);

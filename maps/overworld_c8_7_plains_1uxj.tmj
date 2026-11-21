@@ -409,5 +409,42 @@
         }
       ]
     }
+  ],
+  "properties": [
+    {
+      "name": "mapName",
+      "type": "string",
+      "value": "overworld_c8_7_plains_1uxj"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "value": "江湖大地圖區域"
+    },
+    {
+      "name": "difficulty",
+      "type": "int",
+      "value": 2
+    },
+    {
+      "name": "specialType",
+      "type": "string",
+      "value": "NORMAL"
+    },
+    {
+      "name": "faction",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "possibleQuests",
+      "type": "string",
+      "value": "【懸賞】擊斃遊蕩悍匪"
+    },
+    {
+      "name": "possibleLoot",
+      "type": "string",
+      "value": "青鋼長劍"
+    }
   ]
 }

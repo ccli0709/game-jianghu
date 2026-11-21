@@ -19,11 +19,81 @@
       "tilecount": 5,
       "columns": 5,
       "tiles": [
-        { "id": 0, "properties": [{ "name": "type", "type": "string", "value": "FLOOR" }, { "name": "moveCost", "type": "int", "value": 100 }] },
-        { "id": 1, "properties": [{ "name": "type", "type": "string", "value": "MUD" }, { "name": "moveCost", "type": "int", "value": 160 }] },
-        { "id": 2, "properties": [{ "name": "type", "type": "string", "value": "WATER" }, { "name": "moveCost", "type": "int", "value": 200 }] },
-        { "id": 3, "properties": [{ "name": "type", "type": "string", "value": "RUBBLE" }, { "name": "moveCost", "type": "int", "value": 130 }] },
-        { "id": 4, "properties": [{ "name": "type", "type": "string", "value": "WALL" }, { "name": "moveCost", "type": "int", "value": 9999 }] }
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "FLOOR"
+            },
+            {
+              "name": "moveCost",
+              "type": "int",
+              "value": 100
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "MUD"
+            },
+            {
+              "name": "moveCost",
+              "type": "int",
+              "value": 160
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "WATER"
+            },
+            {
+              "name": "moveCost",
+              "type": "int",
+              "value": 200
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "RUBBLE"
+            },
+            {
+              "name": "moveCost",
+              "type": "int",
+              "value": 130
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "WALL"
+            },
+            {
+              "name": "moveCost",
+              "type": "int",
+              "value": 9999
+            }
+          ]
+        }
       ]
     }
   ],
@@ -39,22 +109,262 @@
       "opacity": 1,
       "visible": true,
       "data": [
-        5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 2, 2, 1, 1, 1, 4, 4, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 5, 1, 3, 3, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 5, 1, 3, 3, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5,
-        5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        4,
+        4,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        1,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        1,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
       ]
     },
     {
@@ -74,7 +384,13 @@
           "y": 320,
           "width": 40,
           "height": 40,
-          "properties": [{ "name": "duration", "type": "int", "value": 99 }]
+          "properties": [
+            {
+              "name": "duration",
+              "type": "int",
+              "value": 99
+            }
+          ]
         }
       ]
     },
@@ -87,9 +403,62 @@
       "x": 0,
       "y": 0,
       "objects": [
-        { "id": 1, "name": "俠客出生點", "type": "PLAYER_SPAWN", "x": 120, "y": 320, "width": 40, "height": 40 },
-        { "id": 2, "name": "敵方首領站位", "type": "ENEMY_SPAWN", "x": 480, "y": 280, "width": 40, "height": 40 }
+        {
+          "id": 1,
+          "name": "俠客出生點",
+          "type": "PLAYER_SPAWN",
+          "x": 120,
+          "y": 320,
+          "width": 40,
+          "height": 40
+        },
+        {
+          "id": 2,
+          "name": "敵方首領站位",
+          "type": "ENEMY_SPAWN",
+          "x": 480,
+          "y": 280,
+          "width": 40,
+          "height": 40
+        }
       ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "mapName",
+      "type": "string",
+      "value": "arena_forest_ambush"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "value": "江湖大地圖區域"
+    },
+    {
+      "name": "difficulty",
+      "type": "int",
+      "value": 2
+    },
+    {
+      "name": "specialType",
+      "type": "string",
+      "value": "NORMAL"
+    },
+    {
+      "name": "faction",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "possibleQuests",
+      "type": "string",
+      "value": "【懸賞】擊斃遊蕩悍匪"
+    },
+    {
+      "name": "possibleLoot",
+      "type": "string",
+      "value": "青鋼長劍"
     }
   ]
 }

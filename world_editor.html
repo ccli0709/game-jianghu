@@ -860,6 +860,15 @@
         tiledversion: "1.10.2",
         version: "1.10",
         type: "map",
+        properties: [
+          { name: "mapName", type: "string", value: getBiomeName(biome) },
+          { name: "description", type: "string", value: `${getBiomeName(biome)}，天地遼闊，常有各路江湖散客遊歷。` },
+          { name: "difficulty", type: "int", value: biome === 'SNOW' ? 4 : (biome === 'MOUNTAIN' ? 3 : 2) },
+          { name: "specialType", type: "string", value: "NORMAL" },
+          { name: "faction", type: "string", value: "" },
+          { name: "possibleQuests", type: "string", value: "【懸賞】擊斃遊蕩悍匪 (賞金 30 兩)\n【探尋】探查此地未名奇遇" },
+          { name: "possibleLoot", type: "string", value: "青鋼短劍 (凡品兵刃)\n行軍乾糧" }
+        ],
         tilesets: [{
           firstgid: 1,
           name: "Jianghu_Overworld_Tiles",
