@@ -20,9 +20,11 @@
 ## 2. 時間與行動核心系統 (Energy/Tick & World Clock System)
 
 ### 2.1 雙層時間流速體系
+
 遊戲劃分為「大地圖宏觀旅行時間」與「戰術微觀時間片」：
 
 1. **大地圖小時與時辰制 (World Clock)**：
+
    * 宏觀時間以**小時 (Hour)** 與 **十二時辰**（子、丑、寅、卯、辰、巳、午、未、申、酉、戌、亥）為基本刻度。
    * **地塊小時消耗 (Overworld Terrain Time Cost)**：
      * **平原官道 (Plains)**：耗費 1 小時（大道平坦，暢行無阻）。
@@ -34,11 +36,12 @@
      * **白晝 (06:00 ~ 16:00)**：麗日晴空，無遮罩。
      * **黃昏 (16:00 ~ 20:00)**：夕陽與晚霞琥珀色濾鏡。
      * **深夜 (20:00 ~ 05:00)**：月黑風高，觸發提燈光環（Radial Gradient Spotlight），僅照亮玩家周遭 2~3 格範圍，遠處隱蔽於迷霧黑暗中。
-
 2. **戰術小地圖能源輪循制 (Energy/Tick Loop)**：
+
    * 進入戰鬥後時間切換為毫秒級動作能量（基準 100 能量行動一次），由 Speed 決定行動頻率。
 
 ### 2.2 跨區塊漫遊與 3×3 世界邊界雷達 (Seamless Transition & Boundary Radar)
+
 1. **大地圖相鄰跨區漫遊 (Chunk Transition)**：
    * 當俠客在大地圖（16×16）移動抵達邊界時（如 $x=15$ 再向東、$y=15$ 再向南）：
      * 系統自動計算相鄰世界區塊坐標 $(targetChunkX, targetChunkY)$。
@@ -57,14 +60,17 @@
 為未來更換美術圖片、自訂地圖與社群 Mod 預留標準 JSON 介面：
 
 ### 3.1 圖形與素材註冊表 (`AssetRegistry`)
+
 * 支援外部 PNG / WebP 貼圖動態注入。
 * 未載入圖片時，無縫回退至 Canvas 向量幾何與高品質中文字體渲染：
+
 ```javascript
 AssetRegistry.registerImage('tile_forest', 'assets/tiles/forest.png');
 AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDrawFn);
 ```
 
 ### 3.2 業界標準 Tiled 宣告式地圖格式 (.tmj / .json)
+
 * 全面採用 2D 遊戲領域工業級標準 **Tiled Map Editor 格式**：
   * **大地圖標準檔案**：[maps/overworld_default.tmj](file:///d:/Repositories/game-jianghu/maps/overworld_default.tmj)
     * `Terrain_Layer` (tilelayer)：1-indexed GID 映射地表類型（平原、崇山、密林、荒丘）。
@@ -74,7 +80,9 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
     * `Chemical_Surfaces` 與 `Tactical_Spawns` (objectgroup)：火油桶位置、雙方出生陣位。
 
 ### 3.3 本地視覺化地圖編輯器 (`editor.html` - 直存直取專案版)
+
 專案自帶無需配置任何第三方服務的專屬地圖編輯工具 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)：
+
 * **專案地圖選單 (Project Map Selector)**：下拉選單直接檢視並切換專案 `maps/` 目錄內現有的所有 `.tmj` / `.json` 地圖，切換即時載入編輯。
 * **一鍵新增地圖 (New Map Modal)**：自訂地圖檔名（如 `arena_cave.tmj` 或 `overworld_south.tmj`）與地圖類型（大地圖 / 戰術圖），自動生成標準初始版型並直接納入專案。
 * **江湖情報與城鎮任務配置 (Map Meta & Quest Pipeline)**：
@@ -90,7 +98,9 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
 * **調色盤直覺選色**：整合各類地貌、移動消耗 (小時 / 能量) 與對應圖示。
 
 ### 3.4 宏觀世界地圖編輯器 (`world_editor.html` - 最大 128x128 網格)
+
 專案提供掌管神州浩土宏觀佈局的專用編輯器 [world_editor.html](file:///d:/Repositories/game-jianghu/world_editor.html)：
+
 * **規格與規模**：支援最大 $128 \times 128$ 個大地圖區塊（即最多容納 $16,384$ 張獨立大地圖），預設規格為 $16 \times 16$ 區塊。
 * **嚴格唯一性排他約束 (Non-duplication Guarantee)**：
   * 世界地圖上的每一個區塊代表一張專屬大地圖。
@@ -113,7 +123,9 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
   * 快捷鍵 <kbd>Ctrl+S</kbd> 或點擊保存，直接將世界架構持久化至專案 [maps/world_default.json](file:///d:/Repositories/game-jianghu/maps/world_default.json)。
 
 ### 3.5 本地極速開發伺服器 (`server.js`)
+
 專案提供零依賴原生 Node.js 開發伺服器 [server.js](file:///d:/Repositories/game-jianghu/server.js)：
+
 * 執行 `npm start` 即可同時啟動：
   * 遊戲本體：`http://localhost:3000/index.html`
   * 單地圖視覺化編輯器：`http://localhost:3000/editor.html`
@@ -121,6 +133,7 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
   * 專案地圖 API：提供 `GET /api/maps`、`GET /api/maps/:file` 與 `POST /api/maps/:file` 雙向讀寫支援。
 
 ### 3.6 官方 Tiled 桌面版編輯器相容
+
 * 開發者若偏好 C++/Qt 桌面版大型工具，亦可直接使用官方開源 [Tiled Map Editor](https://www.mapeditor.org/) 開啟並編輯 `maps/` 目錄下的所有 `.tmj` 地圖。
 
 ### 2.2 核心排程器實作 (TypeScript)
@@ -185,6 +198,7 @@ export class TimeScheduler {
 ## 4. 模組化武學與人物裝備系統 (Character & Equipment System)
 
 ### 4.1 六維指標與核心修為
+
 * **氣血 (HP) / 真氣 (Qi)**：基礎生命與內力池。
 * **臂力 (Strength)**：影響外功物理傷害、格擋減傷率與破甲。
 * **身法 (Agility)**：直接影響行動速度基準（Speed）與閃避率。
@@ -195,6 +209,7 @@ export class TimeScheduler {
 * **經脈負荷 (Strain)**：經脈透支（Overdraw）將累積負荷，超過閾值造成永久殘疾或內傷。
 
 ### 4.2 身上穿戴行頭 (Equipment Slots)
+
 * **主手兵刃 (Weapon)**：如【寒鐵青鋒劍】（上品），提供攻擊力、招式速度與特殊元素詞條（15% 觸發霜凍）。
 * **貼身防具 (Armor)**：如【流雲夜行袍】（良品），提供防禦力與大地圖夜行隱匿加成。
 * **腰佩靈寶 (Accessory)**：如【白玉長生珮】（寶器），提供生命上限與大圖行進真氣自回。
@@ -206,7 +221,9 @@ export class TimeScheduler {
 
 捨棄固定技能樹，玩家透過蒐集/領悟四個模組拼裝招式：
 
-$$\text{自創招式} = \text{起手式 (Frame/Cost)} + \text{運勁軌跡 (Trajectory)} + \text{氣勁屬性 (Qi Affinity)} + \text{收招變異 (Modifier)}$$
+$$
+\text{自創招式} = \text{起手式 (Frame/Cost)} + \text{運勁軌跡 (Trajectory)} + \text{氣勁屬性 (Qi Affinity)} + \text{收招變異 (Modifier)}
+$$
 
 ```typescript
 export interface MartialMove {
@@ -241,12 +258,14 @@ export interface MartialMove {
 NPC 具備獨立認知資料庫，非單純好感度數值。
 
 ### 5.1 情感維度與記憶
+
 * `trust` (-100 ~ 100): 信任程度（影響交易折扣、密信交付）。
 * `fear` (0 ~ 100): 恐懼程度（影響求饒、逃跑、報官意願）。
 * `grudge` (-100 ~ 100): 恩怨值（決定是否暗殺、尋仇或生死相救）。
 * `witnessedEvents`: 記錄目擊事件（殺人、偷竊、栽贓）。
 
 ### 5.2 流言封包 (Rumor Packet)
+
 * 事件發生時，生成封包沿著「目擊者 $\rightarrow$ 客棧/茶館 $\rightarrow$ 往來商隊」擴散。
 * 流言傳播會失真，NPC 依據立場加入偏見（例如：將正派弟子的劫掠美化成義舉）。
 
@@ -264,7 +283,9 @@ NPC 具備獨立認知資料庫，非單純好感度數值。
 ## 7. 高自由度回合制戰鬥機制
 
 ### 7.1 多種類型地格與移動力消耗 (Terrain Movement Cost)
+
 戰術網格不再只有通行/不通行，而是具備動態能量代價（Cost）：
+
 * **青石地面 (Floor)**: 基準 100 能量。
 * **碎石陡坡 (Rubble)**: 130 能量（崎嶇地形，輕微降速）。
 * **泥濘沼澤 (Mud)**: 160 能量（黏滯深陷，大幅消耗移動力）。
@@ -273,17 +294,23 @@ NPC 具備獨立認知資料庫，非單純好感度數值。
 * **堅石障礙 (Wall/Rock)**: 9999 能量（不可穿越，受擊退撞擊會承受震傷與暈眩）。
 
 ### 7.2 智能 A* 尋路演算法 (A-Star Pathfinding)
+
 * 敵手 AI 不再採用簡單差值朝向，而是使用具備權重啟發式的 A* 演算法：
-  $$f(n) = g(n) + h(n)$$
+  $$
+  f(n) = g(n) + h(n)
+  $$
+
   * $g(n)$：真實地形移動消耗累加（會主動繞開高消耗的泥濘/深水與障礙岩壁）。
   * $h(n)$：曼哈頓距離 $\times$ 基礎消耗。
 * 若敵手能量不足以支付眼前的高阻力地格（如 200 能量之深水），將自動在原地多輪蓄能再強渡，或選擇繞行青石路。
 
 ### 7.3 步數借支與經脈透支 (Energy Overdraw)
+
 * 當回合可透支下回合 Energy 連動 2~3 次（用以絕殺或突圍）。
 * 代價：下回合陷入「脫力」狀態，無法行動且被爆擊率 100%。
 
 ### 7.4 確定性預判虛影與擊退碰撞 (Telegraphing & Knockback)
+
 * 烈陽掌擊退敵人撞擊岩壁：額外受到 15 點撞擊震傷並**暈眩 1 回合**。
 * 撞擊其他實體：雙方平分衝擊傷害。
 
@@ -291,14 +318,14 @@ NPC 具備獨立認知資料庫，非單純好感度數值。
 
 ## 8. Web 技術架構選型 (Pixi.js WebGL Engine)
 
-| 模組 | 選用技術 | 技術重點 |
-| :--- | :--- | :--- |
-| **渲染管線** | **Pixi.js v7 (WebGL/WebGPU)** | 完整的 SceneGraph 場景樹、批次 Sprite/幾何繪製，具備視網膜 High-DPI 適配 (`autoDensity: true`, `resolution: devicePixelRatio`)。 |
-| **場景圖架構** | **分層 Container 系統** | `overworldContainer`（地形網格層、據點標籤層、實體層、大氣光照遮罩層）與 `battleContainer`（戰術網格層、地表化學層、戰鬥實體層）。 |
-| **動畫系統** | **Pixi.js Ticker Loop** | 每幀執行補間插值（Lerp Animation），角色與敵方在網格間移動時呈現滑順過渡，不再是瞬間跳格。 |
-| **持久化存檔** | **SQLite-WASM + OPFS** | 原生檔案系統存取，執行標準 SQL 關聯查詢處理 NPC 複雜人際網與世界狀態。 |
-| **UI 介面** | **HTML/CSS Overlay** | 遊戲主畫面用 WebGL Canvas，背包、對話框、修煉介面以 DOM 覆蓋，兼顧排版與可維護性。 |
-| **戰報日誌** | **倒序先進先出佇列 (Reverse FIFO)** | 訊息採「由新到舊 (最新在頂部)」呈現，自動保持最多 200 筆緩衝，移除過期最舊記錄。 |
+| 模組                 | 選用技術                                  | 技術重點                                                                                                                               |
+| :------------------- | :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **渲染管線**   | **Pixi.js v7 (WebGL/WebGPU)**       | 完整的 SceneGraph 場景樹、批次 Sprite/幾何繪製，具備視網膜 High-DPI 適配 (`autoDensity: true`, `resolution: devicePixelRatio`)。   |
+| **場景圖架構** | **分層 Container 系統**             | `overworldContainer`（地形網格層、據點標籤層、實體層、大氣光照遮罩層）與 `battleContainer`（戰術網格層、地表化學層、戰鬥實體層）。 |
+| **動畫系統**   | **Pixi.js Ticker Loop**             | 每幀執行補間插值（Lerp Animation），角色與敵方在網格間移動時呈現滑順過渡，不再是瞬間跳格。                                             |
+| **持久化存檔** | **SQLite-WASM + OPFS**              | 原生檔案系統存取，執行標準 SQL 關聯查詢處理 NPC 複雜人際網與世界狀態。                                                                 |
+| **UI 介面**    | **HTML/CSS Overlay**                | 遊戲主畫面用 WebGL Canvas，背包、對話框、修煉介面以 DOM 覆蓋，兼顧排版與可維護性。                                                     |
+| **戰報日誌**   | **倒序先進先出佇列 (Reverse FIFO)** | 訊息採「由新到舊 (最新在頂部)」呈現，自動保持最多 200 筆緩衝，移除過期最舊記錄。                                                       |
 
 ---
 

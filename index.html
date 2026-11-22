@@ -466,7 +466,7 @@
       font-family: inherit;
     }
 
-    /* 人物詳細屬性與裝備模態視窗 */
+    /* 人物詳細屬性模態視窗 */
     #char-dialog {
       display: none;
       position: absolute;
@@ -477,9 +477,27 @@
       border: 1px solid #333a4e;
       border-radius: 8px;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.96);
-      width: 620px;
+      width: 640px;
       padding: 22px;
       z-index: 100;
+    }
+
+    /* 隨身裝備與背包模態視窗 */
+    #equip-dialog {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #141620;
+      border: 1px solid #333a4e;
+      border-radius: 8px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.96);
+      width: 780px;
+      max-height: 88vh;
+      padding: 22px;
+      z-index: 100;
+      box-sizing: border-box;
     }
 
     .char-header {
@@ -507,7 +525,7 @@
 
     .char-body {
       display: grid;
-      grid-template-columns: 1fr 1.2fr;
+      grid-template-columns: 1fr 1.05fr;
       gap: 16px;
     }
 
@@ -546,6 +564,52 @@
       color: #f1f5f9;
     }
 
+    /* 門派與武功卡片 */
+    .sect-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.76rem;
+      font-weight: bold;
+      background: #1e293b;
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+    }
+
+    .martial-card {
+      background: #181b29;
+      border: 1px solid #2a3146;
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .martial-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .skill-card {
+      background: #181b29;
+      border: 1px solid #272d3f;
+      border-radius: 5px;
+      padding: 7px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* 裝備與背包佈局 */
+    .equip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
     .equip-slot {
       background: #1a1c29;
       border: 1px solid #272d3f;
@@ -581,10 +645,10 @@
       font-weight: bold;
     }
 
-    .tier-purple {
-      background: #3b185f;
-      color: #c084fc;
-      border: 1px solid #7e22ce;
+    .tier-white {
+      background: #27272a;
+      color: #e4e4e7;
+      border: 1px solid #52525b;
     }
 
     .tier-green {
@@ -593,10 +657,28 @@
       border: 1px solid #059669;
     }
 
+    .tier-purple {
+      background: #3b185f;
+      color: #c084fc;
+      border: 1px solid #7e22ce;
+    }
+
     .tier-gold {
       background: #451a03;
-      color: #fbbf24;
+      color: #fde047;
       border: 1px solid #b45309;
+    }
+
+    .tier-orange {
+      background: #431407;
+      color: #fdba74;
+      border: 1px solid #ea580c;
+    }
+
+    .tier-red {
+      background: #450a0a;
+      color: #fca5a5;
+      border: 1px solid #dc2626;
     }
 
     .equip-stat {
@@ -609,6 +691,118 @@
       font-size: 0.72rem;
       color: #64748b;
       font-style: italic;
+    }
+
+    /* 隨身背包容器與物品卡片 */
+    .inv-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .inv-item-card {
+      background: #1a1c29;
+      border: 1px solid #272d3f;
+      border-radius: 6px;
+      padding: 7px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .inv-item-card:hover {
+      background: #202436;
+      border-color: #3b82f6;
+    }
+
+    .inv-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .inv-item-name {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inv-item-desc {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .inv-actions {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .btn-action-equip {
+      padding: 3px 9px;
+      font-size: 0.72rem;
+      background: #064e3b;
+      border: 1px solid #059669;
+      color: #a7f3d0;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-action-equip:hover {
+      background: #047857;
+    }
+
+    .btn-action-use {
+      padding: 3px 9px;
+      font-size: 0.72rem;
+      background: #451a03;
+      border: 1px solid #d97706;
+      color: #fde047;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-action-use:hover {
+      background: #b45309;
+    }
+
+    .btn-action-unequip {
+      padding: 2px 7px;
+      font-size: 0.7rem;
+      background: #450a0a;
+      border: 1px solid #dc2626;
+      color: #fca5a5;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-action-unequip:hover {
+      background: #b91c1c;
+    }
+
+    .log-item {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .log-heal {
+      color: #34d399;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -633,7 +827,10 @@
           onclick="window.location.href='item_manager.html'">💎 物品總管</button></div>
       <div class="status-item"><button class="btn"
           style="padding:4px 10px; font-size:0.78rem; border-color:#3b82f6; background:#1a2333;"
-          onclick="toggleCharacterDialog()"><kbd>C</kbd> 人物屬性與裝備</button></div>
+          onclick="toggleCharacterDialog()"><kbd>C</kbd> 人物屬性</button></div>
+      <div class="status-item"><button class="btn"
+          style="padding:4px 10px; font-size:0.78rem; border-color:#10b981; background:#064e3b;"
+          onclick="toggleEquipmentDialog()"><kbd>B</kbd> 裝備背包</button></div>
       <div class="status-item">名號: <span class="status-val" style="color:#60a5fa;" id="ui-hero-name">李暮雲</span></div>
       <div class="status-item">氣血: <span id="ui-hp" class="status-val val-hp">100/100</span></div>
       <div class="status-item">碎銀: <span id="ui-gold" class="status-val val-gold">50 兩</span></div>
@@ -646,7 +843,7 @@
     <div id="canvas-wrapper">
       <div id="pixi-viewport"></div>
 
-      <!-- 人物詳細屬性與裝備視窗 -->
+      <!-- 人物詳細屬性視窗 (包含門派、六維修為、當前修練武功與心法) -->
       <div id="char-dialog">
         <div class="char-header">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -655,7 +852,8 @@
               <div style="font-size:1.15rem; font-weight:bold; color:#f8fafc;" id="char-name">李暮雲</div>
               <div style="font-size:0.76rem; color:#94a3b8; margin-top:2px;">
                 <span style="color:#60a5fa;" id="char-title">初入江湖的無名散客</span> ·
-                <span style="color:#fbbf24; font-weight:bold;" id="char-realm">二流高手</span>
+                <span style="color:#fbbf24; font-weight:bold;" id="char-realm">二流高手</span> ·
+                門派: <span class="sect-tag" id="char-sect-header">尚未加入</span>
               </div>
             </div>
           </div>
@@ -663,9 +861,13 @@
         </div>
 
         <div class="char-body">
-          <!-- 左側：核心六維與修為數值 -->
+          <!-- 左側：門派與核心六維修為數值 -->
           <div class="char-col">
             <div class="char-section-title">核心修為與六維指標</div>
+            <div class="stat-row">
+              <span>所屬門派</span>
+              <b id="c-sect" style="color:#a7f3d0;">尚未加入 (江湖散人)</b>
+            </div>
             <div class="stat-row"><span>氣血 (生命儲備)</span><b id="c-hp" style="color:#f87171;">100 / 100</b></div>
             <div class="stat-row"><span>真氣 (內力池)</span><b id="c-qi" style="color:#60a5fa;">80 / 80</b></div>
             <div class="stat-row"><span>身法速度 (Speed)</span><b id="c-speed" style="color:#34d399;">100 點</b></div>
@@ -678,15 +880,73 @@
             <div class="stat-row"><span>經脈負荷 (內傷)</span><b id="c-strain" style="color:#34d399;">0% (安好無損)</b></div>
           </div>
 
-          <!-- 右側：身上裝備武器防具 -->
+          <!-- 右側：當前修練武功與心法 -->
           <div class="char-col">
-            <div class="char-section-title">佩戴兵刃與隨身防具</div>
+            <div class="char-section-title">當前修練武功與心法</div>
+
+            <!-- 主修內功心法 -->
+            <div class="martial-card">
+              <div class="martial-top">
+                <span style="font-size:0.75rem; color:#60a5fa; font-weight:bold;">運行心法</span>
+                <span class="equip-tier tier-green" id="c-martial-level">第三重</span>
+              </div>
+              <div style="font-size:0.92rem; font-weight:bold; color:#f8fafc;" id="c-martial-name">太乙吐納心法</div>
+              <div style="font-size:0.76rem; color:#38bdf8; line-height:1.4;" id="c-martial-effect">
+                每時辰自動溫養氣血 5 點、真氣上限 +15 點。調和陰陽，令經脈不易受內傷反噬。
+              </div>
+            </div>
+
+            <!-- 所習武學招式列表 -->
+            <div class="char-section-title" style="margin-top:6px;">已習武學招式</div>
+            <div id="c-skills-list" style="display:flex; flex-direction:column; gap:6px;">
+              <div class="skill-card">
+                <div>
+                  <b style="color:#f1f5f9; font-size:0.84rem;">太祖長拳</b>
+                  <span style="font-size:0.72rem; color:#94a3b8; margin-left:6px;">(外家拳法)</span>
+                </div>
+                <span class="equip-tier tier-white">略有小成</span>
+              </div>
+              <div class="skill-card">
+                <div>
+                  <b style="color:#f1f5f9; font-size:0.84rem;">流霜刺水</b>
+                  <span style="font-size:0.72rem; color:#94a3b8; margin-left:6px;">(青鋼長劍配套招式)</span>
+                </div>
+                <span class="equip-tier tier-green">駕輕就熟</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 隨身裝備與背包視窗 (左右分欄，裝備可裝卸，物品可使用) -->
+      <div id="equip-dialog">
+        <div class="char-header">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="char-avatar" style="border-color:#10b981; color:#a7f3d0;">囊</div>
+            <div>
+              <div style="font-size:1.15rem; font-weight:bold; color:#f8fafc;">隨身裝備與行囊背包</div>
+              <div style="font-size:0.76rem; color:#94a3b8; margin-top:2px;">
+                <span>碎銀: <b style="color:#fbbf24;" id="eq-gold">50 兩</b></span> ·
+                <span>行囊格子: <b style="color:#38bdf8;" id="inv-count">5 / 30</b></span>
+              </div>
+            </div>
+          </div>
+          <button class="btn" style="padding:5px 12px;" onclick="closeEquipmentDialog()">關閉 (ESC / B)</button>
+        </div>
+
+        <div class="equip-grid">
+          <!-- 左側：當前穿戴裝備欄 -->
+          <div class="char-col">
+            <div class="char-section-title">當前穿戴裝備 (點擊卸下)</div>
 
             <!-- 主手兵刃 -->
-            <div class="equip-slot">
+            <div class="equip-slot" id="slot-box-weapon">
               <div class="equip-top">
                 <span class="equip-type">主手兵刃</span>
-                <span class="equip-tier tier-purple" id="eq-weapon-tier">上品</span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                  <span class="equip-tier tier-purple" id="eq-weapon-tier">上品</span>
+                  <button class="btn-action-unequip" id="btn-unequip-weapon" onclick="unequipItem('weapon')">卸下</button>
+                </div>
               </div>
               <div class="equip-name" id="eq-weapon-name">寒鐵青鋒劍</div>
               <div class="equip-stat" id="eq-weapon-stat">攻擊 +25 ｜ 招式速度 +5% ｜ 15% 觸發【霜凍】</div>
@@ -694,25 +954,43 @@
             </div>
 
             <!-- 貼身防具 -->
-            <div class="equip-slot">
+            <div class="equip-slot" id="slot-box-armor">
               <div class="equip-top">
                 <span class="equip-type">貼身防具</span>
-                <span class="equip-tier tier-green" id="eq-armor-tier">良品</span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                  <span class="equip-tier tier-green" id="eq-armor-tier">良品</span>
+                  <button class="btn-action-unequip" id="btn-unequip-armor" onclick="unequipItem('armor')">卸下</button>
+                </div>
               </div>
               <div class="equip-name" id="eq-armor-name">流雲夜行袍</div>
-              <div class="equip-stat" id="eq-armor-stat">防禦 +14 ｜ 夜間旅行隱匿度 +25%</div>
+              <div class="equip-stat" id="eq-armor-stat">防禦 +14 ｜ 氣血 +30 ｜ 夜行隱匿 +25%</div>
               <div class="equip-desc" id="eq-armor-desc">墨蠶生絲混編，輕如蟬翼，極利於夜行暗伏。</div>
             </div>
 
             <!-- 隨身靈寶 -->
-            <div class="equip-slot">
+            <div class="equip-slot" id="slot-box-trinket">
               <div class="equip-top">
                 <span class="equip-type">腰佩靈寶</span>
-                <span class="equip-tier tier-gold" id="eq-trinket-tier">寶器</span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                  <span class="equip-tier tier-gold" id="eq-trinket-tier">寶器</span>
+                  <button class="btn-action-unequip" id="btn-unequip-trinket"
+                    onclick="unequipItem('trinket')">卸下</button>
+                </div>
               </div>
               <div class="equip-name" id="eq-trinket-name">白玉長生珮</div>
               <div class="equip-stat" id="eq-trinket-stat">生命上限 +20 ｜ 大地圖行進真氣自回 +2/h</div>
               <div class="equip-desc" id="eq-trinket-desc">溫潤羊脂古玉，暗藏靜氣凝神之微光。</div>
+            </div>
+          </div>
+
+          <!-- 右側：行囊背包內容 -->
+          <div class="char-col">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="char-section-title" style="border:none; margin:0; padding:0;">隨身背包物品</div>
+              <span style="font-size:0.72rem; color:#64748b;">裝備可穿戴 ｜ 藥品道具可使用</span>
+            </div>
+            <div class="inv-list-container" id="inv-items-container">
+              <!-- 動態渲染背包卡片 -->
             </div>
           </div>
         </div>
@@ -786,7 +1064,10 @@
             <span><kbd>E</kbd> 進入眼前據點 (客棧/城鎮)</span>
           </button>
           <button class="btn" onclick="toggleCharacterDialog()">
-            <span><kbd>C</kbd> 檢視人物詳細屬性與裝備</span>
+            <span><kbd>C</kbd> 人物屬性</span>
+          </button>
+          <button class="btn" onclick="toggleEquipmentDialog()">
+            <span><kbd>B</kbd> 裝備背包</span>
           </button>
         </div>
       </div>
@@ -1292,6 +1573,17 @@
           name: '李暮雲',
           title: '初入江湖的無名散客',
           realm: '二流高手',
+          sect: '尚未加入 (江湖散人)', // 門派：初始時尚未加入
+          martialArt: {             // 當前修練的武功或心法
+            name: '太乙吐納心法',
+            level: '第三重·凝神化氣',
+            effect: '每時辰自動溫養氣血 5 點、真氣上限 +15 點。調和陰陽，令經脈不易受內傷反噬。',
+            type: '內功心法'
+          },
+          skills: [
+            { name: '太祖長拳', realm: '略有小成', category: '外家拳法', desc: '江湖普及拳法，大開大闔，消耗真氣 10 點。' },
+            { name: '流霜刺水', realm: '駕輕就熟', category: '青鋼長劍配套招式', desc: '迅疾如風的刺擊劍招，減緩敵方身法。' }
+          ],
           hp: 100,
           maxHp: 100,
           qi: 80,
@@ -1319,27 +1611,113 @@
           },
           equipment: {
             weapon: {
+              id: 'eq_weapon_1',
               name: '寒鐵青鋒劍',
+              category: 'MELEE_WEAPON',
+              icon: '🗡️',
               tier: '上品',
               tierClass: 'tier-purple',
               stat: '攻擊 +25 ｜ 招式速度 +5% ｜ 15% 觸發【霜凍】',
-              desc: '長白山地底寒鐵鍛造，劍身清幽，出鞘生霜。'
+              desc: '長白山地底寒鐵鍛造，劍身清幽，出鞘生霜。',
+              attributes: { atk: 25, speedMod: 5, specialEffect: '15% 霜凍' }
             },
             armor: {
+              id: 'eq_armor_1',
               name: '流雲夜行袍',
+              category: 'ARMOR',
+              icon: '🥋',
               tier: '良品',
               tierClass: 'tier-green',
-              stat: '防禦 +14 ｜ 夜間旅行隱匿度 +25%',
-              desc: '墨蠶生絲混編，輕如蟬翼，極利於夜行暗伏。'
+              stat: '防禦 +14 ｜ 氣血 +30 ｜ 夜行隱匿 +25%',
+              desc: '墨蠶生絲混編，輕如蟬翼，極利於夜行暗伏。',
+              attributes: { def: 14, hpBonus: 30 }
             },
             trinket: {
+              id: 'eq_trinket_1',
               name: '白玉長生珮',
+              category: 'SPECIAL',
+              icon: '📿',
               tier: '寶器',
               tierClass: 'tier-gold',
               stat: '生命上限 +20 ｜ 大地圖行進真氣自回 +2/h',
-              desc: '溫潤羊脂古玉，暗藏靜氣凝神之微光。'
+              desc: '溫潤羊脂古玉，暗藏靜氣凝神之微光。',
+              attributes: { hpBonus: 20 }
             }
-          }
+          },
+          inventory: [
+            {
+              id: 'inv_med_1',
+              name: '金創續命散',
+              category: 'MEDICINE',
+              icon: '💊',
+              tier: '良品',
+              tierClass: 'tier-green',
+              count: 5,
+              desc: '江湖名醫秘製外傷金瘡藥，能迅速止血化瘀。',
+              stat: '氣血回復 +40 ｜ 真氣回復 +15',
+              attributes: { healHp: 40, healQi: 15 }
+            },
+            {
+              id: 'inv_med_2',
+              name: '九轉培元丹',
+              category: 'MEDICINE',
+              icon: '🍶',
+              tier: '上品',
+              tierClass: 'tier-purple',
+              count: 3,
+              desc: '純陽罡氣凝練之靈丹，服之真氣充盈四肢百骸。',
+              stat: '氣血回復 +20 ｜ 真氣回復 +45',
+              attributes: { healHp: 20, healQi: 45 }
+            },
+            {
+              id: 'inv_wpn_1',
+              name: '厚背破陣刀',
+              category: 'MELEE_WEAPON',
+              icon: '🪓',
+              tier: '良品',
+              tierClass: 'tier-green',
+              count: 1,
+              desc: '精鋼鍛造的厚背單刀，勢大力沉，擅破重甲。',
+              stat: '攻擊 +20 ｜ 15% 震退敵手',
+              attributes: { atk: 20, reach: 1, specialEffect: '15% 震退' }
+            },
+            {
+              id: 'inv_arm_1',
+              name: '玄鐵鎖子甲',
+              category: 'ARMOR',
+              icon: '🛡️',
+              tier: '上品',
+              tierClass: 'tier-purple',
+              count: 1,
+              desc: '玄鐵打製密鎖，刀槍難入，雖稍重但防護極佳。',
+              stat: '防禦 +22 ｜ 氣血加成 +45',
+              attributes: { def: 22, hpBonus: 45 }
+            },
+            {
+              id: 'inv_enh_1',
+              name: '天外隕鐵精華',
+              category: 'ENHANCEMENT',
+              icon: '💎',
+              tier: '極品',
+              tierClass: 'tier-gold',
+              count: 2,
+              desc: '蘊含地心熾熱的罕見玄鐵，可用於淬鍊佩戴中的兵刃。',
+              stat: '永久提升手持兵刃攻擊力 +2',
+              attributes: { upgradeBonus: '兵刃攻擊 +2' }
+            },
+            {
+              id: 'inv_spc_1',
+              name: '英雄帖 (少林大會)',
+              category: 'SPECIAL',
+              icon: '📜',
+              tier: '寶器',
+              tierClass: 'tier-gold',
+              count: 1,
+              desc: '武林名門少林寺發往中原群雄之請帖，參悟可增威名。',
+              stat: '研讀感悟可提升江湖威名 5 點',
+              attributes: { repBonus: 5 }
+            }
+          ]
         };
 
         this.overworld = new OverworldManager(DEFAULT_OVERWORLD_DATA);
@@ -2298,11 +2676,17 @@
           if (e.key === 'Escape') {
             closeTownDialog();
             closeCharacterDialog();
+            closeEquipmentDialog();
             return;
           }
 
           if (e.key === 'c' || e.key === 'C') {
             toggleCharacterDialog();
+            return;
+          }
+
+          if (e.key === 'b' || e.key === 'B' || e.key === 'i' || e.key === 'I') {
+            toggleEquipmentDialog();
             return;
           }
 
@@ -2335,12 +2719,15 @@
       game = new PixiGameEngine();
     };
 
-    // 人物詳細屬性與裝備介面控制
+    // ==========================================
+    // 人物詳細屬性視窗控制
+    // ==========================================
     function toggleCharacterDialog() {
       const dlg = document.getElementById('char-dialog');
       if (dlg.style.display === 'block') {
         closeCharacterDialog();
       } else {
+        closeEquipmentDialog();
         openCharacterDialog();
       }
     }
@@ -2355,7 +2742,7 @@
     }
 
     function updateCharacterUI() {
-      if (!game) return;
+      if (!game || !game.player) return;
       const p = game.player;
 
       const setTxt = (id, txt) => {
@@ -2367,6 +2754,11 @@
       setTxt('char-title', p.title);
       setTxt('char-realm', p.realm);
 
+      // 門派資訊
+      setTxt('char-sect-header', p.sect || '尚未加入');
+      setTxt('c-sect', p.sect || '尚未加入 (江湖散人)');
+
+      // 修為數值
       setTxt('c-hp', `${p.hp} / ${p.maxHp}`);
       setTxt('c-qi', `${p.qi} / ${p.maxQi}`);
       setTxt('c-speed', `${p.speed} 點`);
@@ -2390,34 +2782,241 @@
         }
       }
 
-      // 裝備卡片更新
-      const eq = p.equipment;
-      if (eq) {
-        if (eq.weapon) {
-          setTxt('eq-weapon-name', eq.weapon.name);
-          setTxt('eq-weapon-tier', eq.weapon.tier);
-          const el = document.getElementById('eq-weapon-tier');
-          if (el) el.className = `equip-tier ${eq.weapon.tierClass}`;
-          setTxt('eq-weapon-stat', eq.weapon.stat);
-          setTxt('eq-weapon-desc', eq.weapon.desc);
-        }
-        if (eq.armor) {
-          setTxt('eq-armor-name', eq.armor.name);
-          setTxt('eq-armor-tier', eq.armor.tier);
-          const el = document.getElementById('eq-armor-tier');
-          if (el) el.className = `equip-tier ${eq.armor.tierClass}`;
-          setTxt('eq-armor-stat', eq.armor.stat);
-          setTxt('eq-armor-desc', eq.armor.desc);
-        }
-        if (eq.trinket) {
-          setTxt('eq-trinket-name', eq.trinket.name);
-          setTxt('eq-trinket-tier', eq.trinket.tier);
-          const el = document.getElementById('eq-trinket-tier');
-          if (el) el.className = `equip-tier ${eq.trinket.tierClass}`;
-          setTxt('eq-trinket-stat', eq.trinket.stat);
-          setTxt('eq-trinket-desc', eq.trinket.desc);
-        }
+      // 當前修練的武功與心法
+      if (p.martialArt) {
+        setTxt('c-martial-name', p.martialArt.name);
+        setTxt('c-martial-level', p.martialArt.level);
+        setTxt('c-martial-effect', p.martialArt.effect);
       }
+
+      // 已掌握武學招式列表
+      const skillsContainer = document.getElementById('c-skills-list');
+      if (skillsContainer && Array.isArray(p.skills)) {
+        skillsContainer.innerHTML = '';
+        p.skills.forEach(s => {
+          const card = document.createElement('div');
+          card.className = 'skill-card';
+          card.innerHTML = `
+            <div>
+              <b style="color:#f1f5f9; font-size:0.84rem;">${s.name}</b>
+              <span style="font-size:0.72rem; color:#94a3b8; margin-left:6px;">(${s.category || '武學招式'})</span>
+              <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">${s.desc || ''}</div>
+            </div>
+            <span class="equip-tier tier-green">${s.realm || '初窺門徑'}</span>
+          `;
+          skillsContainer.appendChild(card);
+        });
+      }
+    }
+
+    // ==========================================
+    // 隨身裝備與背包視窗控制 (支援裝卸與使用)
+    // ==========================================
+    function toggleEquipmentDialog() {
+      const dlg = document.getElementById('equip-dialog');
+      if (dlg.style.display === 'block') {
+        closeEquipmentDialog();
+      } else {
+        closeCharacterDialog();
+        openEquipmentDialog();
+      }
+    }
+
+    function openEquipmentDialog() {
+      document.getElementById('equip-dialog').style.display = 'block';
+      updateEquipmentUI();
+    }
+
+    function closeEquipmentDialog() {
+      document.getElementById('equip-dialog').style.display = 'none';
+    }
+
+    function updateEquipmentUI() {
+      if (!game || !game.player) return;
+      const p = game.player;
+
+      const setTxt = (id, txt) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = txt;
+      };
+
+      setTxt('eq-gold', `${p.gold} 兩`);
+      setTxt('inv-count', `${p.inventory ? p.inventory.length : 0} / 30`);
+
+      // 1. 更新裝備槽位
+      const slots = ['weapon', 'armor', 'trinket'];
+      slots.forEach(slotKey => {
+        const item = p.equipment ? p.equipment[slotKey] : null;
+        const nameEl = document.getElementById(`eq-${slotKey}-name`);
+        const tierEl = document.getElementById(`eq-${slotKey}-tier`);
+        const statEl = document.getElementById(`eq-${slotKey}-stat`);
+        const descEl = document.getElementById(`eq-${slotKey}-desc`);
+        const unequipBtn = document.getElementById(`btn-unequip-${slotKey}`);
+
+        if (item) {
+          if (nameEl) nameEl.innerHTML = `${item.icon || '⚔️'} ${item.name}`;
+          if (tierEl) {
+            tierEl.innerText = item.tier || '普通';
+            tierEl.className = `equip-tier ${item.tierClass || 'tier-white'}`;
+            tierEl.style.display = 'inline-block';
+          }
+          if (statEl) statEl.innerText = item.stat || '無特殊加成';
+          if (descEl) descEl.innerText = item.desc || '';
+          if (unequipBtn) unequipBtn.style.display = 'inline-block';
+        } else {
+          if (nameEl) nameEl.innerText = '-- 未佩戴 --';
+          if (tierEl) tierEl.style.display = 'none';
+          if (statEl) statEl.innerText = '槽位空置，無屬性加成';
+          if (descEl) descEl.innerText = '點擊右側背包物品可直接穿戴。';
+          if (unequipBtn) unequipBtn.style.display = 'none';
+        }
+      });
+
+      // 2. 更新右側背包物品列表
+      const invContainer = document.getElementById('inv-items-container');
+      if (!invContainer) return;
+      invContainer.innerHTML = '';
+
+      if (!p.inventory || p.inventory.length === 0) {
+        invContainer.innerHTML = `
+          <div style="text-align:center; padding:35px 10px; color:#64748b; font-size:0.8rem;">
+            隨身行囊空空如也，可在市鎮客棧購置或大地圖探尋獲取。
+          </div>
+        `;
+        return;
+      }
+
+      p.inventory.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'inv-item-card';
+
+        const isEquip = ['MELEE_WEAPON', 'RANGED_WEAPON', 'ARMOR'].includes(item.category) ||
+          (item.category === 'SPECIAL' && !item.isConsumable);
+        const actionBtn = isEquip
+          ? `<button class="btn-action-equip" onclick="equipItem(${idx})">裝備</button>`
+          : `<button class="btn-action-use" onclick="useItem(${idx})">使用</button>`;
+
+        const countBadge = item.count && item.count > 1 ? `<span style="color:#60a5fa; font-weight:bold; font-size:0.75rem;">x${item.count}</span>` : '';
+
+        card.innerHTML = `
+          <div class="inv-item-info">
+            <div class="inv-item-name">
+              <span>${item.icon || '📦'}</span>
+              <span>${item.name}</span>
+              ${countBadge}
+              <span class="equip-tier ${item.tierClass || 'tier-white'}" style="margin-left:4px;">${item.tier || '凡品'}</span>
+            </div>
+            <div class="inv-item-desc">${item.stat || item.desc || ''}</div>
+          </div>
+          <div class="inv-actions">
+            ${actionBtn}
+          </div>
+        `;
+        invContainer.appendChild(card);
+      });
+    }
+
+    // 裝備物品 (穿戴)
+    function equipItem(index) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      const item = p.inventory[index];
+      if (!item) return;
+
+      let slotKey = 'weapon';
+      if (item.category === 'ARMOR') {
+        slotKey = 'armor';
+      } else if (item.category === 'SPECIAL' || item.category === 'ENHANCEMENT') {
+        slotKey = 'trinket';
+      }
+
+      // 若槽位已有裝備，將舊裝備放回背包
+      const oldEquip = p.equipment[slotKey];
+      if (oldEquip) {
+        p.inventory.push(oldEquip);
+      }
+
+      // 從背包中扣除 1 個
+      if (item.count && item.count > 1) {
+        item.count--;
+        const equipObj = JSON.parse(JSON.stringify(item));
+        delete equipObj.count;
+        p.equipment[slotKey] = equipObj;
+      } else {
+        p.inventory.splice(index, 1);
+        delete item.count;
+        p.equipment[slotKey] = item;
+      }
+
+      game.addLog(`<span class="log-item">【換裝】</span>佩戴了【${p.equipment[slotKey].name}】！`);
+      updateEquipmentUI();
+      updateCharacterUI();
+      game.updateUI();
+    }
+
+    // 卸下裝備
+    function unequipItem(slotKey) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      const item = p.equipment[slotKey];
+      if (!item) return;
+
+      p.inventory.push(item);
+      p.equipment[slotKey] = null;
+
+      game.addLog(`<span class="log-item">【卸裝】</span>卸下了【${item.name}】，放回背包行囊。`);
+      updateEquipmentUI();
+      updateCharacterUI();
+      game.updateUI();
+    }
+
+    // 使用物品 (藥品/強化石/奇物)
+    function useItem(index) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      const item = p.inventory[index];
+      if (!item) return;
+
+      if (item.category === 'MEDICINE') {
+        const healHp = item.attributes?.healHp || 35;
+        const healQi = item.attributes?.healQi || 15;
+        const oldHp = p.hp;
+        const oldQi = p.qi;
+        p.hp = Math.min(p.maxHp, p.hp + healHp);
+        p.qi = Math.min(p.maxQi, p.qi + healQi);
+        const hpDiff = p.hp - oldHp;
+        const qiDiff = p.qi - oldQi;
+
+        game.addLog(`<span class="log-heal">【服藥】</span>使用了【${item.name}】，氣血回復 +${hpDiff}，真氣回復 +${qiDiff}！`);
+      } else if (item.category === 'ENHANCEMENT') {
+        if (p.equipment.weapon) {
+          p.equipment.weapon.attributes = p.equipment.weapon.attributes || {};
+          p.equipment.weapon.attributes.atk = (p.equipment.weapon.attributes.atk || 20) + 2;
+          p.equipment.weapon.stat = `攻擊 +${p.equipment.weapon.attributes.atk} (淬鍊強化) ｜ 招式速度 +5%`;
+          game.addLog(`<span class="log-item">【淬鍊】</span>使用【${item.name}】淬鍊了兵刃【${p.equipment.weapon.name}】，外功攻擊力提升至 ${p.equipment.weapon.attributes.atk}！`);
+        } else {
+          game.addLog('<span class="log-warn">【提示】</span>手上尚未佩戴兵刃，無法進行淬鍊！');
+          return;
+        }
+      } else if (item.category === 'SPECIAL') {
+        p.attributes.rep = (p.attributes.rep || 15) + 5;
+        game.addLog(`<span class="log-world">【參悟】</span>研讀【${item.name}】，若有所思，江湖威名提升 5 點！`);
+      } else {
+        // 其他可穿戴裝備直接調用穿戴
+        equipItem(index);
+        return;
+      }
+
+      // 扣除數量
+      if (item.count && item.count > 1) {
+        item.count--;
+      } else {
+        p.inventory.splice(index, 1);
+      }
+
+      updateEquipmentUI();
+      updateCharacterUI();
+      game.updateUI();
     }
 
     function selectBattleAction(type) {
