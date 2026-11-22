@@ -49,6 +49,30 @@
       "name": "苗疆迷沼分境 (6, 7)",
       "biome": "SWAMP",
       "assignedAt": "2026-11-19T23:35:59.108Z"
+    },
+    "5,7": {
+      "mapFile": "overworld_c5_7_plains_ykgk.tmj",
+      "name": "中原平原分境 (5, 7)",
+      "biome": "PLAINS",
+      "assignedAt": "2026-11-22T10:36:42.743Z"
+    },
+    "4,7": {
+      "mapFile": "overworld_c4_7_plains_3glx.tmj",
+      "name": "中原平原分境 (4, 7)",
+      "biome": "PLAINS",
+      "assignedAt": "2026-11-22T10:36:54.327Z"
+    },
+    "4,6": {
+      "mapFile": "overworld_c4_6_plains_73qq.tmj",
+      "name": "中原平原分境 (4, 6)",
+      "biome": "PLAINS",
+      "assignedAt": "2026-11-22T10:36:56.118Z"
+    },
+    "4,5": {
+      "mapFile": "overworld_c4_5_plains_wjy5.tmj",
+      "name": "中原平原分境 (4, 5)",
+      "biome": "PLAINS",
+      "assignedAt": "2026-11-22T10:36:57.777Z"
     }
   }
 }

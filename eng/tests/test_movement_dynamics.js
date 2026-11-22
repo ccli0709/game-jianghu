@@ -37,7 +37,23 @@ function runTests() {
   assert.strictEqual(shouldLockMovement(targetX - 15, targetY, targetX, targetY), true, '距離目標 15px 時應鎖定移動');
   assert.strictEqual(shouldLockMovement(targetX - 2, targetY, targetX, targetY), false, '距離目標 2px 時應解鎖允許下一步');
 
-  console.log('✅ Movement Dynamics 4/4 測試通過！');
+  // 5. 碰壁回彈 (Bump & Rebound) 動畫計算驗證
+  const bumpOffset = 12;
+  const dx = 1, dy = 0; // 朝右撞牆
+  const bumpedVisualX = targetX + dx * bumpOffset;
+  const bumpedVisualY = targetY + dy * bumpOffset;
+  assert.strictEqual(bumpedVisualX, targetX + 12, '碰壁時視覺 X 座標應朝撞擊方向微突 12px');
+  assert.strictEqual(shouldLockMovement(bumpedVisualX, bumpedVisualY, targetX, targetY), true, '碰壁剛觸發時因距離 12px > 5px 應受防抖保護');
+
+  // 模擬 Ticker 回彈收斂 (lerpFactor = 0.24)
+  let simX = bumpedVisualX;
+  for (let frame = 0; frame < 6; frame++) {
+    simX += (targetX - simX) * 0.24;
+  }
+  const remainingDist = Math.abs(simX - targetX);
+  assert.ok(remainingDist < 3.0, `回彈 6 幀後殘餘距離應小於 3px，實際為 ${remainingDist.toFixed(2)}px`);
+
+  console.log('✅ Movement Dynamics 5/5 測試通過！');
 }
 
 module.exports = { runTests, getLerpFactor, shouldLockMovement };

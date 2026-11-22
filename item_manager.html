@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮世江湖 · 全域物品與神兵百寶總管</title>
+  <style>
+    :root {
+      --bg-dark: #090a0f;
+      --bg-card: #12141e;
+      --bg-card-hover: #191c2b;
+      --border-color: #232738;
+      --border-active: #38bdf8;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-gold: #fbbf24;
+      --accent-red: #f87171;
+      --accent-green: #34d399;
+      --accent-purple: #c084fc;
+      --accent-orange: #fb923c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* 頂部導航列 */
+    header {
+      background: #0d0f17;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-hub {
+      background: #431407;
+      color: #fdba74;
+      border: 1px solid #ea580c;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .stats-summary {
+      display: flex;
+      gap: 12px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .stats-summary span b {
+      color: var(--accent-gold);
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-select-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .file-select {
+      background: #090a10;
+      border: 1px solid #363e58;
+      color: #38bdf8;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      outline: none;
+      min-width: 175px;
+    }
+
+    .file-select:focus {
+      border-color: #38bdf8;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 按鈕樣式 */
+    .btn {
+      background: #181b28;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #23283c;
+      border-color: #3e4766;
+    }
+
+    .btn-primary {
+      background: #1e3a5f;
+      border-color: #0284c7;
+      color: #e0f2fe;
+    }
+
+    .btn-primary:hover {
+      background: #0369a1;
+      border-color: #38bdf8;
+    }
+
+    .btn-save {
+      background: #064e3b;
+      border-color: #059669;
+      color: #d1fae5;
+    }
+
+    .btn-save:hover {
+      background: #047857;
+    }
+
+    .btn-random {
+      background: #4c1d95;
+      border-color: #7c3aed;
+      color: #ede9fe;
+    }
+
+    .btn-random:hover {
+      background: #5b21b6;
+      border-color: #a78bfa;
+    }
+
+    .btn-danger {
+      background: #450a0a;
+      border-color: #dc2626;
+      color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: #7f1d1d;
+    }
+
+    .storage-status {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .status-api {
+      background: #064e3b;
+      color: #6ee7b7;
+      border: 1px solid #059669;
+    }
+
+    .status-local {
+      background: #451a03;
+      color: #fcd34d;
+      border: 1px solid #d97706;
+    }
+
+    /* 主工作區 */
+    main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* 左側清單面板 */
+    #sidebar-items {
+      width: 380px;
+      background: #0f111a;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .search-filter-box {
+      padding: 12px;
+      background: #131622;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #090a0f;
+      border: 1px solid #2d3348;
+      color: var(--text-main);
+      padding: 7px 10px;
+      border-radius: 5px;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .pill-btn {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      background: #181a26;
+      border: 1px solid #272d42;
+      color: var(--text-muted);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .pill-btn:hover {
+      background: #222638;
+      color: var(--text-main);
+    }
+
+    .pill-btn.active {
+      background: #1e3a5f;
+      border-color: #38bdf8;
+      color: #e0f2fe;
+      font-weight: 600;
+    }
+
+    /* 物品卡片列表 */
+    .item-list-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .item-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .item-card:hover {
+      background: var(--bg-card-hover);
+      border-color: #3c4460;
+    }
+
+    .item-card.active {
+      border-color: var(--accent-blue);
+      background: #182236;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    }
+
+    .item-card-icon {
+      font-size: 1.5rem;
+      width: 36px;
+      height: 36px;
+      background: #1a1e2e;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .item-card-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .item-card-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .item-card-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-card-tags {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      margin-top: 3px;
+    }
+
+    /* 品質階級標籤 */
+    .tier-badge {
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .tier-white {
+      background: #27272a;
+      color: #e4e4e7;
+      border: 1px solid #52525b;
+    }
+
+    .tier-green {
+      background: #064e3b;
+      color: #6ee7b7;
+      border: 1px solid #059669;
+    }
+
+    .tier-purple {
+      background: #3b0764;
+      color: #d8b4fe;
+      border: 1px solid #7e22ce;
+    }
+
+    .tier-gold {
+      background: #451a03;
+      color: #fde047;
+      border: 1px solid #d97706;
+    }
+
+    .tier-orange {
+      background: #431407;
+      color: #fdba74;
+      border: 1px solid #ea580c;
+    }
+
+    .tier-red {
+      background: #450a0a;
+      color: #fca5a5;
+      border: 1px solid #dc2626;
+    }
+
+    .category-badge {
+      font-size: 0.65rem;
+      background: #181b28;
+      color: #94a3b8;
+      padding: 1px 5px;
+      border-radius: 3px;
+      border: 1px solid #2b3248;
+    }
+
+    .item-card-price {
+      font-size: 0.73rem;
+      color: var(--accent-gold);
+      font-weight: bold;
+    }
+
+    /* 右側主編輯器面板 */
+    #editor-main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: #0b0c13;
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-label span.req {
+      color: var(--accent-red);
+      margin-left: 2px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: #090a10;
+      border: 1px solid #2b3044;
+      color: var(--text-main);
+      padding: 8px 11px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.15s ease;
+      width: 100%;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 1px var(--accent-blue);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 60px;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+
+    /* 專屬類型屬性區高亮外框 */
+    .type-attrs-box {
+      border: 1px solid #283049;
+      background: #111422;
+      border-radius: 6px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .type-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed #2a344f;
+      padding-bottom: 8px;
+    }
+
+    .type-banner-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 隨機建議彈窗 Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.78);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #131624;
+      border: 1px solid #363e58;
+      border-radius: 8px;
+      width: 580px;
+      max-width: 90vw;
+      padding: 22px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .suggestion-preview-card {
+      background: #0b0d15;
+      border: 1px solid #282f45;
+      border-radius: 6px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* 浮動 Toast 提示 */
+    #toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #064e3b;
+      color: #a7f3d0;
+      border: 1px solid #059669;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+      display: none;
+      z-index: 3000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 頂部導航列 -->
+  <header>
+    <div class="header-left">
+      <h1>🗡️ 浮世江湖 <span class="badge-hub">全域物品總管</span></h1>
+      <div class="stats-summary">
+        <span>全域物品: <b id="stat-total">0</b> 件</span>
+        <span>兵刃: <b id="stat-weapons">0</b></span>
+        <span>防具: <b id="stat-armors">0</b></span>
+        <span>丹藥: <b id="stat-meds">0</b></span>
+        <span>奇寶: <b id="stat-enhancements">0</b></span>
+      </div>
+    </div>
+
+    <!-- 專案物品庫選取核心區 (以下拉選單方式選擇讀取專案裡保存的其他物品庫) -->
+    <div class="header-center">
+      <span class="file-select-label">📦 專案物品庫:</span>
+      <select id="save-file-select" class="file-select" onchange="onSelectSaveFileChange(this.value)">
+        <option value="default.json">default.json (官方基準庫 - 108件)</option>
+      </select>
+      <button class="btn btn-primary" onclick="openNewSaveModal()">＋ 另存新庫</button>
+      <button class="btn btn-save" onclick="saveItemsToProject()" title="快捷鍵: Ctrl+S">💾 保存修改 (Ctrl+S)</button>
+    </div>
+
+    <div class="header-actions">
+      <span id="storage-badge" class="storage-status status-api">探測環境中...</span>
+      <button class="btn" style="border-color:#d97706; color:#fde047;" onclick="confirmResetToDefault()"
+        title="各類別各種等級分別隨機生成 3 樣 (共108件)">🔄 重設為 Default</button>
+      <button class="btn btn-random" onclick="openRandomModal()">🎲 隨機建議</button>
+      <button class="btn btn-primary" onclick="createNewItem()">➕ 新增物品</button>
+      <button class="btn" style="border-color:#059669; color:#a7f3d0;"
+        onclick="window.location.href='world_editor.html'">🌍 世界地圖</button>
+      <button class="btn" style="border-color:#0284c7; color:#7dd3fc;" onclick="window.location.href='editor.html'">🗺️
+        地圖編輯器</button>
+      <button class="btn" style="border-color:#38bdf8; color:#38bdf8;" onclick="window.location.href='index.html'">⚔️
+        返回遊戲</button>
+    </div>
+  </header>
+
+  <!-- 主工作區 -->
+  <main>
+    <!-- 左側清單面板 -->
+    <aside id="sidebar-items">
+      <div class="search-filter-box">
+        <input type="text" id="filter-search" class="search-input" placeholder="🔍 搜尋物品名稱 / ID / 描述..."
+          oninput="applyFilters()">
+
+        <!-- 類別篩選 -->
+        <div class="filter-pills" id="category-pills">
+          <button class="pill-btn active" data-cat="ALL" onclick="setCategoryFilter('ALL')">全部</button>
+          <button class="pill-btn" data-cat="MELEE_WEAPON" onclick="setCategoryFilter('MELEE_WEAPON')">近戰兵刃</button>
+          <button class="pill-btn" data-cat="RANGED_WEAPON" onclick="setCategoryFilter('RANGED_WEAPON')">遠程暗器</button>
+          <button class="pill-btn" data-cat="ARMOR" onclick="setCategoryFilter('ARMOR')">各式防具</button>
+          <button class="pill-btn" data-cat="MEDICINE" onclick="setCategoryFilter('MEDICINE')">補血藥品</button>
+          <button class="pill-btn" data-cat="ENHANCEMENT" onclick="setCategoryFilter('ENHANCEMENT')">強化玄石</button>
+          <button class="pill-btn" data-cat="SPECIAL" onclick="setCategoryFilter('SPECIAL')">秘寶奇物</button>
+        </div>
+
+        <!-- 品質篩選 -->
+        <div class="filter-pills" id="tier-pills" style="margin-top:2px;">
+          <button class="pill-btn active" data-tier="ALL" onclick="setTierFilter('ALL')">全品質</button>
+          <button class="pill-btn" data-tier="COMMON" onclick="setTierFilter('COMMON')">凡品</button>
+          <button class="pill-btn" data-tier="UNCOMMON" onclick="setTierFilter('UNCOMMON')">良品</button>
+          <button class="pill-btn" data-tier="RARE" onclick="setTierFilter('RARE')">上品</button>
+          <button class="pill-btn" data-tier="EPIC" onclick="setTierFilter('EPIC')">極品</button>
+          <button class="pill-btn" data-tier="LEGENDARY" onclick="setTierFilter('LEGENDARY')">寶器</button>
+        </div>
+      </div>
+
+      <!-- 物品卡片清單 -->
+      <div class="item-list-container" id="item-list">
+        <!-- 動態渲染卡片列表 -->
+      </div>
+    </aside>
+
+    <!-- 右側詳細編輯區 -->
+    <section id="editor-main">
+      <div class="panel-card" id="form-container">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span id="editor-item-icon" style="font-size:1.3rem;">🗡️</span>
+            <span id="editor-item-title">編輯物品詳細屬性</span>
+            <span class="tier-badge tier-purple" id="editor-item-tier-badge">上品</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn" onclick="duplicateCurrentItem()">📋 複製此物品</button>
+            <button class="btn btn-danger" onclick="deleteCurrentItem()">🗑️ 刪除物品</button>
+          </div>
+        </div>
+
+        <!-- 1. 核心基礎通用欄位 -->
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label">物品唯一代碼 (ID)<span class="req">*</span></label>
+            <input type="text" id="inp-id" class="form-input" placeholder="例如: wpn_cold_iron_sword">
+          </div>
+          <div class="form-group">
+            <label class="form-label">物品名稱<span class="req">*</span></label>
+            <input type="text" id="inp-name" class="form-input" placeholder="例如: 寒鐵青鋒劍">
+          </div>
+          <div class="form-group">
+            <label class="form-label">圖標 Emoji</label>
+            <input type="text" id="inp-icon" class="form-input" placeholder="例如: 🗡️ / 🏹 / 🥋 / 💊">
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label">物品大類<span class="req">*</span></label>
+            <select id="inp-category" class="form-select" onchange="onCategoryChange(this.value)">
+              <option value="MELEE_WEAPON">近戰武器 (Melee Weapon)</option>
+              <option value="RANGED_WEAPON">遠程暗器 (Ranged / Hidden Weapon)</option>
+              <option value="ARMOR">各式防具 (Armor / Clothing)</option>
+              <option value="MEDICINE">補血靈藥 (Medicine / Pill)</option>
+              <option value="ENHANCEMENT">強化鍛造 (Enhancement Material)</option>
+              <option value="SPECIAL">特殊奇寶 (Special & Quest Artifact)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">品質品階<span class="req">*</span></label>
+            <select id="inp-tier" class="form-select" onchange="onTierChange(this.value)">
+              <option value="COMMON">凡品 (白 - 粗陋尋常)</option>
+              <option value="UNCOMMON">良品 (綠 - 江湖優質)</option>
+              <option value="RARE" selected>上品 (紫 - 名門精鑄)</option>
+              <option value="EPIC">極品 (金 - 罕世重寶)</option>
+              <option value="LEGENDARY">寶器 (橙 - 絕代神兵)</option>
+              <option value="MYTHIC">神兵絕品 (紅 - 天下獨步)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">修為境界要求</label>
+            <select id="inp-realm" class="form-select">
+              <option value="初入江湖">初入江湖 (Lv.1)</option>
+              <option value="三流散客">三流散客 (Lv.10)</option>
+              <option value="二流高手" selected>二流高手 (Lv.25)</option>
+              <option value="一流高手">一流高手 (Lv.45)</option>
+              <option value="化境宗師">化境宗師 (Lv.70)</option>
+              <option value="無限制">無修為限制</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label">市井賣出價值 (碎銀/兩)</label>
+            <input type="number" id="inp-value" class="form-input" min="0" value="50">
+          </div>
+          <div class="form-group">
+            <label class="form-label">堆疊上限 (Stack Max)</label>
+            <input type="number" id="inp-stack" class="form-input" min="1" max="999" value="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">行囊重量 (斤)</label>
+            <input type="number" id="inp-weight" class="form-input" min="0" step="0.1" value="2.0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">背景典故與敘述 (Lore Text)</label>
+          <textarea id="inp-desc" class="form-textarea" rows="2" placeholder="詳細描寫該物品之鍛造由來、江湖傳說或靈效..."></textarea>
+        </div>
+
+        <!-- 2. 動態類型專屬屬性卡片 -->
+        <div class="type-attrs-box" id="dynamic-attrs-container">
+          <!-- 根據 category 動態掛載專屬欄位 -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 另存新檔彈窗 Modal -->
+  <div class="modal-overlay" id="new-save-modal">
+    <div class="modal-content" style="width: 440px;">
+      <div class="modal-title">
+        <span>💾 另存為新的物品存檔檔案</span>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+        將當前編輯的物品清單另存為一個新的 JSON 存檔，儲存於專案 <code>data/</code> 目錄中。
+      </p>
+
+      <div class="form-group" style="margin-top:6px;">
+        <label class="form-label">存檔檔案名稱 (.json)<span class="req">*</span></label>
+        <input type="text" id="inp-new-save-filename" class="form-input" placeholder="例如: items_hardcore.json">
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+        <button class="btn" onclick="closeNewSaveModal()">取消</button>
+        <button class="btn btn-save" onclick="confirmCreateNewSave()">確認建立並儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 隨機建議生成器彈窗 -->
+  <div class="modal-overlay" id="random-modal">
+    <div class="modal-content">
+      <div class="modal-title">
+        <span>🎲 隨機物品設計建議生成器 (Random Suggester)</span>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+        依照武俠世界的命名律、詞綴矩陣與數值平衡模型，隨機推演出一件完全配置好的物品。
+      </p>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">鎖定類型 (可選)</label>
+          <select id="rand-opt-cat" class="form-select">
+            <option value="RANDOM">🎲 隨機類別 (Random)</option>
+            <option value="MELEE_WEAPON">近戰武器</option>
+            <option value="RANGED_WEAPON">遠程暗器</option>
+            <option value="ARMOR">各式防具</option>
+            <option value="MEDICINE">補血藥品</option>
+            <option value="ENHANCEMENT">強化鍛造</option>
+            <option value="SPECIAL">特殊奇寶</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">鎖定品質 (可選)</label>
+          <select id="rand-opt-tier" class="form-select">
+            <option value="RANDOM">🎲 隨機品質 (Random)</option>
+            <option value="COMMON">凡品 (白)</option>
+            <option value="UNCOMMON">良品 (綠)</option>
+            <option value="RARE">上品 (紫)</option>
+            <option value="EPIC">極品 (金)</option>
+            <option value="LEGENDARY">寶器 (橙)</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-random" style="justify-content:center; padding:9px;" onclick="generateRandomSuggestion()">
+        ✨ 立即隨機生成新物品建議
+      </button>
+
+      <!-- 建議成果預覽 -->
+      <div class="suggestion-preview-card" id="suggestion-preview" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <b id="sug-name" style="font-size:1.05rem; color:#f8fafc;">寒鐵青鋒劍</b>
+          <span class="tier-badge tier-purple" id="sug-tier">上品</span>
+        </div>
+        <div style="font-size:0.75rem; color:#38bdf8;" id="sug-meta">近戰武器 · 價值 120 兩 · 需求 二流高手</div>
+        <div style="font-size:0.8rem; color:#cbd5e1; line-height:1.4;" id="sug-attrs">攻擊力 +25 ｜ 招式速度 +5% ｜ 15% 觸發【霜凍】
+        </div>
+        <div style="font-size:0.75rem; color:#94a3b8; font-style:italic;" id="sug-desc">長白山地底寒鐵鍛造，劍身清幽，出鞘生霜。</div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button class="btn" onclick="closeRandomModal()">取消</button>
+        <button class="btn btn-primary" id="btn-apply-suggestion" style="display:none;"
+          onclick="applySuggestionAndCreate()">
+          ➕ 套用此建議並新增至物品庫
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 浮動提示 Toast -->
+  <div id="toast-msg"></div>
+
+  <script src="src/core/ItemGenerator.js"></script>
+  <script>
+    // ========================================================
+    // 全域狀態與初始化
+    // ========================================================
+    let itemsCatalog = [];
+    let currentSelectedId = null;
+    let currentCatFilter = 'ALL';
+    let currentTierFilter = 'ALL';
+    let currentSuggestion = null;
+    let isConnectedToApi = false;
+    let currentSaveFilename = 'default.json';
+
+    // 品質色彩與徽章映射
+    const TIER_CONFIG = {
+      COMMON: { name: '凡品', class: 'tier-white', color: '#e4e4e7', mult: 1.0 },
+      UNCOMMON: { name: '良品', class: 'tier-green', color: '#6ee7b7', mult: 1.4 },
+      RARE: { name: '上品', class: 'tier-purple', color: '#d8b4fe', mult: 2.2 },
+      EPIC: { name: '極品', class: 'tier-gold', color: '#fde047', mult: 3.5 },
+      LEGENDARY: { name: '寶器', class: 'tier-orange', color: '#fdba74', mult: 5.5 },
+      MYTHIC: { name: '神兵絕品', class: 'tier-red', color: '#fca5a5', mult: 8.0 }
+    };
+
+    const CATEGORY_NAMES = {
+      MELEE_WEAPON: '近戰兵刃',
+      RANGED_WEAPON: '遠程暗器',
+      ARMOR: '各式防具',
+      MEDICINE: '補血藥品',
+      ENHANCEMENT: '強化玄石',
+      SPECIAL: '秘寶奇物'
+    };
+
+    // 啟動加載
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadCatalog();
+      bindShortcuts();
+    });
+
+    function bindShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          saveItemsToProject();
+        }
+      });
+    }
+
+    // 顯示 Toast 提示
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast-msg');
+      toast.innerText = msg;
+      toast.style.background = isSuccess ? '#064e3b' : '#7f1d1d';
+      toast.style.borderColor = isSuccess ? '#059669' : '#dc2626';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    }
+
+    // ========================================================
+    // 資料讀取與多存檔管理核心 (下拉選單列表所有物品庫，預設帶出 default)
+    // ========================================================
+    async function loadSaveFilesList() {
+      const select = document.getElementById('save-file-select');
+      if (!select) return;
+
+      try {
+        const res = await fetch('/api/items/files');
+        if (res.ok) {
+          const files = await res.json();
+          if (Array.isArray(files) && files.length > 0) {
+            isConnectedToApi = true;
+            // 排序：將 default.json 優先排在最前
+            files.sort((a, b) => {
+              if (a === 'default.json') return -1;
+              if (b === 'default.json') return 1;
+              return a.localeCompare(b);
+            });
+
+                                  files.forEach(f => {
+              const o                    tion');
+              opt.value = f;
+              opt.innerText = f === 'default.json' ? `${f} (官方基準庫 - 108件)` :
+                             (f === 'items_default.json' ? `${f} (基準庫備份)` :
+                             (f === 'items.json' ? `${f} (遊戲運行庫)` : f));
+              select.appendChild(opt);
+            });
+
+            // 若無指定或當前檔案不在清單中，優先指定帶出 default.json
+            if (currentSaveFilename && files.includes(currentSaveFilename)) {
+              select.value = currentSaveFilename;
+            } else if (files.includes('default.json')) {
+              currentSaveFilename = 'default.json';
+              select.value = 'default.json';
+            } else if (files.includes('items_default.json')) {
+              currentSaveFilename = 'items_default.json';
+              select.value = 'items_default.json';
+            } else {
+              currentSaveFilename = files[0];
+              select.value = files[0];
+            }
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('載入存檔檔案清單失敗，使用本機預設選單:', e);
+      }
+
+      // 離線回退模式
+      select.innerHTML = `
+        <option value="default.json">default.json (官方基準庫 - 108件)</option>
+        <option value="items.json">items.json (遊戲運行庫)</option>
+      `;
+      if (!currentSaveFilename || (currentSaveFilename !== 'items.json' && currentSaveFilename !== 'default.json')) {
+        currentSaveFilename = 'default.json';
+      }
+      select.value = currentSaveFilename;
+    }
+
+    async function onSelectSaveFileChange(filename) {
+      if (currentSelectedId) collectCurrentFormToItem();
+      currentSaveFilename = filename;
+
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/items/files/${filename}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              itemsCatalog = data;
+              renderSidebar();
+              if (itemsCatalog.length > 0) selectItem(itemsCatalog[0].id);
+              showToast(`📂 已成功載入專案存檔: ${filename} (共 ${itemsCatalog.length} 件)`);
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn('載入指定存檔失敗:', e);
+        }
+      }
+
+      const local = localStorage.getItem(`JIANGHU_ITEMS_${filename}`) || localStorage.getItem('JIANGHU_ITEMS_CATALOG');
+      if (local) {
+        try { itemsCatalog = JSON.parse(local); } catch (e) { }
+      }
+      renderSidebar();
+      if (itemsCatalog.length > 0) selectItem(itemsCatalog[0].id);
+      showToast(`📂 已載入本地存檔: ${filename}`);
+    }
+
+    function openNewSaveModal() {
+      document.getElementById('new-save-modal').classList.add('show');
+      document.getElementById('inp-new-save-filename').value = `items_custom_${Date.now().toString(36)}.json`;
+    }
+
+    function closeNewSaveModal() {
+      document.getElementById('new-save-modal').classList.remove('show');
+    }
+
+    async function confirmCreateNewSave() {
+      let rawName = document.getElementById('inp-new-save-filename').value.trim();
+      if (!rawName) {
+        alert('請輸入有效的存檔檔案名稱！');
+        return;
+      }
+      if (!rawName.toLowerCase().endsWith('.json')) {
+        rawName += '.json';
+      }
+
+      closeNewSaveModal();
+      collectCurrentFormToItem();
+      currentSaveFilename = rawName;
+
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/items/files/${rawName}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(itemsCatalog, null, 2)
+          });
+          const resJson = await res.json();
+          if (res.ok && resJson.success) {
+            await loadSaveFilesList();
+            showToast(`🎉 已成功另存新檔為: ${rawName}！`);
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      localStorage.setItem(`JIANGHU_ITEMS_${rawName}`, JSON.stringify(itemsCatalog));
+      const select = document.getElementById('save-file-select');
+      const opt = document.createElement('option');
+      opt.value = rawName;
+      opt.innerText = `${rawName} (本地)`;
+      select.appendChild(opt);
+      select.value = rawName;
+      showToast(`🎉 已在本地成功建立並保存新存檔: ${rawName}`);
+    }
+
+    async function confirmResetToDefault() {
+      if (!confirm('確定要將全域物品庫重設為預設 Default 嗎？\n這將為 6 大類別、6 大品質階級各隨機生成 3 樣物品 (共 108 件)，並保存至 default！')) {
+        return;
+      }
+
+      currentSaveFilename = 'default.json';
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch('/api/items/reset-default', { method: 'POST' });
+          if (res.ok) {
+            const json = await res.json();
+            showToast(`✅ ${json.message}`);
+            await loadCatalog();
+            return;
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+      }
+
+      // 離線模式動態生成
+      if (typeof generateDefaultCatalog === 'function') {
+        itemsCatalog = generateDefaultCatalog(3);
+      } else {
+        itemsCatalog = getInitialDefaultCatalog();
+      }
+      localStorage.setItem('JIANGHU_ITEMS_default', JSON.stringify(itemsCatalog));
+      localStorage.setItem('JIANGHU_ITEMS_default.json', JSON.stringify(itemsCatalog));
+      localStorage.setItem('JIANGHU_ITEMS_CATALOG', JSON.stringify(itemsCatalog));
+      await loadSaveFilesList();
+      renderSidebar();
+      if (itemsCatalog.length > 0) selectItem(itemsCatalog[0].id);
+      showToast(`🔄 已在本地成功生成 default 物品資料庫，共 ${itemsCatalog.length} 件！`);
+    }
+
+    async function loadCatalog() {
+      const badge = document.getElementById('storage-badge');
+      try {
+        const testRes = await fetch('/api/items/files');
+        if (testRes.ok) {
+          isConnectedToApi = true;
+          badge.innerText = '● 專案 API 連線中';
+          badge.className = 'storage-status status-api';
+          await loadSaveFilesList();
+
+          const targetFilename = currentSaveFilename || 'default.json';
+          const fileRes = await fetch(`/api/items/files/${targetFilename}`);
+          if (fileRes.ok) {
+            const data = await fileRes.json();
+            if (Array.isArray(data) && data.length > 0) {
+              itemsCatalog = data;
+              renderSidebar();
+              if (itemsCatalog.length > 0) selectItem(itemsCatalog[0].id);
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('API 未連接，回退至本地快取與內建庫');
+      }
+
+      // 回退至本地 localStorage
+      isConnectedToApi = false;
+      badge.innerText = '○ 離線本機模式 (localStorage)';
+      badge.className = 'storage-status status-local';
+      await loadSaveFilesList();
+
+      const targetFilename = currentSaveFilename || 'default.json';
+      const local = localStorage.getItem(`JIANGHU_ITEMS_${targetFilename}`) ||
+                    localStorage.getItem('JIANGHU_ITEMS_default') ||
+                    localStorage.getItem('JIANGHU_ITEMS_default.json') ||
+                    localStorage.getItem('JIANGHU_ITEMS_CATALOG');
+      if (local) {
+        try {
+          itemsCatalog = JSON.parse(local);
+        } catch (e) { }
+      }
+
+      if (!itemsCatalog || itemsCatalog.length === 0) {
+        if (typeof generateDefaultCatalog === 'function') {
+          itemsCatalog = generateDefaultCatalog(3);
+        } else {
+          itemsCatalog = getInitialDefaultCatalog();
+        }
+        localStorage.setItem('JIANGHU_ITEMS_default', JSON.stringify(itemsCatalog));
+        localStorage.setItem('JIANGHU_ITEMS_default.json', JSON.stringify(itemsCatalog));
+        localStorage.setItem('JIANGHU_ITEMS_CATALOG', JSON.stringify(itemsCatalog));
+      }
+
+      renderSidebar();
+      if (itemsCatalog.length > 0) selectItem(itemsCatalog[0].id);
+    }
+
+    async function saveItemsToProject() {
+      collectCurrentFormToItem();
+
+      // 情境 A: 專案伺服器 API 保存至指定檔案
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/items/files/${currentSaveFilename}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(itemsCatalog, null, 2)
+          });
+          const resJson = await res.json();
+          if (res.ok && resJson.success) {
+            showToast(`💾 已成功保存至 ${currentSaveFilename} (共 ${itemsCatalog.length} 件)`);
+            renderSidebar();
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // 情境 B: 離線本機快取
+      localStorage.setItem(`JIANGHU_ITEMS_${currentSaveFilename}`, JSON.stringify(itemsCatalog));
+      localStorage.setItem('JIANGHU_ITEMS_CATALOG', JSON.stringify(itemsCatalog));
+      showToast(`💾 已儲存至本地快取 [${currentSaveFilename}] (共 ${itemsCatalog.length} 件物品)`);
+      renderSidebar();
+    }
+
+    // ========================================================
+    // 側邊欄渲染與過濾
+    // ========================================================
+    function renderSidebar() {
+      updateSummaryStats();
+      const listContainer = document.getElementById('item-list');
+      listContainer.innerHTML = '';
+
+      const query = (document.getElementById('filter-search')?.value || '').trim().toLowerCase();
+
+      const filtered = itemsCatalog.filter(item => {
+        if (currentCatFilter !== 'ALL' && item.category !== currentCatFilter) return false;
+        if (currentTierFilter !== 'ALL' && item.tier !== currentTierFilter) return false;
+        if (query) {
+          const matchName = item.name.toLowerCase().includes(query);
+          const matchId = item.id.toLowerCase().includes(query);
+          const matchDesc = (item.desc || '').toLowerCase().includes(query);
+          if (!matchName && !matchId && !matchDesc) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `<div style="text-align:center; padding:30px; font-size:0.8rem; color:#64748b;">無符合篩選之物品</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `item-card ${item.id === currentSelectedId ? 'active' : ''}`;
+        card.onclick = () => selectItem(item.id);
+
+        const tierInfo = TIER_CONFIG[item.tier] || TIER_CONFIG.COMMON;
+        const catName = CATEGORY_NAMES[item.category] || item.category;
+
+        // 計算數值簡介
+        let statSummary = '';
+        if (item.category === 'MELEE_WEAPON') statSummary = `攻 +${item.attributes?.atk || 0}`;
+        else if (item.category === 'RANGED_WEAPON') statSummary = `遠攻 +${item.attributes?.rangedAtk || 0}`;
+        else if (item.category === 'ARMOR') statSummary = `防 +${item.attributes?.def || 0} / 血 +${item.attributes?.hpBonus || 0}`;
+        else if (item.category === 'MEDICINE') statSummary = `回血 +${item.attributes?.healHp || 0}`;
+        else if (item.category === 'ENHANCEMENT') statSummary = item.attributes?.upgradeBonus || '強化胚料';
+        else statSummary = '特殊效果';
+
+        card.innerHTML = `
+          <div class="item-card-icon">${item.icon || '📦'}</div>
+          <div class="item-card-info">
+            <div class="item-card-title">
+              <span>${item.name}</span>
+            </div>
+            <div class="item-card-desc">${statSummary} ｜ ${item.desc || ''}</div>
+            <div class="item-card-tags">
+              <span class="tier-badge ${tierInfo.class}">${tierInfo.name}</span>
+              <span class="category-badge">${catName}</span>
+              <span class="item-card-price">🪙 ${item.value || 0} 兩</span>
+            </div>
+          </div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function updateSummaryStats() {
+      document.getElementById('stat-total').innerText = itemsCatalog.length;
+      document.getElementById('stat-weapons').innerText = itemsCatalog.filter(i => i.category === 'MELEE_WEAPON' || i.category === 'RANGED_WEAPON').length;
+      document.getElementById('stat-armors').innerText = itemsCatalog.filter(i => i.category === 'ARMOR').length;
+      document.getElementById('stat-meds').innerText = itemsCatalog.filter(i => i.category === 'MEDICINE').length;
+      document.getElementById('stat-enhancements').innerText = itemsCatalog.filter(i => i.category === 'ENHANCEMENT' || i.category === 'SPECIAL').length;
+    }
+
+    function setCategoryFilter(cat) {
+      currentCatFilter = cat;
+      document.querySelectorAll('#category-pills .pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === cat);
+      });
+      renderSidebar();
+    }
+
+    function setTierFilter(tier) {
+      currentTierFilter = tier;
+      document.querySelectorAll('#tier-pills .pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tier === tier);
+      });
+      renderSidebar();
+    }
+
+    function applyFilters() {
+      renderSidebar();
+    }
+
+    // ========================================================
+    // 物品選取與表單雙向綁定
+    // ========================================================
+    function selectItem(id) {
+      // 換選取項前先儲存當前項改動
+      if (currentSelectedId && currentSelectedId !== id) {
+        collectCurrentFormToItem();
+      }
+
+      currentSelectedId = id;
+      const item = itemsCatalog.find(i => i.id === id);
+      if (!item) return;
+
+      // 載入基本欄位
+      document.getElementById('inp-id').value = item.id || '';
+      document.getElementById('inp-name').value = item.name || '';
+      document.getElementById('inp-icon').value = item.icon || '🗡️';
+      document.getElementById('inp-category').value = item.category || 'MELEE_WEAPON';
+      document.getElementById('inp-tier').value = item.tier || 'RARE';
+      document.getElementById('inp-realm').value = item.requiredRealm || '二流高手';
+      document.getElementById('inp-value').value = item.value ?? 50;
+      document.getElementById('inp-stack').value = item.stackMax ?? 1;
+      document.getElementById('inp-weight').value = item.weight ?? 2.0;
+      document.getElementById('inp-desc').value = item.desc || '';
+
+      // 更新頂部卡片預覽
+      document.getElementById('editor-item-icon').innerText = item.icon || '🗡️';
+      document.getElementById('editor-item-title').innerText = item.name || '未命名物品';
+      const tierInfo = TIER_CONFIG[item.tier] || TIER_CONFIG.RARE;
+      const tierBadge = document.getElementById('editor-item-tier-badge');
+      tierBadge.className = `tier-badge ${tierInfo.class}`;
+      tierBadge.innerText = tierInfo.name;
+
+      // 渲染動態專屬屬性區
+      renderDynamicAttributes(item.category, item.attributes || {});
+
+      renderSidebar();
+    }
+
+    function collectCurrentFormToItem() {
+      if (!currentSelectedId) return;
+      const item = itemsCatalog.find(i => i.id === currentSelectedId);
+      if (!item) return;
+
+      const newId = document.getElementById('inp-id').value.trim();
+      item.id = newId || item.id;
+      item.name = document.getElementById('inp-name').value.trim() || '未命名物品';
+      item.icon = document.getElementById('inp-icon').value.trim() || '📦';
+      item.category = document.getElementById('inp-category').value;
+      item.tier = document.getElementById('inp-tier').value;
+      const tierInfo = TIER_CONFIG[item.tier] || TIER_CONFIG.COMMON;
+      item.tierName = tierInfo.name;
+      item.tierClass = tierInfo.class;
+      item.requiredRealm = document.getElementById('inp-realm').value;
+      item.value = parseInt(document.getElementById('inp-value').value) || 0;
+      item.stackMax = parseInt(document.getElementById('inp-stack').value) || 1;
+      item.weight = parseFloat(document.getElementById('inp-weight').value) || 0.1;
+      item.desc = document.getElementById('inp-desc').value.trim();
+
+      // 收集專屬類型屬性
+      item.attributes = collectDynamicAttributes(item.category);
+    }
+
+    function onCategoryChange(newCat) {
+      renderDynamicAttributes(newCat, {});
+    }
+
+    function onTierChange(newTier) {
+      const tierInfo = TIER_CONFIG[newTier] || TIER_CONFIG.COMMON;
+      const tierBadge = document.getElementById('editor-item-tier-badge');
+      tierBadge.className = `tier-badge ${tierInfo.class}`;
+      tierBadge.innerText = tierInfo.name;
+    }
+
+    // ========================================================
+    // 動態專屬屬性區渲染器 (依照類型)
+    // ========================================================
+    function renderDynamicAttributes(category, attrs = {}) {
+      const box = document.getElementById('dynamic-attrs-container');
+      box.innerHTML = '';
+
+      if (category === 'MELEE_WEAPON') {
+        box.innerHTML = `
+          <div class="type-banner">
+            <span class="type-banner-title">🗡️ 近戰兵刃專屬屬性 (Melee Weapon Specifics)</span>
+            <span style="font-size:0.75rem; color:#94a3b8;">兵刃鋒芒與外功招式加乘</span>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">外功傷害 (Atk)</label>
+              <input type="number" id="attr-atk" class="form-input" value="${attrs.atk ?? 25}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">招式速度修正 (Speed %)</label>
+              <input type="number" id="attr-speedMod" class="form-input" value="${attrs.speedMod ?? 0}" placeholder="-15 ~ +25">
+            </div>
+            <div class="form-group">
+              <label class="form-label">破甲穿透率 (Armor Pierce %)</label>
+              <input type="number" id="attr-armorPiercing" class="form-input" value="${attrs.armorPiercing ?? 10}" min="0" max="100">
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">攻擊距離 (Reach 格數)</label>
+              <select id="attr-reach" class="form-select">
+                <option value="1" ${attrs.reach === 1 ? 'selected' : ''}>1 格 (常規劍/刀/匕/拳)</option>
+                <option value="2" ${attrs.reach === 2 ? 'selected' : ''}>2 格 (長槍/長棍/方天畫戟)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">專屬武學套路 (Martial Move)</label>
+              <input type="text" id="attr-martialMove" class="form-input" value="${attrs.martialMove || ''}" placeholder="例如: 流霜刺水 / 力劈華山">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">兵刃附帶特效 / 異常狀態詞條</label>
+            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 命中時 15% 觸發【霜凍】/ 造成流血內傷">
+          </div>
+        `;
+      } else if (category === 'RANGED_WEAPON') {
+        box.innerHTML = `
+          <div class="type-banner">
+            <span class="type-banner-title">🏹 遠程暗器專屬屬性 (Ranged Weapon Specifics)</span>
+            <span style="font-size:0.75rem; color:#94a3b8;">射程、淬毒與消耗模式</span>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">暗器殺傷力 (Ranged Atk)</label>
+              <input type="number" id="attr-rangedAtk" class="form-input" value="${attrs.rangedAtk ?? 20}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">有效射程格數 (Effective Range)</label>
+              <input type="number" id="attr-effectiveRange" class="form-input" value="${attrs.effectiveRange ?? 4}" min="2" max="8">
+            </div>
+            <div class="form-group">
+              <label class="form-label">致命暴擊率 (Crit Rate %)</label>
+              <input type="number" id="attr-critRate" class="form-input" value="${attrs.critRate ?? 15}" min="0" max="100">
+            </div>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">淬毒命中率 (Poison Chance %)</label>
+              <input type="number" id="attr-poisonChance" class="form-input" value="${attrs.poisonChance ?? 0}" min="0" max="100">
+            </div>
+            <div class="form-group">
+              <label class="form-label">是否消耗品 (Is Consumable)</label>
+              <select id="attr-isConsumable" class="form-select">
+                <option value="true" ${attrs.isConsumable !== false ? 'selected' : ''}>是 (投擲後耗損數量)</option>
+                <option value="false" ${attrs.isConsumable === false ? 'selected' : ''}>否 (永久暗器機關匣/長弓)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">每次耗能/彈藥數 (Ammo Cost)</label>
+              <input type="number" id="attr-ammoCost" class="form-input" value="${attrs.ammoCost ?? 1}" min="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">特殊擊中詞條 / 附毒爆炸效果</label>
+            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 命中時生成火海 / 附加五毒劇毒每回合-10HP">
+          </div>
+        `;
+      } else if (category === 'ARMOR') {
+        box.innerHTML = `
+          <div class="type-banner">
+            <span class="type-banner-title">🥋 各式防具專屬屬性 (Armor Specifics)</span>
+            <span style="font-size:0.75rem; color:#94a3b8;">身軀護甲、經脈抗性與輕功身法修正</span>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">防具穿戴部位 (Armor Slot)</label>
+              <select id="attr-armorSlot" class="form-select">
+                <option value="貼身輕袍" ${attrs.armorSlot === '貼身輕袍' ? 'selected' : ''}>貼身輕袍 (Robes)</option>
+                <option value="身軀重鎧" ${attrs.armorSlot === '身軀重鎧' ? 'selected' : ''}>身軀重鎧 (Heavy Armor)</option>
+                <option value="踏雲軟靴" ${attrs.armorSlot === '踏雲軟靴' ? 'selected' : ''}>踏雲軟靴 (Boots)</option>
+                <option value="護腕靈鐲" ${attrs.armorSlot === '護腕靈鐲' ? 'selected' : ''}>護腕靈鐲 (Bracers)</option>
+                <option value="腰佩靈寶" ${attrs.armorSlot === '腰佩靈寶' ? 'selected' : ''}>腰佩靈寶 (Trinket / Jade)</option>
+                <option value="護心重鏡" ${attrs.armorSlot === '護心重鏡' ? 'selected' : ''}>護心重鏡 (Mirror)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">護體硬功防禦 (Def)</label>
+              <input type="number" id="attr-def" class="form-input" value="${attrs.def ?? 15}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">氣血上限加成 (HP Bonus)</label>
+              <input type="number" id="attr-hpBonus" class="form-input" value="${attrs.hpBonus ?? 30}">
+            </div>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">經脈負荷抗性 (Strain Res %)</label>
+              <input type="number" id="attr-strainRes" class="form-input" value="${attrs.strainRes ?? 10}" min="0" max="100">
+            </div>
+            <div class="form-group">
+              <label class="form-label">身法閃避修正 (Dodge %)</label>
+              <input type="number" id="attr-dodgeMod" class="form-input" value="${attrs.dodgeMod ?? 5}" placeholder="-15 ~ +30">
+            </div>
+            <div class="form-group">
+              <label class="form-label">夜間隱匿度修正 (Stealth %)</label>
+              <input type="number" id="attr-stealthMod" class="form-input" value="${attrs.stealthMod ?? 0}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">護身被動特質 / 特殊效果詞條</label>
+            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 大地圖行進真氣自回 +2/h ｜ 火傷害減免 20%">
+          </div>
+        `;
+      } else if (category === 'MEDICINE') {
+        box.innerHTML = `
+          <div class="type-banner">
+            <span class="type-banner-title">💊 補血丹藥專屬屬性 (Medicine Specifics)</span>
+            <span style="font-size:0.75rem; color:#94a3b8;">氣血真氣回復、外傷止血與調息冷卻</span>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">藥物分類 (Med Type)</label>
+              <select id="attr-medType" class="form-select">
+                <option value="外傷靈藥" ${attrs.medType === '外傷靈藥' ? 'selected' : ''}>外傷靈藥 (金瘡散/生肌膏)</option>
+                <option value="內服靈丹" ${attrs.medType === '內服靈丹' ? 'selected' : ''}>內服靈丹 (小還丹/大還丹)</option>
+                <option value="清心解毒" ${attrs.medType === '清心解毒' ? 'selected' : ''}>清心解毒 (雄黃散/化毒丸)</option>
+                <option value="續命仙草" ${attrs.medType === '續命仙草' ? 'selected' : ''}>續命仙草 (天山雪蓮/千年首烏)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">氣血回復量 (Heal HP)</label>
+              <input type="number" id="attr-healHp" class="form-input" value="${attrs.healHp ?? 60}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">真氣回復量 (Heal Qi)</label>
+              <input type="number" id="attr-healQi" class="form-input" value="${attrs.healQi ?? 0}">
+            </div>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">解除異常狀態 (Cure Effects)</label>
+              <input type="text" id="attr-cureEffects" class="form-input" value="${attrs.cureEffects || ''}" placeholder="例如: 止血 / 拔除寒毒 / 修復內傷">
+            </div>
+            <div class="form-group">
+              <label class="form-label">戰鬥中是否可用</label>
+              <select id="attr-combatUsable" class="form-select">
+                <option value="true" ${attrs.combatUsable !== false ? 'selected' : ''}>是 (戰鬥回合格中可服用)</option>
+                <option value="false" ${attrs.combatUsable === false ? 'selected' : ''}>否 (僅大地圖調息時使用)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">調息冷卻輪數 (Cooldown)</label>
+              <input type="number" id="attr-cooldownTurns" class="form-input" value="${attrs.cooldownTurns ?? 2}" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">特殊藥效 / 仙草護體詞條</label>
+            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 服用後 3 回合內每回合自回 10 點真氣">
+          </div>
+        `;
+      } else if (category === 'ENHANCEMENT') {
+        box.innerHTML = `
+          <div class="type-banner">
+            <span class="type-banner-title">✨ 強化鍛造專屬屬性 (Enhancement Specifics)</span>
+            <span style="font-size:0.75rem; color:#94a3b8;">兵刃淬火、護甲鑲嵌與成功率</span>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label">強化目標類型 (Target Type)</label>
+              <select id="attr-targetType" class="form-select">
+                <option value="兵刃淬鍊" ${attrs.targetType === '兵刃淬鍊' ? 'selected' : ''}>兵刃淬鍊 (刀劍槍棍)</option>
+                <option value="護甲加固" ${attrs.targetType === '護甲加固' ? 'selected' : ''}>護甲加固 (鎖子重甲/輕袍)</option>
+                <option value="靈寶開光" ${attrs.targetType === '靈寶開光' ? 'selected' : ''}>靈寶開光 (玉佩/護心鏡)</option>
+                <option value="根骨洗髓" ${attrs.targetType === '根骨洗髓' ? 'selected' : ''}>根骨洗髓 (修為脈絡提升)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">成功鍛造增益 (Upgrade Bonus)</label>
+              <input type="text" id="attr-upgradeBonus" class="form-input" value="${attrs.upgradeBonus || '攻擊力 +8'}" placeholder="例如: 攻擊力 +10 ｜ 附加破甲">
+            </div>
+            <div class="form-group">
+              <label class="form-label">強化成功率 (Success Rate %)</label>
+              <input type="number" id="attr-successRate" class="form-input" value="${attrs.successRate ?? 80}" min="1" max="100">
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">最高可強化階級 (Max Grade)</label>
+              <input type="number" id="attr-maxGrade" class="form-input" value="${attrs.maxGrade ?? 5}" min="1" max="15">
+            </div>
+            <div class="form-group">
+              <label class="form-label">消耗輔材或耗時需求</label>
+              <input type="text" id="attr-consumedMaterial" class="form-input" value="${attrs.consumedMaterial || ''}" placeholder="例如: 炭火 5 斤 / 需於鐵匠鋪進行">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">特殊淬火特質詞條</label>
+            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 強化 +5 以上時解鎖寒光劍氣">
+          </div>
+        `;
+      } else {
+        // SPECIAL
+        box.innerHTML = `
+          <div class="type-banner">
+            <span class="type-banner-title">📜 秘寶奇物專屬屬性 (Special & Quest Artifacts)</span>
+            <span style="font-size:0.75rem; color:#94a3b8;">宗門信物、武學秘笈殘卷與主線線索</span>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">奇物種類 (Special Type)</label>
+              <select id="attr-specialType" class="form-select">
+                <option value="宗門信物" ${attrs.specialType === '宗門信物' ? 'selected' : ''}>宗門信物 (Token)</option>
+                <option value="武學殘卷" ${attrs.specialType === '武學殘卷' ? 'selected' : ''}>武學殘卷 (Secret Manual)</option>
+                <option value="江湖秘鑰" ${attrs.specialType === '江湖秘鑰' ? 'selected' : ''}>江湖秘鑰 (Ancient Key)</option>
+                <option value="懸賞證物" ${attrs.specialType === '懸賞證物' ? 'selected' : ''}>懸賞證物 (Bounty Proof)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">關聯任務代碼 (Quest Link)</label>
+              <input type="text" id="attr-questLink" class="form-input" value="${attrs.questLink || ''}" placeholder="例如: QUEST_BOUNTY_BLACKWIND">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">常駐被動光環 (Passive Bonus)</label>
+            <input type="text" id="attr-passiveBonus" class="form-input" value="${attrs.passiveBonus || ''}" placeholder="例如: 江湖聲望增長速度 +25% / 驛站投宿費用全免">
+          </div>
+          <div class="form-group">
+            <label class="form-label">特殊用途與傳奇記載</label>
+            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 出示此信物可進入長白山雪域隱藏洞窟">
+          </div>
+        `;
+      }
+    }
+
+    function collectDynamicAttributes(category) {
+      const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
+      const getNum = (id, def = 0) => {
+        const val = parseInt(document.getElementById(id)?.value);
+        return isNaN(val) ? def : val;
+      };
+
+      if (category === 'MELEE_WEAPON') {
+        return {
+          atk: getNum('attr-atk', 20),
+          speedMod: getNum('attr-speedMod', 0),
+          armorPiercing: getNum('attr-armorPiercing', 10),
+          reach: getNum('attr-reach', 1),
+          martialMove: getVal('attr-martialMove'),
+          specialEffect: getVal('attr-specialEffect')
+        };
+      } else if (category === 'RANGED_WEAPON') {
+        return {
+          rangedAtk: getNum('attr-rangedAtk', 20),
+          effectiveRange: getNum('attr-effectiveRange', 4),
+          critRate: getNum('attr-critRate', 15),
+          poisonChance: getNum('attr-poisonChance', 0),
+          isConsumable: document.getElementById('attr-isConsumable')?.value === 'true',
+          ammoCost: getNum('attr-ammoCost', 1),
+          specialEffect: getVal('attr-specialEffect')
+        };
+      } else if (category === 'ARMOR') {
+        return {
+          armorSlot: getVal('attr-armorSlot') || '貼身輕袍',
+          def: getNum('attr-def', 15),
+          hpBonus: getNum('attr-hpBonus', 30),
+          strainRes: getNum('attr-strainRes', 10),
+          dodgeMod: getNum('attr-dodgeMod', 5),
+          stealthMod: getNum('attr-stealthMod', 0),
+          specialEffect: getVal('attr-specialEffect')
+        };
+      } else if (category === 'MEDICINE') {
+        return {
+          medType: getVal('attr-medType') || '外傷靈藥',
+          healHp: getNum('attr-healHp', 50),
+          healQi: getNum('attr-healQi', 0),
+          cureEffects: getVal('attr-cureEffects'),
+          combatUsable: document.getElementById('attr-combatUsable')?.value === 'true',
+          cooldownTurns: getNum('attr-cooldownTurns', 2),
+          specialEffect: getVal('attr-specialEffect')
+        };
+      } else if (category === 'ENHANCEMENT') {
+        return {
+          targetType: getVal('attr-targetType') || '兵刃淬鍊',
+          upgradeBonus: getVal('attr-upgradeBonus'),
+          successRate: getNum('attr-successRate', 80),
+          maxGrade: getNum('attr-maxGrade', 5),
+          consumedMaterial: getVal('attr-consumedMaterial'),
+          specialEffect: getVal('attr-specialEffect')
+        };
+      } else {
+        return {
+          specialType: getVal('attr-specialType') || '宗門信物',
+          questLink: getVal('attr-questLink'),
+          passiveBonus: getVal('attr-passiveBonus'),
+          specialEffect: getVal('attr-specialEffect')
+        };
+      }
+    }
+
+    // ========================================================
+    // 新增、刪除、複製物品
+    // ========================================================
+    function createNewItem() {
+      collectCurrentFormToItem();
+
+      const newId = `item_custom_${Date.now().toString(36)}`;
+      const newItem = {
+        id: newId,
+        name: '嶄新神兵百寶',
+        category: 'MELEE_WEAPON',
+        subCategory: 'SWORD',
+        icon: '🗡️',
+        tier: 'UNCOMMON',
+        tierName: '良品',
+        tierClass: 'tier-green',
+        value: 60,
+        stackMax: 1,
+        weight: 3.0,
+        requiredRealm: '三流散客',
+        desc: '於江湖歷練中尋得之物，刃光凜然。',
+        attributes: {
+          atk: 18,
+          speedMod: 0,
+          armorPiercing: 10,
+          reach: 1,
+          martialMove: '穿雲破霧',
+          specialEffect: '無特殊效果'
+        }
+      };
+
+      itemsCatalog.unshift(newItem);
+      renderSidebar();
+      selectItem(newItem.id);
+      showToast(`✨ 已新增新物品: ${newItem.name}`);
+    }
+
+    function duplicateCurrentItem() {
+      if (!currentSelectedId) return;
+      collectCurrentFormToItem();
+      const origin = itemsCatalog.find(i => i.id === currentSelectedId);
+      if (!origin) return;
+
+      const cloned = JSON.parse(JSON.stringify(origin));
+      cloned.id = `${origin.id}_copy_${Math.floor(Math.random() * 1000)}`;
+      cloned.name = `${origin.name} (複製)`;
+
+      const idx = itemsCatalog.findIndex(i => i.id === currentSelectedId);
+      itemsCatalog.splice(idx + 1, 0, cloned);
+
+      renderSidebar();
+      selectItem(cloned.id);
+      showToast(`📋 已複製物品: ${cloned.name}`);
+    }
+
+    function deleteCurrentItem() {
+      if (!currentSelectedId) return;
+      const item = itemsCatalog.find(i => i.id === currentSelectedId);
+      if (!item) return;
+
+      if (!confirm(`確定要將物品「${item.name} (${item.id})」從全域資料庫中徹底刪除嗎？`)) {
+        return;
+      }
+
+      const idx = itemsCatalog.findIndex(i => i.id === currentSelectedId);
+      itemsCatalog.splice(idx, 1);
+
+      showToast(`🗑️ 已刪除物品: ${item.name}`);
+      currentSelectedId = null;
+
+      renderSidebar();
+      if (itemsCatalog.length > 0) {
+        selectItem(itemsCatalog[Math.min(idx, itemsCatalog.length - 1)].id);
+      } else {
+        createNewItem();
+      }
+    }
+
+    // ========================================================
+    // 🎲 隨機建議生成器 (Random Suggestion Engine)
+    // ========================================================
+    const RANDOM_DICTIONARY = {
+      MELEE_WEAPON: {
+        prefixes: ['寒鐵', '青鋒', '奔雷', '紫電', '七星', '純陽', '玄鐵', '修羅', '斬月', '九霄', '無雙', '伏魔', '赤霄', '百鍊'],
+        nouns: ['劍', '刀', '槍', '重刃', '青芒劍', '厚背刀', '盤龍槍', '短匕', '熟銅棍', '奪魂刺'],
+        icons: ['🗡️', '⚔️', '🪓', '🔱'],
+        moves: ['白虹貫日', '力劈群山', '驚濤拍岸', '流霜覆雪', '青松迎客', '追魂奪魄', '穿雲破日', '橫掃千軍'],
+        effects: [
+          '命中時 20% 造成【流血】，每回合扣減氣血 12 點',
+          '攻擊時 15% 觸發【霜凍】，令敵手招式遲緩',
+          '擊中時 25% 機率【破甲】，削弱敵方防禦 30%',
+          '暴擊時擊退目標 1 格並附加外功震盪',
+          '招式施展內力消耗減免 15 點'
+        ],
+        desc: [
+          '前朝鑄劍名宿以極地隕鐵經九九八十一天地火鍛造而成，出鞘風雷引動。',
+          '江南名門代代傳承之佩刃，刃口如一泓秋水，吹毛斷髮。',
+          '塞外古戰場泥沙中發掘之古刃，殺伐之氣沉凝，久經沙場血戰。',
+          '玄宗道門秘傳降魔兵刃，通體透射純陽清光，妖邪辟易。'
+        ]
+      },
+      RANGED_WEAPON: {
+        prefixes: ['穿雲', '奪魄', '連珠', '追魂', '漫天', '無影', '九幽', '霹靂', '破罡', '金錢'],
+        nouns: ['飛刀', '袖箭', '鐵菩提', '霹靂雷火彈', '含沙暗器匣', '穿骨針', '透甲鏢', '透骨釘'],
+        icons: ['🎯', '💣', '📦', '🏹'],
+        effects: [
+          '40% 附帶【鶴頂劇毒】，每回合扣減氣血 15 點',
+          '觸地爆炸在目標地格鋪設【火海 (FIRE)】持續 3 回合',
+          '暗器破空無聲，夜行暗殺傷害提升 50%',
+          '30% 貫穿一直線上的多名敵手',
+          '命中目標要害穴道，令其定身 1 回合'
+        ],
+        desc: [
+          '唐門暗器精工鍛造，機關精巧無比，扣動機簧可電射而出。',
+          '五毒教採百草毒液反覆浸淬之暗器，見血封喉。',
+          '西域霹靂堂珍密火器，內裝特製硝石火藥，觸物即焚。'
+        ]
+      },
+      ARMOR: {
+        prefixes: ['流雲', '天蠶', '鎖子', '軟蝟', '烏金', '踏雲', '千鱗', '紫霞', '金絲', '護心'],
+        nouns: ['輕袍', '重鎧', '鎖子甲', '軟靴', '護腕', '長生珮', '護心鏡', '夜行衣'],
+        icons: ['🥋', '🛡️', '🥾', '📿'],
+        slots: ['貼身輕袍', '身軀重鎧', '踏雲軟靴', '護腕靈鐲', '腰佩靈寶', '護心重鏡'],
+        effects: [
+          '夜間旅行隱匿度 +25%，不易遭遇荒野仇家',
+          '大地圖行進真氣自回 +2/h，降低走火入魔風險',
+          '受外功物理傷害降低 15%，堅若磐石',
+          '戰鬥中挪移身法每步能量消耗減免 15 點',
+          '免疫火海與沼澤的減速負面影響'
+        ],
+        desc: [
+          '蜀中天蠶絲精編而就，刀槍不入，水火不侵，輕如鴻毛。',
+          '邊疆百戰將領佩戴之鎖子甲，層層精鋼鐵環，防護周密。',
+          '溫潤羊脂古玉雕琢而成，日夜溫養配戴者奇經八脈與真氣。'
+        ]
+      },
+      MEDICINE: {
+        prefixes: ['回春', '九轉', '小還', '玄冰', '天王', '生肌', '百草', '洗髓', '培元', '清心'],
+        nouns: ['金瘡膏', '還魂丹', '化毒散', '保命丸', '清心散', '雪蓮煎', '玉露丸'],
+        icons: ['🩹', '💊', '🪷', '🧪'],
+        effects: [
+          '立即回復氣血 80 點，解除流血與輕度內傷',
+          '大幅回復真氣 60 點，並在 2 回合內真氣流轉加倍',
+          '起死回生仙藥，瀕死時全滿復活並獲得金剛護體',
+          '解除全體異常狀態（毒素、封穴、霜凍、內傷）'
+        ],
+        desc: [
+          '少林達摩堂秘傳靈藥，以三十六味珍稀雪山藥材慢火熬製。',
+          '採深山懸崖絕頂靈草所煉製，香氣四溢，入口即化。',
+          '苗疆神醫親手調配之百草秘方，對拔毒化瘀有立竿見影之奇效。'
+        ]
+      },
+      ENHANCEMENT: {
+        prefixes: ['千年', '極地', '深海', '太乙', '赤火', '地脈', '星辰', '混沌'],
+        nouns: ['寒鐵礦', '烏金石', '玄晶砂', '炎陽石', '星宿隕鐵', '易筋神丸'],
+        icons: ['🪨', '✨', '💎', '🔥'],
+        effects: [
+          '可將上品以下兵刃淬火進階，大幅提升破甲與鋒銳度',
+          '永久提升氣血上限 +40 點、經脈負荷上限 +10%',
+          '鍛造成功率達 90%，失敗不掉落現有階級'
+        ],
+        desc: [
+          '深藏於極寒地底千丈之處，汲取天地靈氣而生之至寒奇石。',
+          '萬年火山冷卻後析出之精鐵結晶，堅逾金剛，灼熱如火。'
+        ]
+      },
+      SPECIAL: {
+        prefixes: ['純陽', '真武', '黑木', '桃花', '龍門', '逍遙', '達摩'],
+        nouns: ['令旗', '長老令', '殘卷', '秘鑰', '掌門印信', '鏢局信牌'],
+        icons: ['🪙', '📜', '🗝️', '🔖'],
+        effects: [
+          '進入所屬名門宗派據點暢行無阻，採買物資享受折扣',
+          '解鎖特定江湖隱藏秘境或通緝主線任務'
+        ],
+        desc: [
+          '各大門派掌門特賜執法令物，持此令可號令分舵門生。',
+          '前朝大內高手遺留之殘破典籍，字裡行間隱約記載絕世心法。'
+        ]
+      }
+    };
+
+    function openRandomModal() {
+      document.getElementById('random-modal').classList.add('show');
+      generateRandomSuggestion();
+    }
+
+    function closeRandomModal() {
+      document.getElementById('random-modal').classList.remove('show');
+    }
+
+    function generateRandomSuggestion() {
+      const catChoice = document.getElementById('rand-opt-cat').value;
+      const tierChoice = document.getElementById('rand-opt-tier').value;
+
+      const allCats = ['MELEE_WEAPON', 'RANGED_WEAPON', 'ARMOR', 'MEDICINE', 'ENHANCEMENT', 'SPECIAL'];
+      const chosenCat = catChoice === 'RANDOM' ? allCats[Math.floor(Math.random() * allCats.length)] : catChoice;
+
+      const allTiers = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'];
+      const chosenTier = tierChoice === 'RANDOM' ? allTiers[Math.floor(Math.random() * allTiers.length)] : tierChoice;
+
+      const dict = RANDOM_DICTIONARY[chosenCat] || RANDOM_DICTIONARY.MELEE_WEAPON;
+      const pfx = dict.prefixes[Math.floor(Math.random() * dict.prefixes.length)];
+      const noun = dict.nouns[Math.floor(Math.random() * dict.nouns.length)];
+      const name = `${pfx}${noun}`;
+      const icon = dict.icons[Math.floor(Math.random() * dict.icons.length)];
+      const desc = dict.desc[Math.floor(Math.random() * dict.desc.length)];
+      const effect = dict.effects[Math.floor(Math.random() * dict.effects.length)];
+
+      const tierInfo = TIER_CONFIG[chosenTier] || TIER_CONFIG.COMMON;
+      const baseValue = Math.round((chosenCat === 'MEDICINE' ?          : 60) * tierInfo.mult);
+
+      // 產生專屬屬性數值
+      let attributes = {};
+      let realm = '初入江湖';
+      if (chosenTier === 'UNCOMMON') realm = '三流散客';
+      else if (chosenTier === 'RARE') realm = '二流高手';
+      else if (chosenTier === 'EPIC') realm = '一流高手';
+      else if (chosenTier === 'LEGENDARY') realm = '化境宗師';
+
+      if (chosenCat === 'MELEE_WEAPON') {
+        const move = dict.moves[Math.floor(Math.random() * dict.moves.length)];
+        attributes = {
+          atk: Math.round(15 * tierInfo.mult),
+          speedMod: Math.floor(Math.random() * 16) - 5,
+          armorPiercing: Math.round(8 * tierInfo.mult),
+          reach: noun.includes('槍') || noun.includes('棍') ? 2 : 1,
+          martialMove: move,
+          specialEffect: effect
+        };
+      } else if (chosenCat === 'RANGED_WEAPON') {
+        attributes = {
+          rangedAtk: Math.round(12 * tierInfo.mult),
+          effectiveRange: Math.floor(Math.random() * 3) + 4,
+          critRate: Math.round(10 * tierInfo.mult),
+          poisonChance: noun.includes('毒') || noun.includes('透') ? 35 : 0,
+          isConsumable: !noun.includes('匣') && !noun.includes('弓'),
+          ammoCost: 1,
+          specialEffect: effect
+        };
+      } else if (chosenCat === 'ARMOR') {
+        const slot = dict.slots[Math.floor(Math.random() * dict.slots.length)];
+        attributes = {
+          armorSlot: slot,
+          def: Math.round(10 * tierInfo.mult),
+          hpBonus: Math.round(20 * tierInfo.mult),
+          strainRes: Math.round(5 * tierInfo.mult),
+          dodgeMod: slot.includes('靴') ? 15 : (slot.includes('重') ? -5 : 5),
+          stealthMod: slot.includes('袍') || slot.includes('夜') ? 25 : 0,
+          specialEffect: effect
+        };
+      } else if (chosenCat === 'MEDICINE') {
+        attributes = {
+          medType: noun.includes('膏') ? '外傷靈藥' : (noun.includes('仙') || noun.includes('蓮') ? '續命仙草' : '內服靈丹'),
+          healHp: Math.round(40 * tierInfo.mult),
+          healQi: Math.round(20 * tierInfo.mult),
+          cureEffects: '清熱解毒、活血化瘀',
+          combatUsable: true,
+          cooldownTurns: 2,
+          specialEffect: effect
+        };
+      } else if (chosenCat === 'ENHANCEMENT') {
+        attributes = {
+          targetType: '兵刃淬鍊',
+          upgradeBonus: `攻擊力 +${Math.round(4 * tierInfo.mult)} ｜ 韌性提升`,
+          successRate: Math.max(30, Math.round(95 - tierInfo.mult * 10)),
+          maxGrade: Math.round(3 * tierInfo.mult),
+          consumedMaterial: '炭火 5 斤',
+          specialEffect: effect
+        };
+      } else {
+        attributes = {
+          specialType: '宗門信物',
+          questLink: `QUEST_KEY_${Date.now().toString(36).toUpperCase()}`,
+          passiveBonus: '江湖威名提升 +15%',
+          specialEffect: effect
+        };
+      }
+
+      currentSuggestion = {
+        id: `gen_${chosenCat.toLowerCase()}_${Date.now().toString(36)}`,
+        name,
+        category: chosenCat,
+        subCategory: 'GENERIC',
+        icon,
+        tier: chosenTier,
+        tierName: tierInfo.name,
+        tierClass: tierInfo.class,
+        value: baseValue,
+        stackMax: (chosenCat === 'MEDICINE' || attributes.isConsumable) ? 20 : 1,
+        weight: chosenCat === 'MEDICINE' ? 0.2 : 2.5,
+        requiredRealm: realm,
+        desc,
+        attributes
+      };
+
+      // 渲染彈窗預覽
+      const previewCard = document.getElementById('suggestion-preview');
+      previewCard.style.display = 'flex';
+      document.getElementById('sug-name').innerText = `${currentSuggestion.icon} ${currentSuggestion.name}`;
+      const badge = document.getElementById('sug-tier');
+      badge.className = `tier-badge ${tierInfo.class}`;
+      badge.innerText = tierInfo.name;
+      document.getElementById('sug-meta').innerText = `${CATEGORY_NAMES[chosenCat]} ｜ 碎銀 ${baseValue} 兩 ｜ 需求 ${realm}`;
+      document.getElementById('sug-attrs').innerText = currentSuggestion.attributes.specialEffect || '常規屬性加成';
+      document.getElementById('sug-desc').innerText = currentSuggestion.desc;
+
+      document.getElementById('btn-apply-suggestion').style.display = 'inline-flex';
+    }
+
+    function applySuggestionAndCreate() {
+      if (!currentSuggestion) return;
+      collectCurrentFormToItem();
+
+      itemsCatalog.unshift(currentSuggestion);
+      closeRandomModal();
+
+      renderSidebar();
+      selectItem(currentSuggestion.id);
+      showToast(`🎉 已成功採納並新增建議物品: ${currentSuggestion.name}`);
+    }
+
+    // 保底預設清單 (若首次離線使用)
+    function getInitialDefaultCatalog() {
+      return [
+        {
+          id: 'wpn_cold_iron_sword',
+          name: '寒鐵青鋒劍',
+          category: 'MELEE_WEAPON',
+          icon: '🗡️',
+          tier: 'RARE',
+          tierName: '上品',
+          tierClass: 'tier-purple',
+          value: 120,
+          stackMax: 1,
+          weight: 3.5,
+          requiredRealm: '二流高手',
+          desc: '長白山地底寒鐵鍛造，劍身清幽，出鞘生霜。',
+          attributes: {
+            atk: 25,
+            speedMod: 5,
+            armorPiercing: 15,
+            reach: 1,
+            martialMove: '流霜刺水',
+            specialEffect: '攻擊時 15% 機率觸發【霜凍】，令敵手行動遲緩'
+          }
+        },
+        {
+          id: 'arm_cloud_robe',
+          name: '流雲夜行袍',
+          category: 'ARMOR',
+          icon: '🥋',
+          tier: 'UNCOMMON',
+          tierName: '良品',
+          tierClass: 'tier-green',
+          value: 85,
+          stackMax: 1,
+          weight: 1.5,
+          requiredRealm: '三流散客',
+          desc: '墨蠶生絲混編，輕如蟬翼，極利於夜行暗伏與飛簷走壁。',
+          attributes: {
+            armorSlot: '貼身輕袍',
+            def: 14,
+            hpBonus: 25,
+            strainRes: 5,
+            dodgeMod: 12,
+            stealthMod: 25,
+            specialEffect: '夜間旅行隱匿度 +25%，不易遭遇荒野仇家'
+          }
+        },
+        {
+          id: 'arm_jade_pendant',
+          name: '白玉長生珮',
+          category: 'ARMOR',
+          icon: '📿',
+          tier: 'LEGENDARY',
+          tierName: '寶器',
+          tierClass: 'tier-gold',
+          value: 450,
+          stackMax: 1,
+          weight: 0.3,
+          requiredRealm: '無限制',
+          desc: '溫潤羊脂古玉，暗藏靜氣凝神之微光，為前朝皇室隨身佩戴之瑞寶。',
+          attributes: {
+            armorSlot: '腰佩靈寶',
+            def: 6,
+            hpBonus: 40,
+            strainRes: 25,
+            dodgeMod: 5,
+            stealthMod: 0,
+            specialEffect: '大地圖行進真氣自回 +2/h，降低走火入魔風險'
+          }
+        },
+        {
+          id: 'med_jinchuang_ointment',
+          name: '金瘡藥膏',
+          category: 'MEDICINE',
+          icon: '🩹',
+          tier: 'COMMON',
+          tierName: '凡品',
+          tierClass: 'tier-white',
+          value: 12,
+          stackMax: 20,
+          weight: 0.1,
+          requiredRealm: '初入江湖',
+          desc: '少林秘傳止血生肌藥粉，敷於刀劍外傷處立見奇效。',
+          attributes: {
+            medType: '外傷靈藥',
+            healHp: 45,
+            healQi: 0,
+            cureEffects: '止血',
+            combatUsable: true,
+            cooldownTurns: 2,
+            specialEffect: '立即回復氣血 45 點，解除流血狀態'
+          }
+        }
+      ];
+    }
+  </script>
+</body>
+
+</html>

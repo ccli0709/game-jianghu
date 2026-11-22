@@ -12,6 +12,7 @@
       document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"><\/script>');
     }
   </script>
+  <script src="src/core/ItemGenerator.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -627,6 +628,9 @@
       <div class="status-item"><button class="btn"
           style="padding:4px 10px; font-size:0.78rem; border-color:#0284c7; background:#0c2340;"
           onclick="window.location.href='editor.html'">🗺️ 地圖編輯器</button></div>
+      <div class="status-item"><button class="btn"
+          style="padding:4px 10px; font-size:0.78rem; border-color:#ea580c; background:#431407;"
+          onclick="window.location.href='item_manager.html'">💎 物品總管</button></div>
       <div class="status-item"><button class="btn"
           style="padding:4px 10px; font-size:0.78rem; border-color:#3b82f6; background:#1a2333;"
           onclick="toggleCharacterDialog()"><kbd>C</kbd> 人物屬性與裝備</button></div>
@@ -1357,6 +1361,7 @@
         this.initInput();
         this.initTicker();
         this.initWorldSystem();
+        this.initItemSystem();
 
         this.addLog('<span class="log-world">【Pixi.js 2D 引擎啟動】</span>硬體 WebGL 渲染管線與動畫插值已就緒。');
         this.updateUI();
@@ -1714,6 +1719,7 @@
 
         // 2. 當前大地圖內部地格通行性判斷
         if (!this.overworld.isPassable(nx, ny)) {
+          this.triggerBump(dx, dy);
           this.addLog('<span class="log-warn">【阻礙】</span>崇山峻嶺，無法翻越！');
           return;
         }
@@ -1783,6 +1789,42 @@
         this.rebuildOverworldDisplay();
       }
 
+      // 全域物品庫初始化：遊戲開始若無初始物品檔，自動隨機生成各類各級各 3 樣並命名保存為 default
+      async initItemSystem() {
+        this.itemsCatalog = [];
+        try {
+          const res = await fetch('/api/items');
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              this.itemsCatalog = data;
+              return;
+            }
+          }
+        } catch (e) { }
+
+        // 離線保底檢查：優先檢查 default 存檔
+        const localDefault = localStorage.getItem('JIANGHU_ITEMS_default') ||
+          localStorage.getItem('JIANGHU_ITEMS_default.json') ||
+          localStorage.getItem('JIANGHU_ITEMS_items_default.json');
+        const localGeneral = localStorage.getItem('JIANGHU_ITEMS_CATALOG');
+        const targetLocal = localDefault || localGeneral;
+        if (targetLocal) {
+          try { this.itemsCatalog = JSON.parse(targetLocal); } catch (e) { }
+        }
+
+        // 若無初始物品檔，各類物品各種等級分別隨機生成 3 樣並命名保存為 default
+        if (!this.itemsCatalog || this.itemsCatalog.length === 0) {
+          if (typeof generateDefaultCatalog === 'function') {
+            this.itemsCatalog = generateDefaultCatalog(3);
+            localStorage.setItem('JIANGHU_ITEMS_default', JSON.stringify(this.itemsCatalog));
+            localStorage.setItem('JIANGHU_ITEMS_default.json', JSON.stringify(this.itemsCatalog));
+            localStorage.setItem('JIANGHU_ITEMS_CATALOG', JSON.stringify(this.itemsCatalog));
+            this.addLog(`<span class="log-world">【神兵百寶】</span>遊戲開始檢測無初始物品檔，已自動隨機生成各類各級各 3 樣並命名保存為 default（共 ${this.itemsCatalog.length} 件）！`);
+          }
+        }
+      }
+
       // 嘗試跨越大地圖邊界
       async attemptChunkTransition(dx, dy, nx, ny) {
         let targetChunkX = this.curChunkX;
@@ -1801,6 +1843,7 @@
 
         // 1. 檢測極限世界疆界
         if (targetChunkX < 0 || targetChunkX >= maxW || targetChunkY < 0 || targetChunkY >= maxH) {
+          this.triggerBump(dx, dy);
           this.addLog(`<span class="log-warn">【世界極限疆界】</span>前方已抵達神州浩土之混沌天塹邊界 (${targetChunkX}, ${targetChunkY})，無法再行跨越！`);
           this.flashRadarAlert();
           return;
@@ -1810,6 +1853,7 @@
         const cellKey = `${targetChunkX},${targetChunkY}`;
         const targetCell = this.worldData?.cells?.[cellKey];
         if (!targetCell || !targetCell.mapFile) {
+          this.triggerBump(dx, dy);
           this.addLog(`<span class="log-warn">【世界邊界阻絕】</span>相鄰區塊 (${targetChunkX}, ${targetChunkY}) 尚未開闢大地圖，無路可通！可於【世界地圖編輯器】中指派大地圖。`);
           this.flashRadarAlert();
           return;
@@ -1966,6 +2010,23 @@
         hud.classList.add('radar-alert-flash');
       }
 
+      // 觸發撞牆/無法通過地格之碰壁回彈視覺反饋 (Bump & Rebound Animation)
+      triggerBump(dx, dy) {
+        const BUMP_OFFSET = 12; // 往前微突探步距離 (約 1/3 格)
+
+        if (this.mode === MODE.OVERWORLD) {
+          // 視覺坐標前衝偏移，隨後由 Ticker 自動平滑拉回網格中心
+          this.player.visualX = this.player.owX * TILE_PX + dx * BUMP_OFFSET;
+          this.player.visualY = this.player.owY * TILE_PX + dy * BUMP_OFFSET;
+          this.player.currentMoveCost = 1; // 回彈保持輕捷自然速度
+          this.drawOverworldPlayer();
+        } else if (this.mode === MODE.BATTLE) {
+          this.player.visualX = this.player.bx * TILE_PX + dx * BUMP_OFFSET;
+          this.player.visualY = this.player.by * TILE_PX + dy * BUMP_OFFSET;
+          this.drawBattlePlayer();
+        }
+      }
+
       // --- 進入戰術死鬥 ---
       startBattle(enemyData, enemyListIndex) {
         this.mode = MODE.BATTLE;
@@ -2031,6 +2092,7 @@
 
           const moveCost = this.battleArena.getMovementCost(tx, ty);
           if (moveCost >= 9999) {
+            this.triggerBump(dx, dy);
             this.addLog('<span class="log-warn">【阻擋】</span>此處為堅實岩壁，無法穿透！');
             return;
           }

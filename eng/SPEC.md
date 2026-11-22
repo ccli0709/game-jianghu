@@ -146,6 +146,11 @@ interface WorldMapConfig {
 * **補間防抖鎖定 (Movement Debounce Lock)**：
   在使用者觸發移動指令時，計算當前俠客的視覺座標與邏輯目標之歐式距離 $D = \sqrt{(visualX - owX \cdot TILE\_PX)^2 + (visualY - owY \cdot TILE\_PX)^2}$。
   若 $D > 5\text{px}$，表示前一步跋涉補間尚未收尾，暫緩連續跳步，確保耗時地形之沉浸感與防狂按穿透。
+* **碰壁回彈機制 (Bump & Rebound Animation)**：
+  當玩家試圖踏入不可通行地格（如崇山峻嶺、阻隔岩壁、或未開闢之世界天塹邊界）時：
+  1. 邏輯坐標 $(owX, owY)$ 保持不動；
+  2. 俠客視覺座標朝移動方向探進偏移：$visualX = owX \cdot TILE\_PX + dx \cdot 12\text{px}$, $visualY = owY \cdot TILE\_PX + dy \cdot 12\text{px}$；
+  3. 由 Ticker 每幀插值補間迅速拉回目標網格中心點，產生「前衝受阻碰壁後彈性退回」之真實物理觸感。
 
 ### 3.3 A* 地形權重尋路系統 (`PathFinder`)
 * **評估函式**：$f(n) = g(n) + h(n)$
@@ -160,6 +165,23 @@ interface WorldMapConfig {
   * 鄰近四格中若有 `OIL`，立即連鎖引爆轉化為 `FIRE`，並重設燃燒輪數為 4。
   * 水面上釋放玄冥指，水面轉化為 `ICE`，維持 4 回合。
 
+### 3.5 全域物品與神兵裝備總管系統 (`ItemCatalogSystem`)
+* **資料儲存路徑**：`data/items.json`
+* **物品大類定義 (`ItemCategory`)**：
+  * `MELEE_WEAPON` (近戰武器)：專屬屬性 `atk` (物理攻擊力), `speedMod` (招式攻速 %), `armorPiercing` (破甲率 %), `reach` (攻擊距離: 1~2格), `martialMove` (專屬招式), `specialEffect` (特效詞條)。
+  * `RANGED_WEAPON` (遠程暗器)：專屬屬性 `rangedAtk` (暗器傷害), `effectiveRange` (有效射程: 3~6格), `critRate` (暴擊率 %), `poisonChance` (淬毒命中率 %), `isConsumable` (消耗品判定), `ammoCost` (彈藥消耗)。
+  * `ARMOR` (各式防具)：專屬屬性 `armorSlot` (部位: 輕袍/重鎧/軟靴/護腕/靈寶/護心鏡), `def` (外功防禦), `hpBonus` (氣血上限), `strainRes` (經脈抗性 %), `dodgeMod` (閃避修正 %), `stealthMod` (夜行隱匿 %)。
+  * `MEDICINE` (補血丹藥)：專屬屬性 `medType` (外傷靈藥/內服靈丹/清心解毒/續命仙草), `healHp` (氣血回復), `healQi` (真氣回復), `cureEffects` (異常解除), `combatUsable` (戰鬥可用性), `cooldownTurns` (調息輪數)。
+  * `ENHANCEMENT` (強化鍛造)：專屬屬性 `targetType` (淬鍊部位), `upgradeBonus` (強化詞條), `successRate` (成功率 %), `maxGrade` (上限階級), `consumedMaterial` (消耗材料)。
+  * `SPECIAL` (秘寶奇物)：專屬屬性 `specialType` (宗門信物/武學殘卷/秘鑰), `questLink` (任務關聯), `passiveBonus` (常駐光環)。
+* **品質階級矩陣 (`ItemTier`)**：
+  * `COMMON` (凡品 - 白), `UNCOMMON` (良品 - 綠), `RARE` (上品 - 紫), `EPIC` (極品 - 金), `LEGENDARY` (寶器 - 橙), `MYTHIC` (神兵絕品 - 紅)。
+* **隨機建議生成器 (`RandomSuggesterEngine`)**：
+  * 結合武俠名詞矩陣、品質係數縮放 ($V = V_{base} \times Mult$) 與典故文案生成自洽平衡之裝備數值。
+* **多存檔與本機磁碟讀寫機制 (`SaveSlotAndLocalStorage`)**：
+  * **專案存檔槽位**：支援在 `data/` 目錄中自由載入、切換與另存新檔（如 `items.json`, `items_default.json`, `items_custom.json`）。
+  * **本機磁碟直讀直存**：支援瀏覽器 File System Access API（`showOpenFilePicker`），可直接從本機磁碟選擇任意 JSON 存檔，編輯後直接原地回寫保存，亦支援無伺服器純離線本機快取。
+
 ---
 
 ## 4. 本地開發與持久化 REST API 契約
@@ -173,3 +195,14 @@ interface WorldMapConfig {
 3. `POST /api/maps/:filename`
    * 請求體：合法 JSON 字串。
    * 回傳：`{ success: true, message: string, filename: string }`，直接原子性寫入專案磁碟。
+4. `GET /api/items/files`
+   * 回傳：專案 `data/` 目錄內所有物品存檔檔案名稱陣列（例如 `["items.json", "items_default.json"]`）。
+5. `GET /api/items/files/:filename`
+   * 回傳：指定物品存檔檔案之完整 JSON 陣列。
+6. `POST /api/items/files/:filename`
+   * 請求體：合法物品清單 JSON 陣列。
+   * 回傳：`{ success: true, message: string, filename: string, count: number }`，原子性寫入指定之存檔檔案。
+7. `GET /api/items` 或 `GET /api/items/default`
+   * 回傳：預設物品庫清單。
+8. `POST /api/items/reset-default`
+   * 動作：呼叫生成器重新隨機產生 108 件物品（各類各級 3 樣），覆寫保存至 default 與 items 檔。

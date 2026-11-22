@@ -3,6 +3,7 @@ const { runTests: runPathTests } = require('./test_pathfinder');
 const { runTests: runChunkTests } = require('./test_chunk_transition');
 const { runTests: runSchemaTests } = require('./test_map_schema');
 const { runTests: runDynamicsTests } = require('./test_movement_dynamics');
+const { runTests: runItemSchemaTests } = require('./test_item_schema');
 
 console.log('====================================================');
 console.log('      《浮世江湖》系統品質保證與自動化測試套件        ');
@@ -16,7 +17,8 @@ const suites = [
   { name: 'A* 智能尋路演算法', fn: runPathTests },
   { name: '跨區漫遊與世界邊界狀態機', fn: runChunkTests },
   { name: '地圖 Schema 與 Tiled 規範校驗', fn: runSchemaTests },
-  { name: '移動速度動態補間與防抖鎖定', fn: runDynamicsTests }
+  { name: '移動速度動態補間與防抖鎖定', fn: runDynamicsTests },
+  { name: '全域物品資料 Schema 與完整性校驗', fn: runItemSchemaTests }
 ];
 
 const startTime = Date.now();
