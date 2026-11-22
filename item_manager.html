@@ -655,6 +655,8 @@
         title="各類別各種等級分別隨機生成 3 樣 (共108件)">🔄 重設為 Default</button>
       <button class="btn btn-random" onclick="openRandomModal()">🎲 隨機建議</button>
       <button class="btn btn-primary" onclick="createNewItem()">➕ 新增物品</button>
+      <button class="btn" style="border-color:#8b5cf6; color:#c4b5fd;"
+        onclick="window.location.href='martial_manager.html'">📜 武學心法</button>
       <button class="btn" style="border-color:#059669; color:#a7f3d0;"
         onclick="window.location.href='world_editor.html'">🌍 世界地圖</button>
       <button class="btn" style="border-color:#0284c7; color:#7dd3fc;" onclick="window.location.href='editor.html'">🗺️
@@ -959,12 +961,12 @@
               return a.localeCompare(b);
             });
 
-                                  files.forEach(f => {
-              const o                    tion');
+            files.forEach(f => {
+              const opt = document.createElement('option');
               opt.value = f;
               opt.innerText = f === 'default.json' ? `${f} (官方基準庫 - 108件)` :
-                             (f === 'items_default.json' ? `${f} (基準庫備份)` :
-                             (f === 'items.json' ? `${f} (遊戲運行庫)` : f));
+                (f === 'items_default.json' ? `${f} (基準庫備份)` :
+                  (f === 'items.json' ? `${f} (遊戲運行庫)` : f));
               select.appendChild(opt);
             });
 
@@ -1150,9 +1152,9 @@
 
       const targetFilename = currentSaveFilename || 'default.json';
       const local = localStorage.getItem(`JIANGHU_ITEMS_${targetFilename}`) ||
-                    localStorage.getItem('JIANGHU_ITEMS_default') ||
-                    localStorage.getItem('JIANGHU_ITEMS_default.json') ||
-                    localStorage.getItem('JIANGHU_ITEMS_CATALOG');
+        localStorage.getItem('JIANGHU_ITEMS_default') ||
+        localStorage.getItem('JIANGHU_ITEMS_default.json') ||
+        localStorage.getItem('JIANGHU_ITEMS_CATALOG');
       if (local) {
         try {
           itemsCatalog = JSON.parse(local);
@@ -1895,7 +1897,7 @@
       const effect = dict.effects[Math.floor(Math.random() * dict.effects.length)];
 
       const tierInfo = TIER_CONFIG[chosenTier] || TIER_CONFIG.COMMON;
-      const baseValue = Math.round((chosenCat === 'MEDICINE' ?          : 60) * tierInfo.mult);
+      const baseValue = Math.round((chosenCat === 'MEDICINE' ? 25 : 60) * tierInfo.mult);
 
       // 產生專屬屬性數值
       let attributes = {};

@@ -4,6 +4,8 @@ const { runTests: runChunkTests } = require('./test_chunk_transition');
 const { runTests: runSchemaTests } = require('./test_map_schema');
 const { runTests: runDynamicsTests } = require('./test_movement_dynamics');
 const { runTests: runItemSchemaTests } = require('./test_item_schema');
+const { runTests: runMartialSchemaTests } = require('./test_martial_schema');
+const { runTests: runCombatStatsTests } = require('./test_combat_stats_system');
 
 console.log('====================================================');
 console.log('      《浮世江湖》系統品質保證與自動化測試套件        ');
@@ -18,7 +20,9 @@ const suites = [
   { name: '跨區漫遊與世界邊界狀態機', fn: runChunkTests },
   { name: '地圖 Schema 與 Tiled 規範校驗', fn: runSchemaTests },
   { name: '移動速度動態補間與防抖鎖定', fn: runDynamicsTests },
-  { name: '全域物品資料 Schema 與完整性校驗', fn: runItemSchemaTests }
+  { name: '全域物品資料 Schema 與完整性校驗', fn: runItemSchemaTests },
+  { name: '全域武學與心法 20 級成長矩陣與門派約束校驗', fn: runMartialSchemaTests },
+  { name: '人物經驗升級、自由潛能點與綜合戰鬥數值引擎', fn: runCombatStatsTests }
 ];
 
 const startTime = Date.now();

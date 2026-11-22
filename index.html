@@ -13,6 +13,7 @@
     }
   </script>
   <script src="src/core/ItemGenerator.js"></script>
+  <script src="src/core/MartialGenerator.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -477,7 +478,10 @@
       border: 1px solid #333a4e;
       border-radius: 8px;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.96);
-      width: 640px;
+      width: 820px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-sizing: border-box;
       padding: 22px;
       z-index: 100;
     }
@@ -525,7 +529,7 @@
 
     .char-body {
       display: grid;
-      grid-template-columns: 1fr 1.05fr;
+      grid-template-columns: 280px 1fr;
       gap: 16px;
     }
 
@@ -549,6 +553,7 @@
     .stat-row {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 0.82rem;
       background: #1a1c29;
       padding: 5px 10px;
@@ -564,6 +569,64 @@
       color: #f1f5f9;
     }
 
+    /* 自由潛能點分配按鈕 */
+    .btn-stat-add {
+      background: #1e3a8a;
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+      font-size: 0.72rem;
+      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-stat-add:hover:not(:disabled) {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+      transform: scale(1.05);
+    }
+
+    .btn-stat-add:disabled {
+      background: #1e293b;
+      border-color: #334155;
+      color: #475569;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    /* 戰鬥綜合指標面板 */
+    .combat-stat-card {
+      background: #131726;
+      border: 1px solid #2b354f;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .combat-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .status-tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
     /* 門派與武功卡片 */
     .sect-tag {
       display: inline-block;
@@ -574,6 +637,97 @@
       background: #1e293b;
       border: 1px solid #3b82f6;
       color: #93c5fd;
+    }
+
+    .martial-slot-card {
+      background: #181b29;
+      border: 1px solid #283046;
+      border-radius: 6px;
+      padding: 8px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color 0.15s;
+    }
+
+    .martial-slot-card:hover {
+      border-color: #3b82f6;
+    }
+
+    .martial-slot-empty {
+      background: rgba(30, 41, 59, 0.35);
+      border: 1px dashed #334155;
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #64748b;
+      font-size: 0.78rem;
+    }
+
+    .martial-slot-empty:hover {
+      border-color: #475569;
+      background: rgba(30, 41, 59, 0.55);
+    }
+
+    .btn-martial-action {
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      border-radius: 4px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-martial-action:hover {
+      background: #334155;
+      color: #ffffff;
+      border-color: #60a5fa;
+    }
+
+    .btn-martial-action.btn-unequip {
+      border-color: #7f1d1d;
+      color: #fca5a5;
+    }
+
+    .btn-martial-action.btn-unequip:hover {
+      background: #7f1d1d;
+      color: #ffffff;
+    }
+
+    .xp-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 1px;
+    }
+
+    .xp-bar-track {
+      flex: 1;
+      height: 5px;
+      background: #0f172a;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+    }
+
+    .xp-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .xp-fill-cultivation {
+      background: linear-gradient(90deg, #059669, #10b981);
+    }
+
+    .xp-fill-martial {
+      background: linear-gradient(90deg, #d97706, #fbbf24);
     }
 
     .martial-card {
@@ -826,12 +980,18 @@
           style="padding:4px 10px; font-size:0.78rem; border-color:#ea580c; background:#431407;"
           onclick="window.location.href='item_manager.html'">💎 物品總管</button></div>
       <div class="status-item"><button class="btn"
+          style="padding:4px 10px; font-size:0.78rem; border-color:#8b5cf6; background:#2e1065;"
+          onclick="window.location.href='martial_manager.html'">📜 武學心法</button></div>
+      <div class="status-item"><button class="btn"
           style="padding:4px 10px; font-size:0.78rem; border-color:#3b82f6; background:#1a2333;"
           onclick="toggleCharacterDialog()"><kbd>C</kbd> 人物屬性</button></div>
       <div class="status-item"><button class="btn"
           style="padding:4px 10px; font-size:0.78rem; border-color:#10b981; background:#064e3b;"
           onclick="toggleEquipmentDialog()"><kbd>B</kbd> 裝備背包</button></div>
       <div class="status-item">名號: <span class="status-val" style="color:#60a5fa;" id="ui-hero-name">李暮雲</span></div>
+      <div class="status-item">等級: <span class="status-val" style="color:#fbbf24; font-weight:bold;"
+          id="ui-hero-level">Lv.1</span></div>
+      <div class="status-item">修為: <span class="status-val" style="color:#93c5fd;" id="ui-hero-exp">0/100</span></div>
       <div class="status-item">氣血: <span id="ui-hp" class="status-val val-hp">100/100</span></div>
       <div class="status-item">碎銀: <span id="ui-gold" class="status-val val-gold">50 兩</span></div>
       <div class="status-item">時序: <span id="ui-time-str" class="status-val val-time">第 1 日 辰時 (08:00)</span></div>
@@ -843,7 +1003,7 @@
     <div id="canvas-wrapper">
       <div id="pixi-viewport"></div>
 
-      <!-- 人物詳細屬性視窗 (包含門派、六維修為、當前修練武功與心法) -->
+      <!-- 人物詳細屬性視窗 (包含門派、等級修為、六維自由分配、當前修練武功與心法、戰鬥綜合指標) -->
       <div id="char-dialog">
         <div class="char-header">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -853,6 +1013,7 @@
               <div style="font-size:0.76rem; color:#94a3b8; margin-top:2px;">
                 <span style="color:#60a5fa;" id="char-title">初入江湖的無名散客</span> ·
                 <span style="color:#fbbf24; font-weight:bold;" id="char-realm">二流高手</span> ·
+                等級: <span style="color:#fde047; font-weight:bold;" id="char-level-badge">Lv.1</span> ·
                 門派: <span class="sect-tag" id="char-sect-header">尚未加入</span>
               </div>
             </div>
@@ -861,61 +1022,146 @@
         </div>
 
         <div class="char-body">
-          <!-- 左側：門派與核心六維修為數值 -->
+          <!-- 左側：門派、修為等級、自由點數分配與戰鬥綜合指標 -->
           <div class="char-col">
-            <div class="char-section-title">核心修為與六維指標</div>
+            <div class="char-section-title">核心修為與潛能境界</div>
             <div class="stat-row">
               <span>所屬門派</span>
               <b id="c-sect" style="color:#a7f3d0;">尚未加入 (江湖散人)</b>
             </div>
+            <div class="stat-row">
+              <span>人物境界等級</span>
+              <b id="c-level" style="color:#fbbf24;">Lv.1 · 初窺門徑</b>
+            </div>
+
+            <!-- 人物經驗修為條 -->
+            <div style="background:#1a1c29; padding:5px 10px; border-radius:4px; border:1px solid #272d3f;">
+              <div style="display:flex; justify-content:space-between; font-size:0.72rem; margin-bottom:3px;">
+                <span style="color:#94a3b8;">修為突破進度</span>
+                <span style="color:#93c5fd; font-weight:bold;" id="c-exp-val">0 / 100 XP</span>
+              </div>
+              <div class="xp-bar-track" style="height:6px;">
+                <div class="xp-bar-fill" id="c-exp-fill"
+                  style="width:0%; background:linear-gradient(90deg, #2563eb, #60a5fa);"></div>
+              </div>
+            </div>
+
+            <!-- 自由潛能點 -->
+            <div class="stat-row" style="background:rgba(30, 58, 138, 0.35); border-color:#2563eb;">
+              <span style="color:#93c5fd; font-weight:600;">剩餘自由潛能點</span>
+              <b id="c-free-points" style="color:#fde047; font-size:0.92rem;">5 點</b>
+            </div>
+
+            <div class="char-section-title" style="margin-top:6px;">核心六維屬性 (可自由分配)</div>
+            <div class="stat-row">
+              <span>臂力 (破外功/增傷)</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <b id="c-str">24</b>
+                <button class="btn-stat-add" id="btn-add-str" onclick="allocatePoint('str')">+ 點</button>
+              </div>
+            </div>
+            <div class="stat-row">
+              <span>身法 (身形/閃避)</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <b id="c-agi">28</b>
+                <button class="btn-stat-add" id="btn-add-agi" onclick="allocatePoint('agi')">+ 點</button>
+              </div>
+            </div>
+            <div class="stat-row">
+              <span>根骨 (抗打擊/氣血)</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <b id="c-con">22</b>
+                <button class="btn-stat-add" id="btn-add-con" onclick="allocatePoint('con')">+ 點</button>
+              </div>
+            </div>
+            <div class="stat-row">
+              <span>悟性 (省真氣/演武)</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <b id="c-wis">26</b>
+                <button class="btn-stat-add" id="btn-add-wis" onclick="allocatePoint('wis')">+ 點</button>
+              </div>
+            </div>
+            <div class="stat-row">
+              <span>福緣 (機緣/暴擊)</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <b id="c-lck">18</b>
+                <button class="btn-stat-add" id="btn-add-lck" onclick="allocatePoint('lck')">+ 點</button>
+              </div>
+            </div>
+
             <div class="stat-row"><span>氣血 (生命儲備)</span><b id="c-hp" style="color:#f87171;">100 / 100</b></div>
             <div class="stat-row"><span>真氣 (內力池)</span><b id="c-qi" style="color:#60a5fa;">80 / 80</b></div>
             <div class="stat-row"><span>身法速度 (Speed)</span><b id="c-speed" style="color:#34d399;">100 點</b></div>
-            <div class="stat-row"><span>臂力 (破外功/增傷)</span><b id="c-str">24</b></div>
-            <div class="stat-row"><span>身法 (身形/閃避)</span><b id="c-agi">28</b></div>
-            <div class="stat-row"><span>根骨 (抗打擊/氣血)</span><b id="c-con">22</b></div>
-            <div class="stat-row"><span>悟性 (省真氣/演武)</span><b id="c-wis">26</b></div>
-            <div class="stat-row"><span>福緣 (機緣/暴擊)</span><b id="c-lck">18</b></div>
             <div class="stat-row"><span>江湖聲望 (威名)</span><b id="c-rep" style="color:#fbbf24;">15 (籍籍無名)</b></div>
             <div class="stat-row"><span>經脈負荷 (內傷)</span><b id="c-strain" style="color:#34d399;">0% (安好無損)</b></div>
-          </div>
 
-          <!-- 右側：當前修練武功與心法 -->
-          <div class="char-col">
-            <div class="char-section-title">當前修練武功與心法</div>
-
-            <!-- 主修內功心法 -->
-            <div class="martial-card">
-              <div class="martial-top">
-                <span style="font-size:0.75rem; color:#60a5fa; font-weight:bold;">運行心法</span>
-                <span class="equip-tier tier-green" id="c-martial-level">第三重</span>
+            <!-- 戰鬥綜合指標面板 (自身屬性、武器、防具、武學、心法、狀態綜合計算) -->
+            <div class="char-section-title" style="margin-top:8px;">戰鬥綜合指標 (自身·神兵·武功·心法·狀態)</div>
+            <div class="combat-stat-card">
+              <div class="combat-stat-row">
+                <span style="color:#94a3b8;">綜合外功攻擊力 (ATK)</span>
+                <b id="c-total-atk" style="color:#f43f5e; font-size:0.92rem;">--</b>
               </div>
-              <div style="font-size:0.92rem; font-weight:bold; color:#f8fafc;" id="c-martial-name">太乙吐納心法</div>
-              <div style="font-size:0.76rem; color:#38bdf8; line-height:1.4;" id="c-martial-effect">
-                每時辰自動溫養氣血 5 點、真氣上限 +15 點。調和陰陽，令經脈不易受內傷反噬。
+              <div class="combat-stat-row">
+                <span style="color:#94a3b8;">綜合護體防禦力 (DEF)</span>
+                <b id="c-total-def" style="color:#38bdf8; font-size:0.92rem;">--</b>
+              </div>
+              <div class="combat-stat-row">
+                <span style="color:#94a3b8;">綜合身法閃避率 (DODGE)</span>
+                <b id="c-total-dodge" style="color:#34d399; font-size:0.92rem;">--</b>
+              </div>
+              <div class="combat-stat-row">
+                <span style="color:#94a3b8;">綜合致命暴擊率 (CRIT)</span>
+                <b id="c-total-crit" style="color:#fbbf24; font-size:0.92rem;">--</b>
+              </div>
+              <div style="border-top:1px dashed #232838; padding-top:4px; margin-top:2px;">
+                <div style="font-size:0.7rem; color:#64748b; margin-bottom:3px;">當前生理與心境狀態:</div>
+                <div id="c-status-tags" style="display:flex; flex-wrap:wrap; gap:4px;">
+                  <span style="color:#64748b; font-size:0.72rem;">🌿 氣息平穩</span>
+                </div>
               </div>
             </div>
+          </div>
 
-            <!-- 所習武學招式列表 -->
-            <div class="char-section-title" style="margin-top:6px;">已習武學招式</div>
-            <div id="c-skills-list" style="display:flex; flex-direction:column; gap:6px;">
-              <div class="skill-card">
-                <div>
-                  <b style="color:#f1f5f9; font-size:0.84rem;">太祖長拳</b>
-                  <span style="font-size:0.72rem; color:#94a3b8; margin-left:6px;">(外家拳法)</span>
-                </div>
-                <span class="equip-tier tier-white">略有小成</span>
-              </div>
-              <div class="skill-card">
-                <div>
-                  <b style="color:#f1f5f9; font-size:0.84rem;">流霜刺水</b>
-                  <span style="font-size:0.72rem; color:#94a3b8; margin-left:6px;">(青鋼長劍配套招式)</span>
-                </div>
-                <span class="equip-tier tier-green">駕輕就熟</span>
-              </div>
+          <!-- 右側：當前修練內功心法與外功武學 -->
+          <div class="char-col">
+            <!-- 內功心法 (最多 3 個，戰勝打敗敵人時獲得經驗) -->
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #232838; padding-bottom:3px;">
+              <div class="char-section-title" style="margin:0; border:none; padding:0;">當前運轉內功心法 (上限 3 部)</div>
+              <span style="font-size:0.72rem; color:#10b981;">戰勝結算時得周天心得</span>
+            </div>
+            <div id="c-cultivations-list" style="display:flex; flex-direction:column; gap:6px;">
+              <!-- 動態渲染已裝備內功心法 -->
+            </div>
+
+            <!-- 外功武學 (最多 3 個，每次出招時獲得經驗) -->
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #232838; padding-bottom:3px; margin-top:6px;">
+              <div class="char-section-title" style="margin:0; border:none; padding:0;">當前裝備外功武學 (上限 3 部)</div>
+              <span style="font-size:0.72rem; color:#f59e0b;">戰鬥出招時得招式歷練</span>
+            </div>
+            <div id="c-martials-list" style="display:flex; flex-direction:column; gap:6px;">
+              <!-- 動態渲染已裝備外功武學 -->
+            </div>
+
+            <div
+              style="font-size:0.72rem; color:#64748b; margin-top:6px; line-height:1.4; border-top:1px dashed #232838; padding-top:5px;">
+              💡 內外功最高皆可淬鍊至第 20 重【登峰造極】；武功主攻殺伐，心法滋養防護與氣血。
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- 武學心法快速更換/裝備選擇小窗 -->
+      <div id="martial-picker-dialog"
+        style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:#141724; border:1px solid #3b82f6; border-radius:8px; box-shadow:0 25px 50px rgba(0,0,0,0.96); width:500px; max-height:80vh; overflow-y:auto; padding:20px; z-index:120; box-sizing:border-box;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #232838; padding-bottom:10px; margin-bottom:12px;">
+          <div style="font-weight:bold; font-size:1rem; color:#f8fafc;" id="picker-title">裝備心法 / 武學</div>
+          <button class="btn" style="padding:4px 10px; font-size:0.75rem;" onclick="closeMartialPicker()">關閉</button>
+        </div>
+        <div id="picker-list" style="display:flex; flex-direction:column; gap:8px;"></div>
       </div>
 
       <!-- 隨身裝備與背包視窗 (左右分欄，裝備可裝卸，物品可使用) -->
@@ -1079,27 +1325,33 @@
           <span id="ui-energy" style="color:#60a5fa; font-weight:bold;">能量: 100</span>
         </div>
 
+        <!-- 角色戰鬥狀態指示列 (暈眩、中毒、奮起、受傷等) -->
+        <div id="battle-status-bar"
+          style="margin-bottom:8px; display:flex; flex-wrap:wrap; gap:4px; font-size:0.75rem;">
+          <span style="color:#64748b; font-size:0.72rem;">身心狀態: 🌿 內息如常</span>
+        </div>
+
         <div class="tip-box">
           <span>戰場地格: <b id="tip-tile-name" style="color:#6ee7b7;">青石地面</b></span>
           <span>移動耗能: <b id="tip-tile-cost" style="color:#fbbf24;">100</b></span>
         </div>
 
-        <div class="skills-grid">
-          <button class="btn active" id="btn-move" onclick="selectBattleAction('MOVE')">
+        <div class="skills-grid" id="battle-skills-grid">
+          <button class="btn active" id="btn-action-move" onclick="selectBattleAction('MOVE')">
             <b>[W/A/S/D] 挪移身法</b>
-            <span style="font-size:0.7rem; color:#94a3b8;">消耗地格能量 | 近身平A</span>
+            <span style="font-size:0.7rem; color:#94a3b8;">消耗地格能量 ｜ 近身施展拳腳</span>
           </button>
-          <button class="btn" id="btn-fire" onclick="selectBattleAction('FIRE_PALM')">
-            <b style="color:#f87171;">[1] 烈陽神掌</b>
-            <span style="font-size:0.7rem; color:#94a3b8;">耗能: 120 | 擊退+爆燃</span>
+          <button class="btn" id="btn-action-0" onclick="selectBattleAction('MARTIAL_0')">
+            <b style="color:#fbbf24;">[1] 太祖長拳</b>
+            <span style="font-size:0.7rem; color:#94a3b8;">第 2 重 ｜ 攻+12 ｜ 耗能 75</span>
           </button>
-          <button class="btn" id="btn-frost" onclick="selectBattleAction('FROST_FINGER')">
-            <b style="color:#93c5fd;">[2] 玄冥神指</b>
-            <span style="font-size:0.7rem; color:#94a3b8;">耗能: 90 | 4格封穴+結冰</span>
+          <button class="btn" id="btn-action-1" onclick="selectBattleAction('MARTIAL_1')">
+            <b style="color:#fbbf24;">[2] 清風快劍</b>
+            <span style="font-size:0.7rem; color:#94a3b8;">第 1 重 ｜ 攻+18 ｜ 耗能 80</span>
           </button>
-          <button class="btn" id="btn-oil" onclick="selectBattleAction('THROW_OIL')">
-            <b style="color:#d97706;">[3] 擲火油罈</b>
-            <span style="font-size:0.7rem; color:#94a3b8;">耗能: 80 | 鋪設易燃面</span>
+          <button class="btn" id="btn-action-2" onclick="selectBattleAction('MARTIAL_2')">
+            <b style="color:#64748b;">[3] 空置外功</b>
+            <span style="font-size:0.7rem; color:#475569;">按 C 鍵開啟屬性視窗裝備</span>
           </button>
         </div>
         <div style="margin-top:10px; display:flex; gap:8px;">
@@ -1572,17 +1824,119 @@
         this.player = {
           name: '李暮雲',
           title: '初入江湖的無名散客',
-          realm: '二流高手',
+          realm: '初入江湖',
+          level: 1,
+          exp: 0,
+          maxExp: 100,
+          freeAttributePoints: 5, // 初始提供 5 點自由分配潛能點
+          statuses: [],           // 當前狀態陣列 (暈眩、中毒、奮起、受傷等)
           sect: '尚未加入 (江湖散人)', // 門派：初始時尚未加入
-          martialArt: {             // 當前修練的武功或心法
-            name: '太乙吐納心法',
-            level: '第三重·凝神化氣',
-            effect: '每時辰自動溫養氣血 5 點、真氣上限 +15 點。調和陰陽，令經脈不易受內傷反噬。',
-            type: '內功心法'
-          },
-          skills: [
-            { name: '太祖長拳', realm: '略有小成', category: '外家拳法', desc: '江湖普及拳法，大開大闔，消耗真氣 10 點。' },
-            { name: '流霜刺水', realm: '駕輕就熟', category: '青鋼長劍配套招式', desc: '迅疾如風的刺擊劍招，減緩敵方身法。' }
+          // 當前裝備內功心法 (最多 3 個，戰勝打敗敵人時獲得經驗，最高 20 級)
+          equippedCultivations: [
+            {
+              id: 'cul_neutral_basic_breathing',
+              name: '基礎吐納心法',
+              type: 'CULTIVATION',
+              sect: 'NEUTRAL',
+              sectName: '江湖散人',
+              icon: '🫁',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              maxLevel: 20,
+              currentLevel: 3,
+              exp: 35,
+              title: '初窺門徑',
+              desc: '江湖散客入門打坐行氣法門，調理內息，滋潤四肢百骸。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('CULTIVATION', { def: 8, hpMax: 25, qiMax: 20, regen: 2 }) : []
+            },
+            {
+              id: 'cul_wudang_pure_yang',
+              name: '純陽無極功',
+              type: 'CULTIVATION',
+              sect: 'WUDANG',
+              sectName: '武當派',
+              icon: '☯️',
+              tier: '極品',
+              tierClass: 'tier-gold',
+              maxLevel: 20,
+              currentLevel: 1,
+              exp: 10,
+              title: '初窺門徑',
+              desc: '武當不傳秘本，道家至精至純內功，內息綿長護持周身。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('CULTIVATION', { def: 20, hpMax: 50, qiMax: 60, regen: 5 }) : []
+            }
+          ],
+          // 當前裝備外功武學 (最多 3 個，每次戰鬥出招使用時獲得經驗，最高 20 級)
+          equippedMartials: [
+            {
+              id: 'mar_neutral_taizu_fist',
+              name: '太祖長拳',
+              type: 'MARTIAL',
+              sect: 'NEUTRAL',
+              sectName: '江湖散人',
+              icon: '👊',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              maxLevel: 20,
+              currentLevel: 2,
+              exp: 15,
+              title: '初窺門徑',
+              desc: '天下初學者通用外家拳術，招法樸實無華，出招時累積武功經驗。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('MARTIAL', { atk: 12, critRate: 5 }) : []
+            },
+            {
+              id: 'mar_huashan_wind_sword',
+              name: '清風快劍',
+              type: 'MARTIAL',
+              sect: 'HUASHAN',
+              sectName: '華山派',
+              icon: '🗡️',
+              tier: '良品',
+              tierClass: 'tier-green',
+              maxLevel: 20,
+              currentLevel: 1,
+              exp: 5,
+              title: '初窺門徑',
+              desc: '華山劍宗起手式，如疾風過隙，飄逸迅捷。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('MARTIAL', { atk: 18, critRate: 8 }) : []
+            }
+          ],
+          // 備用已學心法與武學庫 (可快速更換裝備)
+          learnedCultivations: [
+            {
+              id: 'cul_shaolin_yijinjing',
+              name: '易筋洗髓經',
+              type: 'CULTIVATION',
+              sect: 'SHAOLIN',
+              sectName: '少林寺',
+              icon: '📿',
+              tier: '神品',
+              tierClass: 'tier-orange',
+              maxLevel: 20,
+              currentLevel: 1,
+              exp: 0,
+              title: '初窺門徑',
+              desc: '少林無上洗髓寶典，內外同修，重塑根骨經脈。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('CULTIVATION', { def: 25, hpMax: 80, qiMax: 80, regen: 6 }) : []
+            }
+          ],
+          learnedMartials: [
+            {
+              id: 'mar_gaibang_dragon_palm',
+              name: '降龍十八掌',
+              type: 'MARTIAL',
+              sect: 'GAIBANG',
+              sectName: '丐幫',
+              icon: '🐉',
+              tier: '神品',
+              tierClass: 'tier-orange',
+              maxLevel: 20,
+              currentLevel: 1,
+              exp: 0,
+              title: '初窺門徑',
+              desc: '天下第一剛猛掌法，掌力沛然莫之能禦，剛烈雄渾。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('MARTIAL', { atk: 45, critRate: 18 }) : []
+            }
           ],
           hp: 100,
           maxHp: 100,
@@ -1592,6 +1946,8 @@
           speed: 100,
           energy: 100,
           stunnedTurns: 0,
+          hitShake: 0, // 受擊震動計數
+          hitFlash: 0, // 受擊閃紅計數
           owX: 7,
           owY: 4,
           bx: 3,
@@ -1734,6 +2090,7 @@
         this.battleEnemies = [];
         this.selectedBattleAction = 'MOVE';
         this.waitingBattlePlayer = true;
+        this.activeEffects = []; // 戰鬥視覺特效 (招式圖標漸淡、漂浮傷害數字)
 
         this.initSceneGraph();
         this.initInput();
@@ -1787,11 +2144,13 @@
         this.battleSurfacesGraphics = new PIXI.Graphics();
         this.battleEntitiesContainer = new PIXI.Container();
         this.battlePlayerGraphic = new PIXI.Graphics();
+        this.battleFxContainer = new PIXI.Container(); // 招式圖標與飄字傷害層 (置頂渲染)
 
         this.battleContainer.addChild(this.battleTileGraphics);
         this.battleContainer.addChild(this.battleSurfacesGraphics);
         this.battleContainer.addChild(this.battleEntitiesContainer);
         this.battleContainer.addChild(this.battlePlayerGraphic);
+        this.battleContainer.addChild(this.battleFxContainer);
 
         this.app.stage.addChild(this.overworldContainer);
         this.app.stage.addChild(this.battleContainer);
@@ -1823,6 +2182,21 @@
 
             this.drawBattlePlayer();
             this.updateBattleEntitiesDisplay(lerpFactor);
+
+            // 更新戰鬥動態視覺特效 (招式圖標放大淡出、傷害數字浮動淡出)
+            if (this.activeEffects && this.activeEffects.length > 0) {
+              for (let i = this.activeEffects.length - 1; i >= 0; i--) {
+                const fx = this.activeEffects[i];
+                fx.update(delta);
+                if (fx.dead) {
+                  if (fx.target && fx.target.parent) {
+                    fx.target.parent.removeChild(fx.target);
+                    fx.target.destroy({ children: true });
+                  }
+                  this.activeEffects.splice(i, 1);
+                }
+              }
+            }
           }
         });
       }
@@ -1980,13 +2354,33 @@
       drawBattlePlayer() {
         const g = this.battlePlayerGraphic;
         g.clear();
-        const px = this.player.visualX + 20;
-        const py = this.player.visualY + 20;
+        let px = this.player.visualX + 20;
+        let py = this.player.visualY + 20;
+        let radius = 14;
+        let fillColor = 0x60a5fa;
 
-        g.beginFill(0x60a5fa);
+        // 玩家受擊打擊感：劇烈震顫、衝擊凹陷與血紅受創閃光
+        if (this.player.hitShake > 0) {
+          const intensity = this.player.hitShake / 10;
+          px += Math.sin(this.player.hitShake * 2.2) * 5 * intensity;
+          py += Math.cos(this.player.hitShake * 3.0) * 3 * intensity;
+          this.player.hitShake = Math.max(0, this.player.hitShake - 0.8);
+        }
+        if (this.player.hitFlash > 0) {
+          fillColor = 0xef4444; // 受創血紅高光
+          radius = 12;          // 衝擊凹陷
+          this.player.hitFlash = Math.max(0, this.player.hitFlash - 1);
+        }
+
+        g.beginFill(fillColor);
         g.lineStyle(1.5, 0xffffff, 1);
-        g.drawCircle(px, py, 14);
+        g.drawCircle(px, py, radius);
         g.endFill();
+
+        if (this.player.hitFlash > 0) {
+          g.lineStyle(2, 0xffffff, 0.9);
+          g.drawCircle(px, py, radius + 4);
+        }
       }
 
       updateBattleEntitiesDisplay(lerpFactor) {
@@ -2003,16 +2397,36 @@
           e.visualY += (targetY - e.visualY) * lerpFactor;
 
           const g = new PIXI.Graphics();
-          const ex = e.visualX + 20;
-          const ey = e.visualY + 20;
+          let ex = e.visualX + 20;
+          let ey = e.visualY + 20;
+          let radius = 14;
+          let fillColor = e.color || 0xef4444;
 
-          g.beginFill(e.color);
-          g.drawCircle(ex, ey, 14);
+          // 敵方受擊打擊感：震動反彈、衝擊壓縮與高光受創閃爍
+          if (e.hitShake > 0) {
+            const intensity = e.hitShake / 10;
+            ex += Math.sin(e.hitShake * 2.2) * 6 * intensity;
+            ey += Math.cos(e.hitShake * 3.0) * 4 * intensity;
+            e.hitShake = Math.max(0, e.hitShake - 0.8);
+          }
+          if (e.hitFlash > 0) {
+            fillColor = 0xffffff; // 瞬間受創高光白
+            radius = 12;          // 物理衝擊壓縮
+            e.hitFlash = Math.max(0, e.hitFlash - 1);
+          }
+
+          g.beginFill(fillColor);
+          g.drawCircle(ex, ey, radius);
           g.endFill();
+
+          if (e.hitFlash > 0) {
+            g.lineStyle(2, 0xef4444, 0.9);
+            g.drawCircle(ex, ey, radius + 4);
+          }
 
           if (e.stunnedTurns > 0) {
             g.lineStyle(3, 0xfbbf24, 1);
-            g.drawCircle(ex, ey, 14);
+            g.drawCircle(ex, ey, radius);
           }
 
           // 血量條
@@ -2039,10 +2453,463 @@
         }
       }
 
+      // 戰鬥招式圖案顯示與漸漸淡出
+      spawnAttackIcon(gx, gy, icon = '👊') {
+        if (!this.battleFxContainer) return;
+        const px = gx * TILE_PX + 20;
+        const py = gy * TILE_PX + 20;
+
+        const text = new PIXI.Text(icon, {
+          fontSize: 26,
+          align: 'center'
+        });
+        text.anchor.set(0.5, 0.5);
+        text.x = px;
+        text.y = py;
+        text.scale.set(0.6);
+        text.alpha = 1.0;
+
+        this.battleFxContainer.addChild(text);
+
+        this.activeEffects.push({
+          target: text,
+          type: 'ICON',
+          age: 0,
+          maxAge: 24, // ~400ms
+          update(delta) {
+            this.age += delta;
+            if (this.age < 7) {
+              const sc = 0.6 + (this.age / 7) * 0.75;
+              this.target.scale.set(sc);
+            } else {
+              const t = (this.age - 7) / (this.maxAge - 7);
+              this.target.scale.set(1.35 + t * 0.15);
+              this.target.alpha = Math.max(0, 1 - t);
+            }
+            if (this.age >= this.maxAge) {
+              this.dead = true;
+            }
+          }
+        });
+      }
+
+      // 綜合戰鬥數值計算引擎 (自身屬性、武器、防具、武學、心法、狀態綜合計算)
+      calcPlayerCombatStats(actionMartial = null) {
+        const p = this.player;
+        if (!p) return { atk: 25, def: 15, dodge: 10, crit: 5, maxHp: 100, maxQi: 80, isStunned: false, details: {} };
+
+        const attrs = p.attributes || { str: 24, agi: 28, con: 22, wis: 26, lck: 18, strain: 0 };
+        const str = attrs.str || 24;
+        const agi = attrs.agi || 28;
+        const con = attrs.con || 22;
+        const wis = attrs.wis || 26;
+        const lck = attrs.lck || 18;
+        const strain = attrs.strain || 0;
+
+        // 1. 自身屬性基底衍生
+        const baseAtk = Math.round(str * 1.8);
+        const baseDef = Math.round(str * 0.4 + con * 1.3 + wis * 0.5);
+        const baseDodge = Math.round(agi * 0.45 + lck * 0.2);
+        const baseCrit = Math.round(agi * 0.35 + lck * 0.3);
+        const baseHp = Math.round(80 + con * 4.5);
+        const baseQi = Math.round(60 + wis * 3.5);
+
+        // 2. 武器、防具、飾品裝備加成
+        let equipAtk = 0;
+        let equipDef = 0;
+        let equipHp = 0;
+        let equipQi = 0;
+        let equipDodge = 0;
+        let equipCrit = 0;
+
+        if (p.equipment) {
+          const w = p.equipment.weapon;
+          if (w && w.attributes) {
+            equipAtk += (w.attributes.atk || 0);
+            equipCrit += (w.attributes.critRate || 0);
+          }
+          const a = p.equipment.armor;
+          if (a && a.attributes) {
+            equipDef += (a.attributes.def || 0);
+            equipHp += (a.attributes.hpBonus || 0);
+            equipDodge += (a.attributes.dodge || a.attributes.dodgeMod || 0);
+          }
+          const t = p.equipment.trinket;
+          if (t && t.attributes) {
+            equipDef += (t.attributes.def || 0);
+            equipAtk += (t.attributes.atk || 0);
+            equipHp += (t.attributes.hpBonus || 0);
+            equipQi += (t.attributes.qiBonus || 0);
+            equipDodge += (t.attributes.dodge || 0);
+            equipCrit += (t.attributes.critRate || 0);
+          }
+        }
+
+        // 3. 內功心法常駐加成 (全部裝備的內功心法當前重數加總)
+        let cultDef = 0;
+        let cultHp = 0;
+        let cultQi = 0;
+        let cultDodge = 0;
+
+        if (Array.isArray(p.equippedCultivations)) {
+          p.equippedCultivations.forEach(c => {
+            const lv = c.currentLevel || 1;
+            const b = (c.levelBonuses && c.levelBonuses[lv - 1]) ? c.levelBonuses[lv - 1] : { def: 10, hpMax: 30, qiMax: 20 };
+            cultDef += (b.def || 0);
+            cultHp += (b.hpMax || 0);
+            cultQi += (b.qiMax || 0);
+            cultDodge += (b.dodge || 0);
+          });
+        }
+
+        // 4. 外功武學加成
+        let martialAtk = 0;
+        let martialCrit = 0;
+        if (actionMartial) {
+          const lv = actionMartial.currentLevel || 1;
+          const b = (actionMartial.levelBonuses && actionMartial.levelBonuses[lv - 1])
+            ? actionMartial.levelBonuses[lv - 1]
+            : { atk: 18, critRate: 6 };
+          martialAtk += (b.atk || 0);
+          martialCrit += (b.critRate || 0);
+        } else if (Array.isArray(p.equippedMartials) && p.equippedMartials.length > 0) {
+          // 常態/被動加成：已裝備武學的基礎淬鍊加成
+          p.equippedMartials.forEach(m => {
+            const lv = m.currentLevel || 1;
+            martialAtk += Math.round(lv * 2.5);
+            martialCrit += Math.round(lv * 0.5);
+          });
+        }
+
+        // 5. 狀態系統綜合修正 (暈眩、中毒、奮起、受傷、經脈受創)
+        let atkMul = 1.0;
+        let defMul = 1.0;
+        let dodgeMod = 0;
+        let isStunned = false;
+
+        const statuses = Array.isArray(p.statuses) ? p.statuses : [];
+        statuses.forEach(s => {
+          if (s.id === 'STUNNED') {
+            isStunned = true;
+          } else if (s.id === 'POISONED') {
+            defMul *= 0.85; // 中毒削弱防禦 15%
+            dodgeMod -= 15;  // 氣血凝滯，閃避 -15%
+          } else if (s.id === 'INSPIRED') {
+            atkMul *= 1.25;  // 奮起戰意，攻擊 +25%
+            defMul *= 1.20;  // 奮起防禦 +20%
+            dodgeMod += 10;  // 閃避 +10%
+          } else if (s.id === 'WOUNDED') {
+            atkMul *= 0.80;  // 受傷衰退，攻擊 -20%
+            defMul *= 0.80;  // 受傷防禦 -20%
+            dodgeMod -= 10;  // 身形滯澀，閃避 -10%
+          }
+        });
+
+        // 經脈負荷懲罰
+        if (strain > 0) {
+          const strainFactor = Math.min(0.3, strain * 0.005);
+          atkMul *= (1 - strainFactor);
+          defMul *= (1 - strainFactor);
+        }
+
+        // 6. 綜合總成計算
+        const finalAtk = Math.max(8, Math.round((baseAtk + equipAtk + martialAtk) * atkMul));
+        const finalDef = Math.max(5, Math.round((baseDef + equipDef + cultDef) * defMul));
+        const finalDodge = isStunned ? 0 : Math.max(0, Math.min(80, Math.round(baseDodge + equipDodge + cultDodge + dodgeMod)));
+        const finalCrit = Math.max(0, Math.min(85, Math.round(baseCrit + equipCrit + martialCrit)));
+        const finalMaxHp = Math.round(baseHp + equipHp + cultHp);
+        const finalMaxQi = Math.round(baseQi + equipQi + cultQi);
+
+        p.maxHp = finalMaxHp;
+        p.maxQi = finalMaxQi;
+        if (p.hp > p.maxHp) p.hp = p.maxHp;
+        if (p.qi > p.maxQi) p.qi = p.maxQi;
+
+        return {
+          atk: finalAtk,
+          def: finalDef,
+          dodge: finalDodge,
+          crit: finalCrit,
+          maxHp: finalMaxHp,
+          maxQi: finalMaxQi,
+          isStunned,
+          details: {
+            baseAtk, equipAtk, martialAtk, atkMul,
+            baseDef, equipDef, cultDef, defMul,
+            baseDodge, equipDodge, cultDodge, dodgeMod
+          }
+        };
+      }
+
+      // 附加/刷新狀態 (暈眩、中毒、奮起、受傷)
+      applyStatus(statusId, duration = 3) {
+        if (!this.player) return;
+        if (!Array.isArray(this.player.statuses)) this.player.statuses = [];
+
+        const STATUS_DEFS = {
+          STUNNED: { id: 'STUNNED', name: '暈眩', icon: '💫', color: '#c084fc', desc: '經脈閉塞，無法行動出招，身法閃避歸零' },
+          POISONED: { id: 'POISONED', name: '中毒', icon: '🧪', color: '#4ade80', desc: '毒質擴散，每輪流失 15 氣血，防禦與閃避削弱 15%' },
+          INSPIRED: { id: 'INSPIRED', name: '奮起', icon: '⚔️', color: '#fb923c', desc: '豪情高漲，攻擊力 +25%，防禦力 +20%，閃避 +10%' },
+          WOUNDED: { id: 'WOUNDED', name: '受傷', icon: '🩸', color: '#f87171', desc: '筋骨受挫，攻擊力 -20%，防禦力 -20%，閃避 -10%' }
+        };
+
+        const def = STATUS_DEFS[statusId] || { id: statusId, name: statusId, icon: '⚡', color: '#fbbf24', desc: '特殊狀態' };
+        const existing = this.player.statuses.find(s => s.id === statusId);
+
+        if (existing) {
+          existing.duration = Math.max(existing.duration, duration);
+          this.addLog(`<span class="log-warn">【狀態延長】</span>${def.icon} 【${def.name}】持續時間刷新為 ${existing.duration} 輪！`);
+        } else {
+          this.player.statuses.push({
+            id: def.id,
+            name: def.name,
+            icon: def.icon,
+            color: def.color,
+            desc: def.desc,
+            duration: duration
+          });
+          this.addLog(`<span class="log-combat">【附加狀態】</span>身染 ${def.icon} <b>【${def.name}】</b>！${def.desc} (持續 ${duration} 輪)`);
+        }
+
+        this.calcPlayerCombatStats();
+        if (typeof updateCharacterUI === 'function') updateCharacterUI();
+        this.updateBattleStatusBar();
+      }
+
+      removeStatus(statusId) {
+        if (!this.player || !Array.isArray(this.player.statuses)) return;
+        const idx = this.player.statuses.findIndex(s => s.id === statusId);
+        if (idx !== -1) {
+          const s = this.player.statuses.splice(idx, 1)[0];
+          this.addLog(`<span class="log-world">【狀態解除】</span>${s.icon} 【${s.name}】狀態消散。`);
+          this.calcPlayerCombatStats();
+          if (typeof updateCharacterUI === 'function') updateCharacterUI();
+          this.updateBattleStatusBar();
+        }
+      }
+
+      // 每輪戰鬥或時辰流逝結算狀態
+      tickPlayerStatuses() {
+        if (!this.player || !Array.isArray(this.player.statuses) || this.player.statuses.length === 0) return;
+
+        const remaining = [];
+        for (const s of this.player.statuses) {
+          // 中毒流失氣血
+          if (s.id === 'POISONED') {
+            const dotDmg = 15;
+            this.player.hp = Math.max(1, this.player.hp - dotDmg);
+            this.spawnDamageText(this.player.bx, this.player.by, dotDmg, false, true, 'POISON');
+            this.addLog(`<span class="log-warn">【劇毒噬體】</span>${s.icon} 體內劇毒發作，氣血流失 <b>${dotDmg}</b> 點！`);
+          }
+
+          s.duration--;
+          if (s.duration > 0) {
+            remaining.push(s);
+          } else {
+            this.addLog(`<span class="log-world">【狀態消退】</span>${s.icon} 【${s.name}】狀態自然消退。`);
+          }
+        }
+
+        this.player.statuses = remaining;
+        this.calcPlayerCombatStats();
+        if (typeof updateCharacterUI === 'function') updateCharacterUI();
+        this.updateBattleStatusBar();
+      }
+
+      updateBattleStatusBar() {
+        const bar = document.getElementById('battle-status-bar');
+        if (!bar || !this.player) return;
+        const statuses = this.player.statuses || [];
+        if (statuses.length === 0) {
+          bar.innerHTML = '<span style="color:#64748b; font-size:0.72rem;">身心狀態: 🌿 內息如常</span>';
+          return;
+        }
+        bar.innerHTML = statuses.map(s => `
+          <span class="status-tag-badge" style="background:#1e293b; border:1px solid ${s.color}; color:${s.color};" title="${s.desc}">
+            ${s.icon} <b>${s.name}</b> (${s.duration}輪)
+          </span>
+        `).join('');
+      }
+
+      // 增加人物修為經驗值 (升級系統)
+      addPlayerExp(amount = 60) {
+        if (!this.player) return;
+        const p = this.player;
+        p.exp = (p.exp || 0) + amount;
+        let leveledUp = false;
+
+        while (p.exp >= p.maxExp) {
+          p.exp -= p.maxExp;
+          p.level = (p.level || 1) + 1;
+          p.freeAttributePoints = (p.freeAttributePoints || 0) + 5; // 升級獎勵 5 點自由潛能點
+          p.maxExp = Math.round(100 * Math.pow(1.28, p.level - 1));
+
+          // 境界突破與全滿氣血
+          p.realm = typeof getCharacterRealmTitle === 'function' ? getCharacterRealmTitle(p.level) : '江湖豪俠';
+          p.title = typeof getCharacterTitleByLevel === 'function' ? getCharacterTitleByLevel(p.level) : p.title;
+          this.calcPlayerCombatStats();
+          p.hp = p.maxHp;
+          p.qi = p.maxQi;
+          leveledUp = true;
+
+          this.addLog(`<span class="log-world" style="font-size:0.92rem; color:#fde047;">🌟【境界突破】俠客修為精進，突破至 Lv.${p.level}【${p.realm}】！獲得 5 點自由分配潛能點，氣血內力完全充盈！</span>`);
+        }
+
+        if (!leveledUp) {
+          this.addLog(`<span class="log-world" style="font-size:0.75rem; color:#93c5fd;">【修為積累】獲得人物經驗 +${amount} (${p.exp}/${p.maxExp} XP)</span>`);
+        }
+
+        this.updateUI();
+        if (typeof updateCharacterUI === 'function') updateCharacterUI();
+      }
+
+      // 自由分配潛能點數至指定屬性 (str, agi, con, wis, lck)
+      allocateAttributePoint(attrKey) {
+        if (!this.player) return;
+        const p = this.player;
+        if (!p.freeAttributePoints || p.freeAttributePoints <= 0) {
+          this.addLog('<span class="log-warn">【提示】</span>尚無可分配的自由潛能點！提升人物等級可獲得。');
+          return;
+        }
+
+        const ATTR_NAMES = {
+          str: '臂力 (破外功/增傷)',
+          agi: '身法 (身形/閃避)',
+          con: '根骨 (抗打擊/氣血)',
+          wis: '悟性 (省真氣/演武)',
+          lck: '福緣 (機緣/暴擊)'
+        };
+
+        if (!p.attributes) p.attributes = { str: 24, agi: 28, con: 22, wis: 26, lck: 18, strain: 0 };
+        if (p.attributes[attrKey] === undefined) p.attributes[attrKey] = 20;
+
+        p.attributes[attrKey]++;
+        p.freeAttributePoints--;
+
+        const stats = this.calcPlayerCombatStats();
+        this.addLog(`<span class="log-world">【潛能開竅】</span>分配 1 點潛能至【${ATTR_NAMES[attrKey] || attrKey}】，提升至 <b>${p.attributes[attrKey]}</b>！(剩餘 ${p.freeAttributePoints} 點)`);
+
+        this.updateUI();
+        if (typeof updateCharacterUI === 'function') updateCharacterUI();
+      }
+
+      // 飄字傷害數字：向上移動並淡出 (支援傷害、暴擊、閃避與中毒)
+      spawnDamageText(gx, gy, damage, isCrit = false, isPlayer = false, customType = null) {
+        if (!this.battleFxContainer) return;
+        const px = gx * TILE_PX + 20 + (Math.random() * 8 - 4);
+        let py = gy * TILE_PX - 2;
+
+        let color = isPlayer ? '#f87171' : (isCrit ? '#fbbf24' : '#ff4444');
+        let stroke = isPlayer ? '#450a0a' : (isCrit ? '#78350f' : '#2b0505');
+        let textStr = isCrit ? `-${damage} 暴擊!` : `-${damage}`;
+
+        if (customType === 'DODGE' || damage === '閃避!') {
+          color = '#60a5fa'; // 冰藍色
+          stroke = '#1e3a8a';
+          textStr = '💨 閃避!';
+        } else if (customType === 'POISON') {
+          color = '#4ade80'; // 毒綠色
+          stroke = '#14532d';
+          textStr = `-${damage} 🧪`;
+        }
+
+        const text = new PIXI.Text(textStr, {
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          fontSize: (isCrit || customType === 'DODGE') ? 15 : 13,
+          fontWeight: '900',
+          fill: color,
+          stroke: stroke,
+          strokeThickness: 3.5,
+          dropShadow: true,
+          dropShadowColor: '#000000',
+          dropShadowBlur: 3,
+          dropShadowDistance: 1,
+          align: 'center'
+        });
+        text.anchor.set(0.5, 1);
+        text.x = px;
+        text.y = py;
+        text.scale.set(1.25);
+        text.alpha = 1.0;
+
+        this.battleFxContainer.addChild(text);
+
+        this.activeEffects.push({
+          target: text,
+          type: 'DAMAGE',
+          age: 0,
+          maxAge: 38, // ~630ms
+          update(delta) {
+            this.age += delta;
+            this.target.y -= 0.85 * delta;
+            if (this.target.scale.x > 1.0) {
+              const sc = Math.max(1.0, this.target.scale.x - 0.04 * delta);
+              this.target.scale.set(sc);
+            }
+            if (this.age > 14) {
+              const t = (this.age - 14) / (this.maxAge - 14);
+              this.target.alpha = Math.max(0, 1 - t);
+            }
+            if (this.age >= this.maxAge) {
+              this.dead = true;
+            }
+          }
+        });
+      }
+
+      // 動態更新戰術招式決策面版 (招式來自於已裝備的外功武學)
+      updateBattleSkillsUI() {
+        const container = document.getElementById('battle-skills-grid');
+        if (!container || !this.player) return;
+
+        const martials = this.player.equippedMartials || [];
+        let html = `
+          <button class="btn ${this.selectedBattleAction === 'MOVE' ? 'active' : ''}" id="btn-action-move" onclick="selectBattleAction('MOVE')">
+            <b>[W/A/S/D] 挪移身法</b>
+            <span style="font-size:0.7rem; color:#94a3b8;">消耗地格能量 ｜ 近身施展拳腳</span>
+          </button>
+        `;
+
+        for (let i = 0; i < 3; i++) {
+          const m = martials[i];
+          const actionKey = `MARTIAL_${i}`;
+          if (m) {
+            const lv = m.currentLevel || 1;
+            const bonus = (m.levelBonuses && m.levelBonuses[lv - 1]) ? m.levelBonuses[lv - 1] : { atk: 15, critRate: 5 };
+            const isActive = this.selectedBattleAction === actionKey;
+            const energyCost = (m.cost || 15) + 60;
+            html += `
+              <button class="btn ${isActive ? 'active' : ''}" id="btn-action-${i}" onclick="selectBattleAction('${actionKey}')">
+                <b style="color:#fbbf24;">[${i + 1}] ${m.icon || '⚔️'} ${m.name}</b>
+                <span style="font-size:0.7rem; color:#94a3b8;">第 ${lv} 重 ｜ 攻+${bonus.atk} ｜ 耗能 ${energyCost}</span>
+              </button>
+            `;
+          } else {
+            html += `
+              <button class="btn" style="opacity:0.45; cursor:not-allowed;" disabled>
+                <b style="color:#64748b;">[${i + 1}] 空置外功槽位</b>
+                <span style="font-size:0.7rem; color:#475569;">按 C 鍵開啟屬性視窗裝備</span>
+              </button>
+            `;
+          }
+        }
+
+        container.innerHTML = html;
+        this.updateBattleStatusBar();
+      }
+
       updateUI() {
+        if (!this.player) return;
+        this.calcPlayerCombatStats();
+
         document.getElementById('ui-hp').innerText = `${this.player.hp}/${this.player.maxHp}`;
         document.getElementById('ui-gold').innerText = `${this.player.gold} 兩`;
         document.getElementById('ui-time-str').innerText = this.clock.getFormattedString();
+
+        const lvEl = document.getElementById('ui-hero-level');
+        if (lvEl) lvEl.innerText = `Lv.${this.player.level || 1}`;
+        const expEl = document.getElementById('ui-hero-exp');
+        if (expEl) expEl.innerText = `${this.player.exp || 0}/${this.player.maxExp || 100}`;
 
         const modeTag = document.getElementById('ui-mode-tag');
         const pOverworld = document.getElementById('panel-overworld');
@@ -2075,6 +2942,8 @@
           const cost = this.battleArena.getMovementCost(this.player.bx, this.player.by);
           document.getElementById('tip-tile-name').innerText = tile.name;
           document.getElementById('tip-tile-cost').innerText = cost;
+          this.updateBattleSkillsUI();
+          this.updateBattleStatusBar();
         }
       }
 
@@ -2146,8 +3015,8 @@
           if (res.ok) {
             const json = await res.json();
             if (json && json.cells) {
-              this.worldData = json;
-              this.worldData.width = json.width || json.dimensions?.width || 16;
+             this.worldData = json;
+              ths.worldData.width = json.width || json.dimensions?.width || 16;
               this.worldData.height = json.height || json.dimensions?.height || 16;
             }
           }
@@ -2229,8 +3098,8 @@
 
         // 2. 檢測世界地圖中是否有相鄰大地圖
         const cellKey = `${targetChunkX},${targetChunkY}`;
-        const targetCell = this.worldData?.cells?.[cellKey];
-        if (!targetCell || !targetCell.mapFile) {
+        const targetCell = this.worldData?.cells?.[cllKey];
+        if (!targetCell || !trgetCell.mapFile) {
           this.triggerBump(dx, dy);
           this.addLog(`<span class="log-warn">【世界邊界阻絕】</span>相鄰區塊 (${targetChunkX}, ${targetChunkY}) 尚未開闢大地圖，無路可通！可於【世界地圖編輯器】中指派大地圖。`);
           this.flashRadarAlert();
@@ -2427,6 +3296,8 @@
         this.player.visualY = 8 * TILE_PX;
         this.player.energy = 100;
         this.player.stunnedTurns = 0;
+        this.player.hitShake = 0;
+        this.player.hitFlash = 0;
 
         this.battleEnemies = [{
           id: enemyData.id,
@@ -2440,16 +3311,23 @@
           speed: enemyData.isBoss ? 110 : 85,
           energy: 0,
           stunnedTurns: 0,
+          hitShake: 0,
+          hitFlash: 0,
           color: enemyData.color
         }];
+
+        // 清理任何遺留特效
+        if (this.battleFxContainer) this.battleFxContainer.removeChildren();
+        this.activeEffects = [];
 
         this.selectedBattleAction = 'MOVE';
         this.waitingBattlePlayer = true;
         this.rebuildBattleDisplay();
+        this.updateBattleSkillsUI();
         this.updateUI();
       }
 
-      // --- 戰鬥行動處理 ---
+      // --- 戰鬥行動處理 (綜合外功武學、自身屬性、裝備與狀態) ---
       handleBattleAction(dx, dy) {
         if (!this.waitingBattlePlayer) return;
         const p = this.player;
@@ -2460,9 +3338,43 @@
           const target = this.battleEnemies.find(e => e.x === tx && e.y === ty && e.hp > 0);
 
           if (target) {
-            target.hp -= 20;
-            this.addLog(`<span class="log-combat">【出拳】</span>掌風正中 ${target.name}，造成 20 點傷害！`);
+            // 近身拳腳平A：若有裝備外功武學，以首位武學或兵刃發動
+            const primary = (p.equippedMartials && p.equippedMartials[0]) ? p.equippedMartials[0] : null;
+            const stats = this.calcPlayerCombatStats(primary);
+
+            if (stats.isStunned) {
+              this.addLog('<span class="log-warn">【眩暈閉氣】</span>處於暈眩狀態，周身經脈凝滯，無法出手！');
+              return;
+            }
+
+            const icon = primary ? (primary.icon || '👊') : (p.equipment?.weapon?.icon || '👊');
+            const lv = primary ? (primary.currentLevel || 1) : 1;
+            const isCrit = (Math.random() * 100) < stats.crit;
+            let dmg = Math.round(stats.atk * (isCrit ? 1.6 : 1.0) * (0.9 + Math.random() * 0.22));
+            dmg = Math.max(6, dmg);
+            target.hp -= dmg;
+
+            // 1. 顯示外功武學圖案代表攻擊，再逐漸淡出
+            this.spawnAttackIcon(target.x, target.y, icon);
+            // 2. 顯示傷害數字，往上移動再淡出
+            this.spawnDamageText(target.x, target.y, dmg, isCrit, false);
+            // 3. 被攻擊方的圖案被打擊到的感覺：震顫反彈與受擊閃白
+            target.hitShake = 11;
+            target.hitFlash = 8;
+
+            const mName = primary ? primary.name : '基礎拳腳';
+            const critText = isCrit ? '【暴擊重創!】' : '';
+            this.addLog(`<span class="log-combat">【${mName}】</span>${icon} 掌風拳勁擊中 ${target.name}，${critText}造成 <b>${dmg}</b> 點外功傷害！`);
+
+            // 暴擊激發戰意 (奮起狀態)
+            if (isCrit && Math.random() < 0.35) {
+              this.applyStatus('INSPIRED', 3);
+            }
+
             p.energy -= 100;
+            if (primary) {
+              this.addMartialExpSingle(primary, 12);
+            }
             this.checkBattleStatus();
             this.advanceBattleTime();
             return;
@@ -2487,72 +3399,111 @@
           }
 
           this.advanceBattleTime();
-        } else if (this.selectedBattleAction === 'FIRE_PALM') {
-          const tx = p.bx + dx;
-          const ty = p.by + dy;
-          const target = this.battleEnemies.find(e => e.x === tx && e.y === ty && e.hp > 0);
+        } else if (this.selectedBattleAction.startsWith('MARTIAL_')) {
+          const slotIdx = parseInt(this.selectedBattleAction.replace('MARTIAL_', ''), 10);
+          const m = (p.equippedMartials && p.equippedMartials[slotIdx]) ? p.equippedMartials[slotIdx] : null;
 
-          if (target) {
-            target.hp -= 35;
-            this.addLog(`<span class="log-combat">【烈陽神掌】</span>陽勁震退 ${target.name} 並引發爆燃！`);
-            for (let k = 0; k < 2; k++) {
-              const kx = target.x + dx;
-              const ky = target.y + dy;
-              if (this.battleArena.getMovementCost(kx, ky) < 9999) {
-                target.x = kx;
-                target.y = ky;
-              } else {
-                target.hp -= 15;
-                target.stunnedTurns = 1;
-                this.addLog(`<span class="log-warn">【撞擊震傷】</span>${target.name} 撞擊岩壁暈眩 1 回合！`);
-                break;
-              }
-            }
-            const sidx = this.battleArena.idx(target.x, target.y);
-            this.battleArena.surfaces[sidx] = BATTLE_SURFACE.FIRE;
-            this.battleArena.duration[sidx] = 4;
-            this.redrawBattleSurfaces();
+          if (!m) {
+            this.addLog('<span class="log-warn">【提示】</span>該武學槽位未裝備外功！');
+            this.selectedBattleAction = 'MOVE';
+            this.updateBattleSkillsUI();
+            return;
           }
-          p.energy -= 120;
-          this.selectedBattleAction = 'MOVE';
-          this.checkBattleStatus();
-          this.advanceBattleTime();
-        } else if (this.selectedBattleAction === 'FROST_FINGER') {
-          this.addLog(`<span class="log-combat">【玄冥指】</span>陰寒指力破空，凍結直線 4 格！`);
-          for (let step = 1; step <= 4; step++) {
-            const rx = p.bx + dx * step;
-            const ry = p.by + dy * step;
-            if (this.battleArena.getMovementCost(rx, ry) >= 9999) break;
 
-            const idx = this.battleArena.idx(rx, ry);
-            this.battleArena.surfaces[idx] = BATTLE_SURFACE.ICE;
-            this.battleArena.duration[idx] = 6;
+          const stats = this.calcPlayerCombatStats(m);
+          if (stats.isStunned) {
+            this.addLog('<span class="log-warn">【眩暈閉氣】</span>處於暈眩狀態，氣息阻滯，無法施展奧義！');
+            return;
+          }
 
-            const target = this.battleEnemies.find(e => e.x === rx && e.y === ry && e.hp > 0);
-            if (target) {
-              target.hp -= 25;
-              target.stunnedTurns = 1;
-              this.addLog(`<span class="log-combat">【寒冰透穴】</span>${target.name} 穴道受制，凍結暈眩 1 回合！`);
+          const energyCost = (m.cost || 15) + 60;
+          if (p.energy < energyCost) {
+            this.addLog(`<span class="log-warn">【真氣匱乏】</span>施展《${m.name}》需耗費 ${energyCost} 能量，當前能量不足！`);
+            return;
+          }
+
+          const range = Math.max(1, m.range || 1);
+          let target = null;
+          let hitX = p.bx + dx;
+          let hitY = p.by + dy;
+
+          // 沿出招方向直線探索射程內的敵手
+          for (let step = 1; step <= range; step++) {
+            const cx = p.bx + dx * step;
+            const cy = p.by + dy * step;
+            if (this.battleArena.getMovementCost(cx, cy) >= 9999) break;
+            const enemy = this.battleEnemies.find(e => e.x === cx && e.y === cy && e.hp > 0);
+            if (enemy) {
+              target = enemy;
+              hitX = cx;
+              hitY = cy;
               break;
             }
           }
-          this.redrawBattleSurfaces();
-          p.energy -= 90;
-          this.selectedBattleAction = 'MOVE';
-          this.checkBattleStatus();
-          this.advanceBattleTime();
-        } else if (this.selectedBattleAction === 'THROW_OIL') {
-          const ox = p.bx + dx * 2;
-          const oy = p.by + dy * 2;
-          if (this.battleArena.getMovementCost(ox, oy) < 9999) {
-            const oidx = this.battleArena.idx(ox, oy);
-            this.battleArena.surfaces[oidx] = BATTLE_SURFACE.OIL;
-            this.battleArena.duration[oidx] = 99;
-            this.addLog(`<span class="log-combat">【潑油】</span>油罈碎裂，鋪滿易燃火油！`);
-            this.redrawBattleSurfaces();
+
+          p.energy -= energyCost;
+          const lv = m.currentLevel || 1;
+
+          // 1. 顯示該外功武學的圖案代表攻擊，再逐漸淡出
+          this.spawnAttackIcon(hitX, hitY, m.icon || '⚔️');
+
+          if (target) {
+            const isCrit = (Math.random() * 100) < stats.crit;
+            let dmg = Math.round(stats.atk * (isCrit ? 1.6 : 1.0) * (0.9 + Math.random() * 0.25));
+            dmg = Math.max(8, dmg);
+            target.hp -= dmg;
+
+            // 2. 顯示傷害數字，往上移動再淡出
+            this.spawnDamageText(hitX, hitY, dmg, isCrit, false);
+
+            // 3. 被攻擊方的圖案被打擊到的感覺：震顫反彈與受擊閃白
+            target.hitShake = 12;
+            target.hitFlash = 9;
+
+            // 附帶招式特效 (掌勁推擊、火熱爆燃、寒冰凍結)
+            if (m.name.includes('掌') || m.desc?.includes('震') || m.desc?.includes('推')) {
+              const kx = target.x + dx;
+              const ky = target.y + dy;
+              if (this.battleArena.getMovementCost(kx, ky) < 9999 && !this.battleEnemies.some(o => o !== target && o.x === kx && o.y === ky && o.hp > 0)) {
+                target.x = kx;
+                target.y = ky;
+              } else {
+                target.hp -= 10;
+                this.spawnDamageText(hitX, hitY, 10, false, false);
+                target.hitShake = 14;
+              }
+            }
+
+            if (m.name.includes('陽') || m.name.includes('火') || m.desc?.includes('燃')) {
+              const sidx = this.battleArena.idx(hitX, hitY);
+              this.battleArena.surfaces[sidx] = BATTLE_SURFACE.FIRE;
+              this.battleArena.duration[sidx] = 4;
+              this.redrawBattleSurfaces();
+            } else if (m.name.includes('冰') || m.name.includes('霜') || m.desc?.includes('凍')) {
+              const sidx = this.battleArena.idx(hitX, hitY);
+              this.battleArena.surfaces[sidx] = BATTLE_SURFACE.ICE;
+              this.battleArena.duration[sidx] = 5;
+              target.stunnedTurns = 1;
+              this.redrawBattleSurfaces();
+            }
+
+            // 暴擊激發戰意 (奮起狀態)
+            if (isCrit && Math.random() < 0.4) {
+              this.applyStatus('INSPIRED', 3);
+            }
+
+            const critText = isCrit ? '【暴擊重創!】' : '';
+            this.addLog(`<span class="log-combat">【${m.name}】</span>${m.icon} 施展第 ${lv} 重奧義擊中 ${target.name}，${critText}造成 <b>${dmg}</b> 點外功重創！`);
+          } else {
+            this.addLog(`<span class="log-combat">【${m.name}】</span>${m.icon} 掌風劍氣破空掠出，落空無中！`);
           }
-          p.energy -= 80;
+
+          // 武功經驗值由每次出招使用時累積
+          this.addMartialExpSingle(m, 16);
+
           this.selectedBattleAction = 'MOVE';
+          this.updateBattleSkillsUI();
+          this.checkBattleStatus();
           this.advanceBattleTime();
         }
       }
@@ -2583,6 +3534,9 @@
           for (const e of this.battleEnemies) {
             if (e.hp > 0) e.energy += e.speed;
           }
+
+          // 時間流逝結算狀態與環境
+          this.tickPlayerStatuses();
           this.battleArena.tickEnvironment(msg => this.addLog(msg));
           this.redrawBattleSurfaces();
         }
@@ -2599,12 +3553,44 @@
 
         const dist = Math.abs(this.player.bx - enemy.x) + Math.abs(this.player.by - enemy.y);
         if (dist === 1) {
-          const dmg = 18;
+          const stats = this.calcPlayerCombatStats();
+
+          // 1. 身法閃避檢定 (由敏捷、福緣、裝備、心法及狀態綜合決定)
+          const isDodged = (Math.random() * 100) < stats.dodge;
+          if (isDodged) {
+            this.spawnDamageText(this.player.bx, this.player.by, '閃避!', false, true, 'DODGE');
+            this.addLog(`<span class="log-combat">${enemy.name}</span> 招式凌厲刺來，你身法如電隨風一折，輕巧【閃避】！`);
+            enemy.energy -= 100;
+            return;
+          }
+
+          // 2. 防禦減傷計算 (自身根骨、臂力、裝備防具、心法護體及狀態綜合決定)
+          const enemyBaseAtk = enemy.isBoss ? 45 : 30;
+          const dmg = Math.max(5, Math.round(enemyBaseAtk * (120 / (120 + stats.def))));
           this.player.hp -= dmg;
-          this.addLog(`<span class="log-combat">${enemy.name}</span> 施展毒刃，造成 ${dmg} 點傷害！`);
+
+          // 顯示攻擊圖案與受傷數字
+          this.spawnAttackIcon(this.player.bx, this.player.by, '🩸');
+          this.spawnDamageText(this.player.bx, this.player.by, dmg, false, true);
+
+          // 被攻擊方的圖案要有被打擊到的感覺：震顫與受創血紅
+          this.player.hitShake = 12;
+          this.player.hitFlash = 9;
+
+          this.addLog(`<span class="log-combat">${enemy.name}</span> 施展毒刃，造成 ${dmg} 點傷害 (防護減免後)！`);
+
+          // 3. 狀態附加判定 (中毒、受傷)
+          if (Math.random() < 0.30) {
+            this.applyStatus('POISONED', 3);
+          }
+          if (dmg >= 16 || Math.random() < 0.20) {
+            this.applyStatus('WOUNDED', 3);
+          }
+
           if (this.player.hp <= 0) {
             alert('你已受重創，被同福鏢局救回客棧...');
-            this.player.hp = 100;
+            this.player.hp = this.player.maxHp || 100;
+            this.player.statuses = [];
             this.mode = MODE.OVERWORLD;
             this.battleContainer.visible = false;
             this.overworldContainer.visible = true;
@@ -2635,6 +3621,9 @@
 
             if (this.battleArena.surfaces[this.battleArena.idx(enemy.x, enemy.y)] === BATTLE_SURFACE.FIRE) {
               enemy.hp -= 15;
+              this.spawnDamageText(enemy.x, enemy.y, 15, false, false);
+              enemy.hitShake = 8;
+              enemy.hitFlash = 8;
               this.addLog(`<span class="log-warn">【焦灼】</span>${enemy.name} 穿過火海受 15 點灼燒傷害！`);
               if (enemy.hp <= 0) this.checkBattleStatus();
             }
@@ -2646,13 +3635,75 @@
         }
       }
 
+      // 單一武學獲得招式歷練經驗
+      addMartialExpSingle(m, amount = 15) {
+        if (!m || m.currentLevel >= MAX_LEVEL) return;
+        m.exp = (m.exp || 0) + amount;
+        let req = typeof getExpRequiredForLevel === 'function' ? getExpRequiredForLevel(m.currentLevel) : 50;
+        let leveledUp = false;
+        while (m.currentLevel < MAX_LEVEL && m.exp >= req) {
+          m.exp -= req;
+          m.currentLevel++;
+          m.title = typeof getRealmTitle === 'function' ? getRealmTitle(m.currentLevel) : '初窺門徑';
+          leveledUp = true;
+          this.addLog(`<span class="log-world">【武學精進】</span>所習外功《${m.name}》突破至 第 ${m.currentLevel} 重·${m.title}！`);
+          req = typeof getExpRequiredForLevel === 'function' ? getExpRequiredForLevel(m.currentLevel) : 50;
+        }
+        if (m.currentLevel >= MAX_LEVEL) m.exp = 0;
+        if (!leveledUp) {
+          this.addLog(`<span class="log-combat" style="font-size:0.75rem; color:#93c5fd;">【招式歷練】</span>《${m.name}》獲得招式歷練經驗 +${amount} (${m.exp}/${req})`);
+        }
+        if (typeof updateCharacterUI === 'function') updateCharacterUI();
+        this.updateBattleSkillsUI();
+      }
+
+      addMartialExp(amount = 12) {
+        if (!this.player || !Array.isArray(this.player.equippedMartials) || this.player.equippedMartials.length === 0) return;
+        this.player.equippedMartials.forEach(m => {
+          this.addMartialExpSingle(m, amount);
+        });
+      }
+
+      addCultivationExp(amount = 50) {
+        if (!this.player || !Array.isArray(this.player.equippedCultivations) || this.player.equippedCultivations.length === 0) return;
+        this.player.equippedCultivations.forEach(c => {
+          if (c.currentLevel >= MAX_LEVEL) return;
+          c.exp = (c.exp || 0) + amount;
+          let req = typeof getExpRequiredForLevel === 'function' ? getExpRequiredForLevel(c.currentLevel) : 50;
+          let leveledUp = false;
+          while (c.currentLevel < MAX_LEVEL && c.exp >= req) {
+            c.exp -= req;
+            c.currentLevel++;
+            c.title = typeof getRealmTitle === 'function' ? getRealmTitle(c.currentLevel) : '初窺門徑';
+            leveledUp = true;
+            this.addLog(`<span class="log-world">【心法大成】</span>內功心法《${c.name}》周天運轉突破至 第 ${c.currentLevel} 重·${c.title}！`);
+            req = typeof getExpRequiredForLevel === 'function' ? getExpRequiredForLevel(c.currentLevel) : 50;
+          }
+          if (c.currentLevel >= MAX_LEVEL) c.exp = 0;
+          if (!leveledUp) {
+            this.addLog(`<span class="log-world" style="font-size:0.75rem; color:#a7f3d0;">【周天頓悟】</span>《${c.name}》隨戰勝獲得心法修為 +${amount} (${c.exp}/${req})`);
+          }
+        });
+        if (typeof updateCharacterUI === 'function') updateCharacterUI();
+      }
+
       checkBattleStatus() {
         const aliveEnemies = this.battleEnemies.filter(e => e.hp > 0);
         if (aliveEnemies.length === 0) {
-          this.addLog('<span class="log-world">【大獲全勝】</span>敵手伏誅！搜得碎銀 35 兩。');
-          this.player.gold += 35;
+          const isBoss = this.overworld.roamingEnemies[this.currentEnemyIndex]?.isBoss;
+          const expGain = isBoss ? 180 : 65;
+          const silverGain = isBoss ? 80 : 35;
 
-          if (this.activeQuest && this.overworld.roamingEnemies[this.currentEnemyIndex]?.isBoss) {
+          this.addLog(`<span class="log-world">【大獲全勝】</span>敵手伏誅！搜得碎銀 ${silverGain} 兩。`);
+          this.player.gold += silverGain;
+
+          // 心法經驗值累積方式：隨著戰鬥後打敗敵人時隨著等級經驗值一起得到
+          this.addCultivationExp(isBoss ? 120 : 50);
+
+          // 人物經驗值累積與自動升級檢定
+          this.addPlayerExp(expGain);
+
+          if (this.activeQuest && isBoss) {
             this.addLog('<span class="log-world">【懸賞達成】</span>通緝犯已伏法，可回客棧領取巨額賞金！');
             this.activeQuest.completed = true;
           }
@@ -2677,6 +3728,7 @@
             closeTownDialog();
             closeCharacterDialog();
             closeEquipmentDialog();
+            closeMartialPicker();
             return;
           }
 
@@ -2704,9 +3756,10 @@
               case 's': case 'S': case 'ArrowDown': this.handleBattleAction(0, 1); break;
               case 'a': case 'A': case 'ArrowLeft': this.handleBattleAction(-1, 0); break;
               case 'd': case 'D': case 'ArrowRight': this.handleBattleAction(1, 0); break;
-              case '1': selectBattleAction('FIRE_PALM'); break;
-              case '2': selectBattleAction('FROST_FINGER'); break;
-              case '3': selectBattleAction('THROW_OIL'); break;
+              case '1': selectBattleAction('MARTIAL_0'); break;
+              case '2': selectBattleAction('MARTIAL_1'); break;
+              case '3': selectBattleAction('MARTIAL_2'); break;
+              case '0': case '`': selectBattleAction('MOVE'); break;
               case ' ': triggerOverdraw(); break;
             }
           }
@@ -2739,24 +3792,82 @@
 
     function closeCharacterDialog() {
       document.getElementById('char-dialog').style.display = 'none';
+      closeMartialPicker();
+    }
+
+    // 境界稱謂與江湖稱號
+    function getCharacterRealmTitle(level) {
+      if (level <= 2) return '初入江湖';
+      if (level <= 4) return '略有小成';
+      if (level <= 6) return '駕輕就熟';
+      if (level <= 8) return '聲名鵲起';
+      if (level <= 10) return '江湖豪俠';
+      if (level <= 12) return '名震一方';
+      if (level <= 14) return '武林名宿';
+      if (level <= 16) return '德高望重';
+      if (level <= 18) return '一代宗師';
+      if (level === 19) return '震古爍今';
+      return '登峰造極';
+    }
+
+    function getCharacterTitleByLevel(level) {
+      if (level <= 2) return '初入江湖的無名散客';
+      if (level <= 4) return '走馬中原的快劍遊俠';
+      if (level <= 6) return '獨行荒原的獵鷹行者';
+      if (level <= 8) return '名動四方的正義之士';
+      if (level <= 10) return '威震綠林的百勝豪俠';
+      if (level <= 14) return '宗師座下的當代柱石';
+      if (level <= 18) return '開宗立派的一代傳奇';
+      return '威震天下的武林至尊';
+    }
+
+    // 全域分配潛能點
+    function allocatePoint(attrKey) {
+      if (game && typeof game.allocateAttributePoint === 'function') {
+        game.allocateAttributePoint(attrKey);
+      }
     }
 
     function updateCharacterUI() {
       if (!game || !game.player) return;
       const p = game.player;
+      const stats = typeof game.calcPlayerCombatStats === 'function'
+        ? game.calcPlayerCombatStats()
+        : { atk: 30, def: 20, dodge: 10, crit: 5, details: { baseAtk: 20, equipAtk: 10, martialAtk: 0, atkMul: 1, baseDef: 15, equipDef: 5, cultDef: 0, defMul: 1, baseDodge: 10, equipDodge: 0, cultDodge: 0, dodgeMod: 0 } };
 
       const setTxt = (id, txt) => {
         const el = document.getElementById(id);
         if (el) el.innerText = txt;
       };
 
+      const lv = p.level || 1;
+      const exp = p.exp || 0;
+      const maxExp = p.maxExp || 100;
+      const freePts = p.freeAttributePoints || 0;
+      const expPercent = Math.min(100, Math.round((exp / (maxExp || 1)) * 100));
+
       setTxt('char-name', p.name);
       setTxt('char-title', p.title);
-      setTxt('char-realm', p.realm);
+      setTxt('char-realm', p.realm || getCharacterRealmTitle(lv));
+      setTxt('char-level-badge', `Lv.${lv}`);
 
       // 門派資訊
       setTxt('char-sect-header', p.sect || '尚未加入');
       setTxt('c-sect', p.sect || '尚未加入 (江湖散人)');
+      setTxt('c-level', `Lv.${lv} · ${p.realm || getCharacterRealmTitle(lv)}`);
+      setTxt('c-exp-val', `${exp} / ${maxExp} XP`);
+      const expFillEl = document.getElementById('c-exp-fill');
+      if (expFillEl) expFillEl.style.width = `${expPercent}%`;
+      setTxt('c-free-points', `${freePts} 點`);
+
+      // 自由加點按鈕狀態控制
+      ['str', 'agi', 'con', 'wis', 'lck'].forEach(k => {
+        const btn = document.getElementById(`btn-add-${k}`);
+        if (btn) {
+          btn.disabled = freePts <= 0;
+          btn.title = freePts > 0 ? `消耗 1 點潛能提升此項屬性 (剩餘 ${freePts} 點)` : '尚無可用自由潛能點，升級後可獲取';
+        }
+      });
 
       // 修為數值
       setTxt('c-hp', `${p.hp} / ${p.maxHp}`);
@@ -2782,31 +3893,254 @@
         }
       }
 
-      // 當前修練的武功與心法
-      if (p.martialArt) {
-        setTxt('c-martial-name', p.martialArt.name);
-        setTxt('c-martial-level', p.martialArt.level);
-        setTxt('c-martial-effect', p.martialArt.effect);
+      // 戰鬥綜合指標面板 (自身屬性、武器、防具、武學、心法、狀態綜合計算)
+      const d = stats.details || { baseAtk: 0, equipAtk: 0, martialAtk: 0, atkMul: 1, baseDef: 0, equipDef: 0, cultDef: 0, defMul: 1, baseDodge: 0, equipDodge: 0, cultDodge: 0, dodgeMod: 0 };
+      setTxt('c-total-atk', `${stats.atk} 點 (自身${d.baseAtk}+神兵${d.equipAtk}+武學${d.martialAtk} × 狀態${d.atkMul ? d.atkMul.toFixed(2) : '1.00'})`);
+      setTxt('c-total-def', `${stats.def} 點 (自身${d.baseDef}+防具${d.equipDef}+心法${d.cultDef} × 狀態${d.defMul ? d.defMul.toFixed(2) : '1.00'})`);
+      setTxt('c-total-dodge', stats.isStunned
+        ? '0% ⚠️【暈眩中，身法歸零】'
+        : `${stats.dodge}% (自身${d.baseDodge}%+防具${d.equipDodge}%+心法${d.cultDodge}%+狀態${d.dodgeMod >= 0 ? '+' : ''}${d.dodgeMod}%)`);
+      setTxt('c-total-crit', `${stats.crit}% (致命重擊率)`);
+
+      // 生理與心境狀態 tags
+      const statusContainer = document.getElementById('c-status-tags');
+      if (statusContainer) {
+        const statuses = Array.isArray(p.statuses) ? p.statuses : [];
+        if (statuses.length === 0) {
+          statusContainer.innerHTML = '<span style="color:#64748b; font-size:0.72rem;">🌿 氣息平穩，經脈如常</span>';
+        } else {
+          statusContainer.innerHTML = statuses.map(s => `
+            <span class="status-tag-badge" style="background:#1e293b; border:1px solid ${s.color}; color:${s.color};" title="${s.desc}">
+              ${s.icon} ${s.name} (${s.duration}輪)
+            </span>
+          `).join('');
+        }
       }
 
-      // 已掌握武學招式列表
-      const skillsContainer = document.getElementById('c-skills-list');
-      if (skillsContainer && Array.isArray(p.skills)) {
-        skillsContainer.innerHTML = '';
-        p.skills.forEach(s => {
+      // 1. 渲染當前運轉內功心法 (最多 3 個)
+      const culContainer = document.getElementById('c-cultivations-list');
+      if (culContainer) {
+        culContainer.innerHTML = '';
+        const cultivations = Array.isArray(p.equippedCultivations) ? p.equippedCultivations : [];
+        cultivations.forEach((c, idx) => {
           const card = document.createElement('div');
-          card.className = 'skill-card';
+          card.className = 'martial-slot-card';
+          const lv = c.currentLevel || 1;
+          const req = typeof getExpRequiredForLevel === 'function' ? getExpRequiredForLevel(lv) : 50;
+          const title = c.title || (typeof getRealmTitle === 'function' ? getRealmTitle(lv) : '初窺門徑');
+          const percent = lv >= 20 ? 100 : Math.min(100, Math.round(((c.exp || 0) / (req || 1)) * 100));
+          const bonusObj = (c.levelBonuses && c.levelBonuses[lv - 1]) ? c.levelBonuses[lv - 1] : null;
+          const summary = bonusObj ? bonusObj.summary : (c.desc || '調息養氣，護持周天。');
+
           card.innerHTML = `
-            <div>
-              <b style="color:#f1f5f9; font-size:0.84rem;">${s.name}</b>
-              <span style="font-size:0.72rem; color:#94a3b8; margin-left:6px;">(${s.category || '武學招式'})</span>
-              <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">${s.desc || ''}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:1.1rem;">${c.icon || '🫁'}</span>
+                <b style="font-size:0.86rem; color:#f8fafc;">${c.name}</b>
+                <span class="sect-tag" style="font-size:0.68rem; padding:1px 6px;">${c.sectName || '江湖散人'}</span>
+                <span class="equip-tier ${c.tierClass || 'tier-green'}">${c.tier || '凡品'}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.75rem; color:#6ee7b7; font-weight:bold;">第 ${lv} 重 · ${title}</span>
+                <button class="btn-martial-action btn-unequip" onclick="unequipCultivation(${idx})">卸下</button>
+              </div>
             </div>
-            <span class="equip-tier tier-green">${s.realm || '初窺門徑'}</span>
+            <div class="xp-bar-container">
+              <span style="font-size:0.68rem; color:#64748b;">周天</span>
+              <div class="xp-bar-track">
+                <div class="xp-bar-fill xp-fill-cultivation" style="width:${percent}%;"></div>
+              </div>
+              <span style="font-size:0.68rem; color:#94a3b8; min-width:70px; text-align:right;">
+                ${lv >= 20 ? '🔥 登峰造極' : `${c.exp || 0}/${req} XP`}
+              </span>
+            </div>
+            <div style="font-size:0.7rem; color:#6ee7b7; line-height:1.3; background:rgba(16, 185, 129, 0.08); padding:3px 6px; border-radius:3px; margin-top:2px;">
+              ${summary}
+            </div>
           `;
-          skillsContainer.appendChild(card);
+          culContainer.appendChild(card);
+        });
+
+        // 槽位未滿 3 個時顯示空槽位
+        for (let i = cultivations.length; i < 3; i++) {
+          const emptyCard = document.createElement('div');
+          emptyCard.className = 'martial-slot-empty';
+          emptyCard.innerHTML = `
+            <span>+ 空置心法槽位 (已運轉 ${cultivations.length}/3 部)</span>
+            <button class="btn-martial-action" onclick="openMartialPicker('CULTIVATION')">+ 運轉心法</button>
+          `;
+          culContainer.appendChild(emptyCard);
+        }
+      }
+
+      // 2. 渲染當前裝備外功武學 (最多 3 個)
+      const marContainer = document.getElementById('c-martials-list');
+      if (marContainer) {
+        marContainer.innerHTML = '';
+        const martials = Array.isArray(p.equippedMartials) ? p.equippedMartials : [];
+        martials.forEach((m, idx) => {
+          const card = document.createElement('div');
+          card.className = 'martial-slot-card';
+          const lv = m.currentLevel || 1;
+          const req = typeof getExpRequiredForLevel === 'function' ? getExpRequiredForLevel(lv) : 50;
+          const title = m.title || (typeof getRealmTitle === 'function' ? getRealmTitle(lv) : '初窺門徑');
+          const percent = lv >= 20 ? 100 : Math.min(100, Math.round(((m.exp || 0) / (req || 1)) * 100));
+          const bonusObj = (m.levelBonuses && m.levelBonuses[lv - 1]) ? m.levelBonuses[lv - 1] : null;
+          const summary = bonusObj ? bonusObj.summary : (m.desc || '外家拳劍，殺伐攻敵。');
+
+          card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:1.1rem;">${m.icon || '👊'}</span>
+                <b style="font-size:0.86rem; color:#f8fafc;">${m.name}</b>
+                <span class="sect-tag" style="font-size:0.68rem; padding:1px 6px;">${m.sectName || '江湖散人'}</span>
+                <span class="equip-tier ${m.tierClass || 'tier-green'}">${m.tier || '凡品'}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.75rem; color:#fcd34d; font-weight:bold;">第 ${lv} 重 · ${title}</span>
+                <button class="btn-martial-action btn-unequip" onclick="unequipMartial(${idx})">卸下</button>
+              </div>    </div>
+            <div class="xp-bar-container">
+              <span style="font-size:0.68rem; color:#64748b;">招式</span>
+              <div class="xp-bar-track">
+                <div class="xp-bar-fill xp-fill-martial" style="width:${percent}%;"></div>
+              </div>
+              <span style="font-size:0.68rem; color:#94a3b8; min-width:70px; text-align:right;">
+                ${lv >= 20 ? '🔥 登峰造極' : `${m.exp || 0}/${req} XP`}
+              </span>
+            </div>
+            <div style="font-size:0.7rem; color:#fcd34d; line-height:1.3; background:rgba(245, 158, 11, 0.08); padding:3px 6px; border-radius:3px; margin-top:2px;">
+              ${summary}
+            </div>
+          `;
+          marContainer.appendChild(card);
+        });
+
+        // 槽位未滿 3 個時顯示空槽位
+        for (let i = martials.length; i < 3; i++) {
+          const emptyCard = document.createElement('div');
+          emptyCard.className = 'martial-slot-empty';
+          emptyCard.innerHTML = `
+            <span>+ 空置武學槽位 (已裝備 ${martials.length}/3 部)</span>
+            <button class="btn-martial-action" onclick="openMartialPicker('MARTIAL')">+ 裝備外功</button>
+          `;
+          marContainer.appendChild(emptyCard);
+        }
+      }
+    }
+
+    // ==========================================
+    // 武學心法快速更換/裝備控制
+    // ==========================================
+    function openMartialPicker(type) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      const isCultivation = type === 'CULTIVATION';
+      const dlg = document.getElementById('martial-picker-dialog');
+      const titleEl = document.getElementById('picker-title');
+      const listEl = document.getElementById('picker-list');
+      if (!dlg || !listEl) return;
+
+      titleEl.innerText = isCultivation ? '選擇運轉內功心法 (上限 3 部)' : '選擇裝備外功武學 (上限 3 部)';
+      listEl.innerHTML = '';
+
+      const items = isCultivation ? (p.learnedCultivations || []) : (p.learnedMartials || []);
+      if (items.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align:center; padding:24px; color:#64748b; font-size:0.85rem;">
+            尚無備用${isCultivation ? '內功心法' : '外功武學'}秘笈。<br>
+            可在江湖遊歷探險、挑戰敵手或透過武學總管中研習領悟！
+          </div>
+        `;
+      } else {
+        items.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'martial-slot-card';
+          const lv = item.currentLevel || 1;
+          const title = item.title || (typeof getRealmTitle === 'function' ? getRealmTitle(lv) : '初窺門徑');
+          const bonusObj = (item.levelBonuses && item.levelBonuses[lv - 1]) ? item.levelBonuses[lv - 1] : null;
+          const summary = bonusObj ? bonusObj.summary : (item.desc || '');
+
+          row.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:1.1rem;">${item.icon || '📜'}</span>
+                <b style="font-size:0.88rem; color:#f8fafc;">${item.name}</b>
+                <span class="sect-tag" style="font-size:0.68rem; padding:1px 6px;">${item.sectName || '江湖散人'}</span>
+                <span class="equip-tier ${item.tierClass || 'tier-green'}">${item.tier || '凡品'}</span>
+              </div>
+              <button class="btn-martial-action" style="background:#2563eb; color:#ffffff; border-color:#3b82f6;" onclick="${isCultivation ? `equipCultivation(${idx})` : `equipMartial(${idx})`}">裝備入槽</button>
+            </div>
+            <div style="font-size:0.75rem; color:${isCultivation ? '#6ee7b7' : '#fcd34d'}; margin-top:2px;">
+              第 ${lv} 重 · ${title} ｜ ${summary}
+            </div>
+          `;
+          listEl.appendChild(row);
         });
       }
+
+      dlg.style.display = 'block';
+    }
+
+    function closeMartialPicker() {
+      const dlg = document.getElementById('martial-picker-dialog');
+      if (dlg) dlg.style.display = 'none';
+    }
+
+    function equipMartial(learnedIdx) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      if (!p.equippedMartials) p.equippedMartials = [];
+      if (p.equippedMartials.length >= 3) {
+        alert('外功武學槽位已滿（一次最多裝備 3 部），請先卸下其他外功！');
+        return;
+      }
+      if (!p.learnedMartials || !p.learnedMartials[learnedIdx]) return;
+      const item = p.learnedMartials.splice(learnedIdx, 1)[0];
+      p.equippedMartials.push(item);
+      game.addLog(`<span class="log-combat">【武學裝備】</span>開始習練外功【${item.name}】（第 ${item.currentLevel} 重）！`);
+      closeMartialPicker();
+      updateCharacterUI();
+      if (game && game.mode === MODE.BATTLE) game.updateBattleSkillsUI();
+    }
+
+    function unequipMartial(idx) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      if (!p.equippedMartials || !p.equippedMartials[idx]) return;
+      const item = p.equippedMartials.splice(idx, 1)[0];
+      if (!p.learnedMartials) p.learnedMartials = [];
+      p.learnedMartials.push(item);
+      game.addLog(`<span class="log-item">【武學卸下】</span>暫停施展外功【${item.name}】，納入備用心法庫。`);
+      updateCharacterUI();
+      if (game && game.mode === MODE.BATTLE) game.updateBattleSkillsUI();
+    }
+
+    function equipCultivation(learnedIdx) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      if (!p.equippedCultivations) p.equippedCultivations = [];
+      if (p.equippedCultivations.length >= 3) {
+        alert('內功心法槽位已滿（一次最多裝備 3 部），請先卸下其他心法！');
+        return;
+      }
+      if (!p.learnedCultivations || !p.learnedCultivations[learnedIdx]) return;
+      const item = p.learnedCultivations.splice(learnedIdx, 1)[0];
+      p.equippedCultivations.push(item);
+      game.addLog(`<span class="log-heal">【心法運轉】</span>開始周天運轉內功【${item.name}】（第 ${item.currentLevel} 重）！`);
+      closeMartialPicker();
+      updateCharacterUI();
+    }
+
+    function unequipCultivation(idx) {
+      if (!game || !game.player) return;
+      const p = game.player;
+      if (!p.equippedCultivations || !p.equippedCultivations[idx]) return;
+      const item = p.equippedCultivations.splice(idx, 1)[0];
+      if (!p.learnedCultivations) p.learnedCultivations = [];
+      p.learnedCultivations.push(item);
+      game.addLog(`<span class="log-item">【心法卸下】</span>收功息氣，卸下內功心法【${item.name}】。`);
+      updateCharacterUI();
     }
 
     // ==========================================
@@ -3022,9 +4356,8 @@
     function selectBattleAction(type) {
       if (game && game.mode === MODE.BATTLE) {
         game.selectedBattleAction = type;
-        const map = { 'MOVE': 'btn-move', 'FIRE_PALM': 'btn-fire', 'FROST_FINGER': 'btn-frost', 'THROW_OIL': 'btn-oil' };
-        for (const [k, id] of Object.entries(map)) {
-          document.getElementById(id).classList.toggle('active', k === type);
+        if (typeof game.updateBattleSkillsUI === 'function') {
+          game.updateBattleSkillsUI();
         }
       }
     }

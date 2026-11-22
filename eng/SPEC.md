@@ -182,6 +182,61 @@ interface WorldMapConfig {
   * **專案存檔槽位**：支援在 `data/` 目錄中自由載入、切換與另存新檔（如 `items.json`, `items_default.json`, `items_custom.json`）。
   * **本機磁碟直讀直存**：支援瀏覽器 File System Access API（`showOpenFilePicker`），可直接從本機磁碟選擇任意 JSON 存檔，編輯後直接原地回寫保存，亦支援無伺服器純離線本機快取。
 
+### 3.6 全域武功與心法系統規範 (`MartialSystem`)
+* **資料儲存路徑**：`data/martials.json`、`data/martials_default.json`
+* **兩大類型分類 (`MARTIAL_TYPES`)**：
+  * `MARTIAL` (外功武學)：戰鬥出招主動施展，加成攻擊力 (`atk`)、暴擊率 (`critRate`) 與護甲穿透 (`armorPierce`)。
+  * `CULTIVATION` (內功心法)：運氣行脈被動輔助，加成防禦力 (`def`)、氣血上限 (`hpMax`)、真氣上限 (`qiMax`)、每時辰調息 (`regen`) 與減傷百分比 (`damageReduction`)。
+* **七大門派體系 (`SECTS`)**：
+  * 少林寺 (`SHAOLIN`)、武當派 (`WUDANG`)、華山派 (`HUASHAN`)、丐幫 (`GAIBANG`)、峨嵋派 (`EMEI`)、逍遙派 (`XIAOYAO`)、江湖散人 (`NEUTRAL`)。
+* **等級上限與境界稱謂梯級 (`MAX_LEVEL = 20`)**：
+  * 最高等級為 20 重境界：1~3 重（初窺門徑）、4~6 重（略有小成）、7~9 重（駕輕就熟）、10~12 重（融會貫通）、13~15 重（爐火純青）、16~18 重（出神入化）、19 重（傲視群雄）、20 重（登峰造極）。
+* **經驗值獲取機制與裝備上限約束**：
+  * **外功武學**：由每次戰鬥出招/使用時累積招式歷練經驗，一次最多裝備 **3 個** (`MAX_EQUIPPED_MARTIALS = 3`)。
+  * **內功心法**：由戰鬥獲勝打敗敵人時隨著等級結算經驗一起得到，一次最多裝備 **3 個** (`MAX_EQUIPPED_CULTIVATIONS = 3`)。
+  * **升級經驗曲線**：$Exp(lv) = \text{round}(50 \times 1.22^{lv - 1})$；第 20 重滿級經驗為 0。
+* **20 級成長矩陣 (`LevelBonuses`)**：
+  * 支援平滑係數推演與逐級微調自定義矩陣，武學偏向外功攻擊增幅，心法偏向防護氣血減傷。
+* **戰術交鋒招式動態綁定與打擊感視覺狀態機 (`TacticalCombatFX`)**：
+  * **招式動態綁定**：戰術小地圖技能面板動態綁定玩家已裝備外功武學（快捷鍵 1~3 對應 Slot 1~3，基礎平A調用首位外功）。
+  * **招式圖標釋放視覺**：每次發動招式，於打擊網格動態生成該外功專屬 Emoji 圖標（如 👊、🗡️、🐉），先驟放放大（$0.6 \to 1.4\times$），隨後平滑淡出。
+  * **敵我雙向傷害飄字**：不論敵我受創或承受環境傷害，向上漂移浮動數字（暴擊標註金色文字，受擊 crimson 紅色），平滑淡出銷毀。
+  * **物理打擊感頓挫回饋 (`HitImpact`)**：受擊方觸發衰減高頻震動 ($\pm 6\text{px}$ 搖晃)、物理衝擊內凹壓縮（半徑由 14px 壓至 12px）與高光白色/血紅受創閃光與衝擊波環。
+
+### 3.7 人物經驗升級、自由潛能點與綜合戰鬥數值引擎 (`PlayerCombatStatsEngine`)
+* **人物經驗值與升級成長 (`PlayerProgression`)**：
+  * **數值結構**：`level` (等級), `exp` (當前經驗), `maxExp` (突破門檻), `freeAttributePoints` (自由分配潛能點)。
+  * **經驗曲線**：$MaxExp(lv) = \text{round}(100 \times 1.28^{lv - 1})$。
+  * **升級回饋**：經驗滿自動突破境界，升級獎勵 **5 點自由潛能點**，氣血與真氣充盈回滿，自動刷新境界稱謂（如初入江湖、略有小成、聲名鵲起、江湖豪俠、武林名宿、一代宗師、登峰造極）。
+  * **經驗獲得管道**：戰鬥獲勝打敗敵人時，與心法周天修為同步結算獲得人物修為經驗（普通敵手 +65，懸賞首領 +180）。
+* **自由潛能點分配 (`AttributeAllocation`)**：
+  * 玩家於屬性視窗中可將剩餘自由潛能點手動分配至核心五維：
+    * **臂力 (STR)**：破外功攻擊與格擋。
+    * **身法 (AGI)**：身形速度、暴擊與主要閃避。
+    * **根骨 (CON)**：生命儲備上限與外功護體防禦。
+    * **悟性 (WIS)**：內力真氣上限與化勁減傷。
+    * **福緣 (LCK)**：暴擊機緣與幸運閃避。
+  * 分配後即時更新人物各項數值並觸發戰鬥綜合指標重算。
+* **戰鬥綜合數值計算引擎 (`calcPlayerCombatStats`)**：
+  * **外功攻擊力 (ATK)**：
+    $$\text{ATK} = (\text{STR} \times 1.8 + \text{Weapon}_{\text{atk}} + \text{Trinket}_{\text{atk}} + \text{Martial}_{\text{atk}}) \times \text{Mul}_{\text{atk}}$$
+  * **護體防禦力 (DEF)**：
+    $$\text{DEF} = (\text{STR} \times 0.4 + \text{CON} \times 1.3 + \text{WIS} \times 0.5 + \text{Armor}_{\text{def}} + \text{Trinket}_{\text{def}} + \text{Cultivation}_{\text{def}}) \times \text{Mul}_{\text{def}}$$
+  * **身法閃避率 (DODGE %)**：
+    $$\text{DODGE} = \begin{cases} 0\% & \text{if STUNNED} \\ \min(80\%, \max(0\%, \text{AGI} \times 0.45 + \text{LCK} \times 0.2 + \text{Equip}_{\text{dodge}} + \text{Cultivation}_{\text{dodge}} + \Delta_{\text{dodge}})) & \text{otherwise} \end{cases}$$
+  * **致命暴擊率 (CRIT %)**：
+    $$\text{CRIT} = \min(85\%, \max(0\%, \text{AGI} \times 0.35 + \text{LCK} \times 0.3 + \text{Equip}_{\text{crit}} + \text{Martial}_{\text{crit}}))$$
+  * **氣血與真氣上限 (Max HP / Max Qi)**：由根骨、悟性、防具飾品及運轉中三大心法層數綜合決定。
+* **狀態系統 (`StatusEffects`)**：
+  * **暈眩 (`STUNNED` 💫)**：周身僵滯，跳過出招回合，**身法閃避率強制歸 0%**。
+  * **中毒 (`POISONED` 🧪)**：每輪流失 15 點氣血，**防禦力 -15%**、**閃避率 -15%**。
+  * **奮起 (`INSPIRED` ⚔️)**：暴擊重創或戰意觸發，**攻擊力 +25%**、**防禦力 +20%**、**閃避率 +10%**。
+  * **受傷 (`WOUNDED` 🩸)**：筋骨挫傷，**攻擊力 -20%**、**防禦力 -20%**、**閃避率 -10%**。
+  * **經脈負荷 (`STRAINED` ⚡)**：經脈負荷 $strain > 0$ 時，攻防依比例受到削弱。
+* **戰術交鋒命中與閃避判定**：
+  * 敵方進攻時優先檢驗玩家綜合閃避率，若判定為閃避，飄浮冰藍色「💨 閃避!」字樣且不受任何傷害；
+  * 若未閃避，傷害依照敵方攻擊力經過玩家綜合防禦公式 $Dmg = \max(5, \text{EnemyAtk} \times \frac{120}{120 + \text{DEF}})$ 計算實質減免，並附帶受傷/中毒機率。
+
 ---
 
 ## 4. 本地開發與持久化 REST API 契約
@@ -206,3 +261,14 @@ interface WorldMapConfig {
    * 回傳：預設物品庫清單。
 8. `POST /api/items/reset-default`
    * 動作：呼叫生成器重新隨機產生 108 件物品（各類各級 3 樣），覆寫保存至 default 與 items 檔。
+9. `GET /api/martials/files`
+   * 回傳：專案 `data/` 目錄內所有武學存檔檔案名稱陣列（例如 `["martials.json", "martials_default.json"]`）。
+10. `GET /api/martials/files/:filename`
+    * 回傳：指定武學存檔檔案之完整 JSON 陣列。
+11. `POST /api/martials/files/:filename`
+    * 請求體：合法武學清單 JSON 陣列。
+    * 回傳：`{ success: true, message: string, filename: string, count: number }`，原子性寫入指定之存檔檔案。
+12. `GET /api/martials` 或 `GET /api/martials/default`
+    * 回傳：預設武學心法清單。
+13. `POST /api/martials/reset-default`
+    * 動作：重設預設 18 部名門武學心法資料庫，寫入 `martials.json` 與 `martials_default.json`。

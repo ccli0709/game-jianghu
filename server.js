@@ -9,7 +9,11 @@ const DATA_DIR = path.join(ROOT_DIR, 'data');
 const ITEMS_FILE = path.join(DATA_DIR, 'items.json');
 const DEFAULT_FILE = path.join(DATA_DIR, 'default.json');
 const ITEMS_DEFAULT_FILE = path.join(DATA_DIR, 'items_default.json');
+const MARTIALS_FILE = path.join(DATA_DIR, 'martials.json');
+const MARTIALS_DEFAULT_FILE = path.join(DATA_DIR, 'martials_default.json');
+
 const ItemGenerator = require('./src/core/ItemGenerator');
+const MartialGenerator = require('./src/core/MartialGenerator');
 
 // 確保 maps 與 data 目錄存在
 if (!fs.existsSync(MAPS_DIR)) {
@@ -41,6 +45,26 @@ function ensureDefaultItems() {
   }
 }
 ensureDefaultItems();
+
+// 檢測初始武學心法檔：若無則建立預設 default 名門武學與心法寶典庫
+function ensureDefaultMartials() {
+  const needsDefault = !fs.existsSync(MARTIALS_DEFAULT_FILE);
+  const needsMartials = !fs.existsSync(MARTIALS_FILE);
+
+  if (needsDefault || needsMartials) {
+    console.log('⚡ 檢測到尚未具備初始武學心法檔，自動生成 default 名門武學與心法寶典庫...');
+    const defaultMartials = MartialGenerator.generateDefaultMartials();
+    const content = JSON.stringify(defaultMartials, null, 2);
+    if (!fs.existsSync(MARTIALS_DEFAULT_FILE)) {
+      fs.writeFileSync(MARTIALS_DEFAULT_FILE, content, 'utf8');
+    }
+    if (!fs.existsSync(MARTIALS_FILE)) {
+      fs.writeFileSync(MARTIALS_FILE, content, 'utf8');
+    }
+    console.log(`✅ 已成功生成並保存 default 武學心法資料庫，共 ${defaultMartials.length} 部武學！`);
+  }
+}
+ensureDefaultMartials();
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -275,6 +299,149 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ==========================================
+  // 武學心法全域管理 API (Martials & Cultivations)
+  // ==========================================
+
+  // API 6: 取得所有武學存檔清單
+  if (req.method === 'GET' && pathname === '/api/martials/files') {
+    ensureDefaultMartials();
+    fs.readdir(DATA_DIR, (err, files) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      const jsonFiles = files.filter(f => f.startsWith('martial') && f.endsWith('.json'));
+      // 若無特化前綴，亦回傳 martials.json, martials_default.json
+      if (files.includes('martials.json') && !jsonFiles.includes('martials.json')) jsonFiles.push('martials.json');
+      if (files.includes('martials_default.json') && !jsonFiles.includes('martials_default.json')) jsonFiles.push('martials_default.json');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(jsonFiles.length > 0 ? jsonFiles : ['martials.json', 'martials_default.json']));
+    });
+    return;
+  }
+
+  // API 6.1: 讀取指定名稱的武學存檔
+  if (req.method === 'GET' && pathname.startsWith('/api/martials/files/')) {
+    const filename = path.basename(pathname.replace('/api/martials/files/', ''));
+    const filePath = path.join(DATA_DIR, filename);
+
+    if (!fs.existsSync(filePath)) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: `武學存檔不存在: ${filename}` }));
+      return;
+    }
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // API 6.2: 儲存指定名稱的武學存檔
+  if (req.method === 'POST' && pathname.startsWith('/api/martials/files/')) {
+    const filename = path.basename(pathname.replace('/api/martials/files/', ''));
+    const filePath = path.join(DATA_DIR, filename);
+
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        if (!Array.isArray(parsed)) throw new Error('武學資料必須為陣列清單格式');
+        fs.writeFile(filePath, JSON.stringify(parsed, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            message: `武學心法存檔已成功寫入 ${filename}，共 ${parsed.length} 部武學！`,
+            filename,
+            count: parsed.length
+          }));
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message || '無效的 JSON 數據格式' }));
+      }
+    });
+    return;
+  }
+
+  // API 6.3: 取得預設全域武學清單
+  if (req.method === 'GET' && (pathname === '/api/martials' || pathname === '/api/martials/default')) {
+    const targetFile = pathname === '/api/martials/default' ? MARTIALS_DEFAULT_FILE : MARTIALS_FILE;
+    if (!fs.existsSync(targetFile)) {
+      ensureDefaultMartials();
+    }
+
+    fs.readFile(fs.existsSync(targetFile) ? targetFile : MARTIALS_DEFAULT_FILE, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // API 6.4: 重設生成預設名門武學庫
+  if (req.method === 'POST' && pathname === '/api/martials/reset-default') {
+    try {
+      const defaultMartials = MartialGenerator.generateDefaultMartials();
+      const content = JSON.stringify(defaultMartials, null, 2);
+      fs.writeFileSync(MARTIALS_DEFAULT_FILE, content, 'utf8');
+      fs.writeFileSync(MARTIALS_FILE, content, 'utf8');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        message: `已重設生成預設名門武學心法寶典庫，共 ${defaultMartials.length} 部武學！`,
+        count: defaultMartials.length
+      }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
+  // API 6.5: 儲存至當前武學庫
+  if (req.method === 'POST' && pathname === '/api/martials') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        if (!Array.isArray(parsed)) throw new Error('武學資料必須為陣列清單格式');
+        fs.writeFile(MARTIALS_FILE, JSON.stringify(parsed, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, message: `全域武學庫已更新，共 ${parsed.length} 部武學`, count: parsed.length }));
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message || '無效的 JSON 數據格式' }));
+      }
+    });
+    return;
+  }
+
   // 靜態檔案託管
   let filePath = path.join(ROOT_DIR, pathname === '/' ? 'index.html' : pathname);
 
@@ -301,11 +468,13 @@ if (require.main === module) {
     console.log(`  地圖編輯器: http://localhost:${PORT}/editor.html`);
     console.log(`  世界編輯器: http://localhost:${PORT}/world_editor.html`);
     console.log(`  物品設計總管: http://localhost:${PORT}/item_manager.html`);
+    console.log(`  武學心法總管: http://localhost:${PORT}/martial_manager.html`);
     console.log(`  地圖儲存目錄: ${MAPS_DIR}`);
     console.log(`  物品資料檔案: ${ITEMS_FILE}`);
+    console.log(`  武學資料檔案: ${MARTIALS_FILE}`);
     console.log(`  預設基準檔案: ${DEFAULT_FILE}`);
     console.log(`===============================================`);
   });
 }
 
-module.exports = { server, ensureDefaultItems };
+module.exports = { server, ensureDefaultItems, ensureDefaultMartials };

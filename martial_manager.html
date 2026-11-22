@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮世江湖 · 武功與心法全域設計總管</title>
+  <style>
+    :root {
+      --bg-dark: #0a0b10;
+      --panel-bg: #12141e;
+      --card-bg: #181b29;
+      --card-hover: #1f2336;
+      --border-color: #272d42;
+      --border-focus: #3b82f6;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    /* 頂部導航列 */
+    header {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: #090a0f;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #1e2235;
+    }
+
+    .header-stats b {
+      color: #38bdf8;
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-select {
+      background: #090a0f;
+      color: #38bdf8;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 0.82rem;
+      outline: none;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn {
+      background: #181b29;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #23283c;
+      border-color: #3e4766;
+    }
+
+    .btn-primary {
+      background: #1e3a8a;
+      border-color: #2563eb;
+      color: #93c5fd;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      color: #fff;
+    }
+
+    .btn-save {
+      background: #064e3b;
+      border-color: #059669;
+      color: #a7f3d0;
+    }
+
+    .btn-save:hover {
+      background: #047857;
+      color: #fff;
+    }
+
+    .btn-random {
+      background: #451a03;
+      border-color: #d97706;
+      color: #fde047;
+    }
+
+    .btn-danger {
+      background: #450a0a;
+      border-color: #dc2626;
+      color: #fca5a5;
+    }
+
+    /* 主工作區 (左欄清單 + 右欄表單) */
+    main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* 左側面板 */
+    aside {
+      width: 380px;
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .filter-box {
+      padding: 10px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #090a0f;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .pill {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: #181b29;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .pill.active {
+      background: #1e3a8a;
+      color: #93c5fd;
+      border-color: #3b82f6;
+      font-weight: bold;
+    }
+
+    .martial-list-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .martial-item-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .martial-item-card:hover {
+      background: var(--card-hover);
+      border-color: #3e4766;
+    }
+
+    .martial-item-card.selected {
+      background: #18223c;
+      border-color: var(--border-focus);
+      box-shadow: inset 3px 0 0 #3b82f6;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      font-size: 0.88rem;
+      font-weight: bold;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .badge-martial {
+      background: #450a0a;
+      border: 1px solid #dc2626;
+      color: #fca5a5;
+    }
+
+    .badge-cultivation {
+      background: #064e3b;
+      border: 1px solid #059669;
+      color: #6ee7b7;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .card-summary {
+      font-size: 0.72rem;
+      color: #38bdf8;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 右側詳細編輯區 */
+    article {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #0d0f17;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .form-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: #141724;
+      border: 1px solid var(--border-color);
+      color: #f8fafc;
+      padding: 7px 10px;
+      border-radius: 4px;
+      font-size: 0.84rem;
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--border-focus);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 60px;
+      line-height: 1.4;
+    }
+
+    /* 20 級成長矩陣表格 */
+    .levels-section {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .curve-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #141724;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+
+    .table-container {
+      background: #12141e;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow-x: auto;
+      max-height: 480px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.78rem;
+    }
+
+    th {
+      background: #181b29;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #1a1e2d;
+      color: #e2e8f0;
+    }
+
+    tr:hover td {
+      background: #171b29;
+    }
+
+    .cell-input {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #38bdf8;
+      padding: 2px 4px;
+      font-size: 0.78rem;
+      border-radius: 3px;
+      width: 100%;
+      outline: none;
+    }
+
+    .cell-input:focus {
+      background: #090a0f;
+      border-color: var(--border-focus);
+    }
+
+    /* 品質階級色標 */
+    .tier-white { color: #e4e4e7; }
+    .tier-green { color: #6ee7b7; }
+    .tier-purple { color: #c084fc; }
+    .tier-gold { color: #fde047; }
+    .tier-orange { color: #fdba74; }
+    .tier-red { color: #fca5a5; }
+
+    /* 彈窗 Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #141724;
+      border: 1px solid #333a4e;
+      border-radius: 8px;
+      padding: 20px;
+      width: 520px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #232838;
+      padding-bottom: 8px;
+    }
+
+    /* Toast 提示 */
+    #toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #064e3b;
+      color: #a7f3d0;
+      border: 1px solid #059669;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      display: none;
+      z-index: 2000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 頂部功能區 -->
+  <header>
+    <div class="header-left">
+      <div class="header-title">
+        <span>📜</span>
+        <span>武學與心法全域設計總管</span>
+      </div>
+      <div class="header-stats">
+        <span>外功武學: <b id="stat-martials">0</b></span>
+        <span>內功心法: <b id="stat-cultivations">0</b></span>
+        <span>涵蓋門派: <b id="stat-sects">7</b></span>
+      </div>
+    </div>
+
+    <!-- 專案存檔下拉選單 -->
+    <div class="header-center">
+      <span style="font-size:0.8rem; color:var(--text-muted);">📦 專案武學庫:</span>
+      <select id="save-file-select" class="file-select" onchange="onSelectSaveFileChange(this.value)">
+        <option value="martials.json">martials.json (官方基準庫 - 20級全階)</option>
+      </select>
+      <button class="btn btn-primary" onclick="openNewSaveModal()">＋ 另存新庫</button>
+      <button class="btn btn-save" onclick="saveMartialsToProject()" title="快捷鍵: Ctrl+S">💾 保存修改 (Ctrl+S)</button>
+    </div>
+
+    <!-- 操作動作列 -->
+    <div class="header-actions">
+      <button class="btn" style="border-color:#d97706; color:#fde047;" onclick="confirmResetToDefault()">🔄 重設為 Default</button>
+      <button class="btn btn-random" onclick="openRandomModal()">🎲 隨機武學建議</button>
+      <button class="btn btn-primary" onclick="createNewMartial()">➕ 新增武學/心法</button>
+      <button class="btn" style="border-color:#ea580c; color:#fdba74;" onclick="window.location.href='item_manager.html'">💎 物品總管</button>
+      <button class="btn" style="border-color:#059669; color:#a7f3d0;" onclick="window.location.href='world_editor.html'">🌍 世界地圖</button>
+      <button class="btn" style="border-color:#0284c7; color:#7dd3fc;" onclick="window.location.href='editor.html'">🗺️ 地圖編輯器</button>
+      <button class="btn" style="border-color:#38bdf8; color:#38bdf8;" onclick="window.location.href='index.html'">⚔️ 返回遊戲</button>
+    </div>
+  </header>
+
+  <!-- 主工作區 -->
+  <main>
+    <!-- 左側清單面板 -->
+    <aside>
+      <div class="filter-box">
+        <input type="text" id="filter-search" class="search-input" placeholder="🔍 搜尋武學名稱 / ID / 門派..." oninput="onFilterChange()">
+        
+        <!-- 類型切換 -->
+        <div class="pill-group" id="type-pills">
+          <div class="pill active" onclick="setTypeFilter('ALL')">全部類型</div>
+          <div class="pill" onclick="setTypeFilter('MARTIAL')">外功武學 (最多裝備3)</div>
+          <div class="pill" onclick="setTypeFilter('CULTIVATION')">內功心法 (最多裝備3)</div>
+        </div>
+
+        <!-- 門派切換 -->
+        <div class="pill-group" id="sect-pills">
+          <div class="pill active" onclick="setSectFilter('ALL')">全部門派</div>
+          <div class="pill" onclick="setSectFilter('SHAOLIN')">少林寺</div>
+          <div class="pill" onclick="setSectFilter('WUDANG')">武當派</div>
+          <div class="pill" onclick="setSectFilter('HUASHAN')">華山派</div>
+          <div class="pill" onclick="setSectFilter('GAIBANG')">丐幫</div>
+          <div class="pill" onclick="setSectFilter('EMEI')">峨嵋派</div>
+          <div class="pill" onclick="setSectFilter('XIAOYAO')">逍遙派</div>
+          <div class="pill" onclick="setSectFilter('NEUTRAL')">江湖散人</div>
+        </div>
+      </div>
+
+      <!-- 武學心法卡片列表容器 -->
+      <div class="martial-list-container" id="martial-list">
+        <!-- 動態渲染卡片清單 -->
+      </div>
+    </aside>
+
+    <!-- 右側詳細編輯區 -->
+    <article id="form-container">
+      <div class="form-header">
+        <div class="form-title">
+          <span id="title-icon">🥊</span>
+          <span id="title-name">羅漢拳法</span>
+          <span class="badge badge-martial" id="title-type-badge">外功武學</span>
+          <span style="font-size:0.8rem; color:#94a3b8; font-weight:normal;" id="title-sect-label">少林寺 · 最高 20 級</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-save" onclick="saveMartialsToProject()">💾 儲存修改</button>
+          <button class="btn btn-danger" onclick="deleteCurrentMartial()">🗑️ 刪除此部武學</button>
+        </div>
+      </div>
+
+      <!-- 基本屬性設定 -->
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label class="form-label">武學唯一識別碼 (ID)</label>
+          <input type="text" id="inp-id" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">武學/心法名稱</label>
+          <input type="text" id="inp-name" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">武學分類</label>
+          <select id="inp-type" class="form-select" onchange="onTypeFormChange(this.value)">
+            <option value="MARTIAL">外功武學 (戰鬥每次出招獲得經驗，限裝3個)</option>
+            <option value="CULTIVATION">內功心法 (戰勝時結算經驗，限裝3個)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label class="form-label">所屬門派</label>
+          <select id="inp-sect" class="form-select">
+            <option value="SHAOLIN">少林寺 (佛門禪武/護體硬功)</option>
+            <option value="WUDANG">武當派 (太極陰陽/以柔克剛)</option>
+            <option value="HUASHAN">華山派 (劍宗氣宗/奇拔險峻)</option>
+            <option value="GAIBANG">丐幫 (降龍十八掌/打狗棒法)</option>
+            <option value="EMEI">峨嵋派 (九陽凌霜/金頂佛光)</option>
+            <option value="XIAOYAO">逍遙派 (北冥神功/凌波微步)</option>
+            <option value="NEUTRAL">江湖散人 (草莽奇俠/自創絕藝)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">代表圖標 Emoji</label>
+          <input type="text" id="inp-icon" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">品質品階</label>
+          <select id="inp-tier" class="form-select">
+            <option value="凡品">凡品 (入門初習)</option>
+            <option value="良品">良品 (中流好手)</option>
+            <option value="上品">上品 (門派精銳)</option>
+            <option value="極品">極品 (宗門真傳)</option>
+            <option value="寶器">寶器 (鎮宗絕藝)</option>
+            <option value="神兵絕品">神兵絕品 (天下無雙)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">出招真氣消耗 / 攻擊距離 (外功武學專屬)</label>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="inp-cost" class="form-input" placeholder="出招耗真氣 (例如 15)">
+            <input type="number" id="inp-range" class="form-input" placeholder="攻擊距離 (例如 1~2 格)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">經驗值累積機制說明</label>
+          <input type="text" id="inp-exp-desc" class="form-input" readonly style="color:#38bdf8;">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">武學心法由來與奧義描述</label>
+        <textarea id="inp-desc" class="form-textarea" placeholder="詳細描述本門武學之出處、口訣心印或招法特點..."></textarea>
+      </div>
+
+      <!-- 20 級成長矩陣表格區 -->
+      <div class="levels-section">
+        <div class="section-header-row">
+          <div class="section-title">
+            <span>📈</span>
+            <span>1~20 級每級加成設定矩陣 (Level 1~20 Progression)</span>
+          </div>
+          <div class="curve-tools">
+            <span style="font-size:0.75rem; color:var(--text-muted);">一鍵推演 20 級基準:</span>
+            <input type="number" id="quick-base-val" style="width:65px;" class="form-input" placeholder="初級數值" value="16">
+            <button class="btn btn-primary" onclick="quickCalculateCurve()" style="padding:3px 8px; font-size:0.72rem;">⚡ 自動平滑生成 20 級曲線</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr id="level-table-headers">
+                <th style="width:50px;">等級</th>
+                <th style="width:90px;">境界稱謂</th>
+                <th style="width:100px;">升級所需經驗</th>
+                <th>當前等級加成細項 (可於下方即時自訂調整)</th>
+              </tr>
+            </thead>
+            <tbody id="level-table-body">
+              <!-- 動態生成 20 級行 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- 另存新庫彈窗 Modal -->
+  <div class="modal-overlay" id="new-save-modal">
+    <div class="modal-content" style="width: 440px;">
+      <div class="modal-title">
+        <span>💾 另存為新的武學庫檔案</span>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+        將當前編輯的武學與心法寶典庫另存為新的 JSON 檔案，保存於專案 <code>data/</code> 目錄。
+      </p>
+      <div class="form-group" style="margin-top:6px;">
+        <label class="form-label">存檔檔案名稱 (.json)</label>
+        <input type="text" id="inp-new-save-filename" class="form-input" placeholder="例如: martials_sect_wudang.json">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+        <button class="btn" onclick="closeNewSaveModal()">取消</button>
+        <button class="btn btn-save" onclick="confirmCreateNewSave()">確認建立並儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 隨機建議生成器彈窗 -->
+  <div class="modal-overlay" id="random-modal">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-title">
+        <span>🎲 隨機武學與心法建議推演器</span>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+        依據各大門派的武學宗義、道藏典籍與數值成長模型，自動推演出一部全新配置完成的 20 級武學/心法。
+      </p>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">鎖定門派 (可選)</label>
+          <select id="rand-opt-sect" class="form-select">
+            <option value="RANDOM">🎲 隨機門派</option>
+            <option value="SHAOLIN">少林寺</option>
+            <option value="WUDANG">武當派</option>
+            <option value="HUASHAN">華山派</option>
+            <option value="GAIBANG">丐幫</option>
+            <option value="EMEI">峨嵋派</option>
+            <option value="XIAOYAO">逍遙派</option>
+            <option value="NEUTRAL">江湖散人</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">鎖定分類 (可選)</label>
+          <select id="rand-opt-type" class="form-select">
+            <option value="RANDOM">🎲 隨機分類</option>
+            <option value="MARTIAL">外功武學</option>
+            <option value="CULTIVATION">內功心法</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button class="btn" onclick="closeRandomModal()">關閉</button>
+        <button class="btn btn-random" onclick="executeRandomSuggestion()">🎲 生成建議並加入</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-msg"></div>
+
+  <!-- 核心邏輯 -->
+  <script src="src/core/MartialGenerator.js"></script>
+  <script>
+    let martialsCatalog = [];
+    let currentSelectedId = null;
+    let currentSaveFilename = 'martials.json';
+    let currentTypeFilter = 'ALL';
+    let currentSectFilter = 'ALL';
+    let isConnectedToApi = false;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadCatalog();
+      bindShortcuts();
+    });
+
+    function bindShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          saveMartialsToProject();
+        }
+      });
+    }
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast-msg');
+      toast.innerText = msg;
+      toast.style.background = isSuccess ? '#064e3b' : '#7f1d1d';
+      toast.style.borderColor = isSuccess ? '#059669' : '#dc2626';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    }
+
+    // 載入武學資料庫
+    async function loadCatalog() {
+      try {
+        const testRes = await fetch('/api/martials/files');
+        if (testRes.ok) {
+          isConnectedToApi = true;
+          await loadSaveFilesList();
+
+          const target = currentSaveFilename || 'martials.json';
+          const res = await fetch(`/api/martials/files/${target}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              martialsCatalog = data;
+              renderSidebar();
+              selectMartial(martialsCatalog[0].id);
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('API 未連線，使用本地與預設庫:', e);
+      }
+
+      // 離線模式
+      await loadSaveFilesList();
+      const local = localStorage.getItem('JIANGHU_MARTIALS_CATALOG');
+      if (local) {
+        try { martialsCatalog = JSON.parse(local); } catch (e) { }
+      }
+      if (!martialsCatalog || martialsCatalog.length === 0) {
+        if (typeof generateDefaultMartials === 'function') {
+          martialsCatalog = generateDefaultMartials();
+        }
+        localStorage.setItem('JIANGHU_MARTIALS_CATALOG', JSON.stringify(martialsCatalog));
+      }
+      renderSidebar();
+      if (martialsCatalog.length > 0) selectMartial(martialsCatalog[0].id);
+    }
+
+    // 載入存檔選單清單
+    async function loadSaveFilesList() {
+      const select = document.getElementById('save-file-select');
+      if (!select) return;
+
+      try {
+        const res = await fetch('/api/martials/files');
+        if (res.ok) {
+          const files = await res.json();
+          if (Array.isArray(files) && files.length > 0) {
+            files.sort((a, b) => (a === 'martials.json' ? -1 : (b === 'martials.json' ? 1 : a.localeCompare(b))));
+            select.innerHTML = '';
+            files.forEach(f => {
+              const opt = document.createElement('option');
+              opt.value = f;
+              opt.innerText = f === 'martials.json' ? `${f} (當前預設庫)` :
+                             (f === 'martials_default.json' ? `${f} (官方基準寶典)` : f);
+              select.appendChild(opt);
+            });
+            if (currentSaveFilename && files.includes(currentSaveFilename)) {
+              select.value = currentSaveFilename;
+            } else {
+              currentSaveFilename = files[0];
+              select.value = files[0];
+            }
+            return;
+          }
+        }
+      } catch (e) { }
+
+      select.innerHTML = `
+        <option value="martials.json">martials.json (官方基準庫 - 20級全階)</option>
+        <option value="martials_default.json">martials_default.json (官方基準寶典)</option>
+      `;
+      select.value = currentSaveFilename;
+    }
+
+    async function onSelectSaveFileChange(filename) {
+      if (currentSelectedId) collectCurrentForm();
+      currentSaveFilename = filename;
+
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/martials/files/${filename}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              martialsCatalog = data;
+              renderSidebar();
+              if (martialsCatalog.length > 0) selectMartial(martialsCatalog[0].id);
+              showToast(`📂 已載入武學存檔: ${filename} (共 ${martialsCatalog.length} 部)`);
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+      }
+
+      const local = localStorage.getItem(`JIANGHU_MARTIALS_${filename}`) || localStorage.getItem('JIANGHU_MARTIALS_CATALOG');
+      if (local) {
+        try { martialsCatalog = JSON.parse(local); } catch (e) { }
+      }
+      renderSidebar();
+      if (martialsCatalog.length > 0) selectMartial(martialsCatalog[0].id);
+      showToast(`📂 已載入本地武學存檔: ${filename}`);
+    }
+
+    // 渲染側邊欄清單
+    function renderSidebar() {
+      updateStats();
+      const listContainer = document.getElementById('martial-list');
+      listContainer.innerHTML = '';
+
+      const query = (document.getElementById('filter-search').value || '').toLowerCase();
+
+      const filtered = martialsCatalog.filter(m => {
+        if (currentTypeFilter !== 'ALL' && m.type !== currentTypeFilter) return false;
+        if (currentSectFilter !== 'ALL' && m.sect !== currentSectFilter) return false;
+        if (query) {
+          const matchName = m.name?.toLowerCase().includes(query);
+          const matchId = m.id?.toLowerCase().includes(query);
+          const matchSect = m.sectName?.toLowerCase().includes(query);
+          if (!matchName && !matchId && !matchSect) return false;
+        }
+        return true;
+      });
+
+      filtered.forEach(m => {
+        const card = document.createElement('div');
+        card.className = `martial-item-card ${m.id === currentSelectedId ? 'selected' : ''}`;
+        card.onclick = () => {
+          collectCurrentForm();
+          selectMartial(m.id);
+        };
+
+        const isMartial = m.type === 'MARTIAL';
+        const typeBadge = isMartial
+          ? `<span class="badge badge-martial">外功</span>`
+          : `<span class="badge badge-cultivation">心法</span>`;
+
+        const maxLvBonus = m.levelBonuses && m.levelBonuses[19] ? m.levelBonuses[19].summary : '20 級成長矩陣已配備';
+
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="card-title">
+              <span>${m.icon || (isMartial ? '⚔️' : '🧘')}</span>
+              <span>${m.name}</span>
+            </div>
+            ${typeBadge}
+          </div>
+          <div class="card-meta">
+            <span>${m.sectName || m.sect}</span>
+            <span>最高 20 級 · ${m.tier || '凡品'}</span>
+          </div>
+          <div class="card-summary">${maxLvBonus}</div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function updateStats() {
+      const martials = martialsCatalog.filter(m => m.type === 'MARTIAL').length;
+      const cultivations = martialsCatalog.filter(m => m.type === 'CULTIVATION').length;
+      const sects = new Set(martialsCatalog.map(m => m.sect)).size;
+
+      document.getElementById('stat-martials').innerText = martials;
+      document.getElementById('stat-cultivations').innerText = cultivations;
+      document.getElementById('stat-sects').innerText = sects;
+    }
+
+    // 選取武學並填充編輯表單
+    function selectMartial(id) {
+      currentSelectedId = id;
+      const m = martialsCatalog.find(item => item.id === id);
+      if (!m) return;
+
+      document.getElementById('title-icon').innerText = m.icon || (m.type === 'MARTIAL' ? '⚔️' : '🧘');
+      document.getElementById('title-name').innerText = m.name;
+      const typeBadge = document.getElementById('title-type-badge');
+      typeBadge.innerText = m.type === 'MARTIAL' ? '外功武學' : '內功心法';
+      typeBadge.className = `badge ${m.type === 'MARTIAL' ? 'badge-martial' : 'badge-cultivation'}`;
+      document.getElementById('title-sect-label').innerText = `${m.sectName || m.sect} · 最高 ${m.maxLevel || 20} 級`;
+
+      document.getElementById('inp-id').value = m.id;
+      document.getElementById('inp-name').value = m.name;
+      document.getElementById('inp-type').value = m.type;
+      document.getElementById('inp-sect').value = m.sect;
+      document.getElementById('inp-icon').value = m.icon || '⚔️';
+      document.getElementById('inp-tier').value = m.tier || '凡品';
+      document.getElementById('inp-cost').value = m.cost !== undefined ? m.cost : 15;
+      document.getElementById('inp-range').value = m.range !== undefined ? m.range : 1;
+      document.getElementById('inp-desc').value = m.desc || '';
+
+      updateExpDescText(m.type);
+      renderLevelTable(m);
+
+      // 高亮側邊欄
+      document.querySelectorAll('.martial-item-card').forEach(c => c.classList.remove('selected'));
+      renderSidebar();
+    }
+
+    function updateExpDescText(type) {
+      const el = document.getElementById('inp-exp-desc');
+      if (type === 'MARTIAL') {
+        el.value = '每次戰鬥出招主動施展時獲得經驗 (一次最多裝備三個武功)';
+      } else {
+        el.value = '戰鬥獲勝打敗敵人時隨等級經驗一起得到 (一次最多裝備三個心法)';
+      }
+    }
+
+    function onTypeFormChange(type) {
+      updateExpDescText(type);
+      const isMartial = type === 'MARTIAL';
+      document.getElementById('inp-cost').style.display = isMartial ? 'block' : 'none';
+      document.getElementById('inp-range').style.display = isMartial ? 'block' : 'none';
+    }
+
+    // 渲染 20 級成長矩陣表格
+    function renderLevelTable(m) {
+      const tbody = document.getElementById('level-table-body');
+      tbody.innerHTML = '';
+
+      if (!m.levelBonuses || m.levelBonuses.length < 20) {
+        m.levelBonuses = generateLevelBonuses(m.type);
+      }
+
+      const isMartial = m.type === 'MARTIAL';
+
+      m.levelBonuses.forEach((b, idx) => {
+        const tr = document.createElement('tr');
+        const lv = idx + 1;
+
+        if (isMartial) {
+          tr.innerHTML = `
+            <td style="font-weight:bold; color:#60a5fa;">第 ${lv} 級</td>
+            <td style="color:#a7f3d0;">${b.title || getRealmTitle(lv)}</td>
+            <td><input type="number" class="cell-input" value="${b.expNeeded}" onchange="updateCellBonus(${idx}, 'expNeeded', this.value)"></td>
+            <td>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <span>攻擊力: <input type="number" class="cell-input" style="width:65px;" value="${b.atk}" onchange="updateCellBonus(${idx}, 'atk', this.value)"></span>
+                <span>暴擊率: <input type="number" class="cell-input" style="width:55px;" value="${b.critRate}" onchange="updateCellBonus(${idx}, 'critRate', this.value)">%</span>
+                <span>破甲: <input type="number" class="cell-input" style="width:55px;" value="${b.armorPierce || 0}" onchange="updateCellBonus(${idx}, 'armorPierce', this.value)"></span>
+              </div>
+            </td>
+          `;
+        } else {
+          tr.innerHTML = `
+            <td style="font-weight:bold; color:#60a5fa;">第 ${lv} 級</td>
+            <td style="color:#a7f3d0;">${b.title || getRealmTitle(lv)}</td>
+            <td><input type="number" class="cell-input" value="${b.expNeeded}" onchange="updateCellBonus(${idx}, 'expNeeded', this.value)"></td>
+            <td>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <span>護體防禦: <input type="number" class="cell-input" style="width:55px;" value="${b.def}" onchange="updateCellBonus(${idx}, 'def', this.value)"></span>
+                <span>氣血上限: <input type="number" class="cell-input" style="width:65px;" value="${b.hpMax}" onchange="updateCellBonus(${idx}, 'hpMax', this.value)"></span>
+                <span>真氣上限: <input type="number" class="cell-input" style="width:60px;" value="${b.qiMax}" onchange="updateCellBonus(${idx}, 'qiMax', this.value)"></span>
+                <span>調息: +<input type="number" class="cell-input" style="width:45px;" value="${b.regen || 2}" onchange="updateCellBonus(${idx}, 'regen', this.value)"></span>
+              </div>
+            </td>
+          `;
+        }
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateCellBonus(index, key, val) {
+      const m = martialsCatalog.find(item => item.id === currentSelectedId);
+      if (!m || !m.levelBonuses[index]) return;
+      m.levelBonuses[index][key] = Number(val);
+      if (m.type === 'MARTIAL') {
+        const b = m.levelBonuses[index];
+        b.summary = `外功攻擊力 +${b.atk} ｜ 暴擊率 +${b.critRate}% ｜ 穿透護甲 +${b.armorPierce || 0}`;
+      } else {
+        const b = m.levelBonuses[index];
+        b.summary = `護體防禦 +${b.def} ｜ 氣血上限 +${b.hpMax} ｜ 真氣上限 +${b.qiMax} ｜ 調息 +${b.regen || 2}`;
+      }
+    }
+
+    // 快速一鍵推演 20 級成長曲線
+    function quickCalculateCurve() {
+      const m = martialsCatalog.find(item => item.id === currentSelectedId);
+      if (!m) return;
+      const baseVal = Number(document.getElementById('quick-base-val').value) || 16;
+      if (m.type === 'MARTIAL') {
+        m.levelBonuses = generateLevelBonuses('MARTIAL', { atk: baseVal, critRate: 6 });
+      } else {
+        m.levelBonuses = generateLevelBonuses('CULTIVATION', { def: baseVal, hpMax: baseVal * 3, qiMax: baseVal * 2, regen: 3 });
+      }
+      renderLevelTable(m);
+      showToast('⚡ 已成功自動平滑推演出 1~20 級成長矩陣！');
+    }
+
+    // 採集當前表單變更至對象
+    function collectCurrentForm() {
+      if (!currentSelectedId) return;
+      const m = martialsCatalog.find(item => item.id === currentSelectedId);
+      if (!m) return;
+
+      m.id = document.getElementById('inp-id').value.trim();
+      m.name = document.getElementById('inp-name').value.trim();
+      m.type = document.getElementById('inp-type').value;
+      m.sect = document.getElementById('inp-sect').value;
+      m.sectName = document.getElementById('inp-sect').options[document.getElementById('inp-sect').selectedIndex].text.split(' ')[0];
+      m.icon = document.getElementById('inp-icon').value.trim() || '⚔️';
+      m.tier = document.getElementById('inp-tier').value;
+      m.cost = Number(document.getElementById('inp-cost').value) || 0;
+      m.range = Number(document.getElementById('inp-range').value) || 1;
+      m.desc = document.getElementById('inp-desc').value.trim();
+    }
+
+    // 儲存修改至專案存檔
+    async function saveMartialsToProject() {
+      collectCurrentForm();
+
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/martials/files/${currentSaveFilename}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(martialsCatalog, null, 2)
+          });
+          const resJson = await res.json();
+          if (res.ok && resJson.success) {
+            showToast(`💾 已成功保存至專案存檔: ${currentSaveFilename} (共 ${martialsCatalog.length} 部)`);
+            renderSidebar();
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      localStorage.setItem(`JIANGHU_MARTIALS_${currentSaveFilename}`, JSON.stringify(martialsCatalog));
+      localStorage.setItem('JIANGHU_MARTIALS_CATALOG', JSON.stringify(martialsCatalog));
+      showToast(`💾 已儲存至本地快取 [${currentSaveFilename}] (共 ${martialsCatalog.length} 部武學)`);
+      renderSidebar();
+    }
+
+    // 新增武學
+    function createNewMartial() {
+      collectCurrentForm();
+      const newId = `mar_custom_${Date.now().toString(36)}`;
+      const newMartial = {
+        id: newId,
+        name: '自創絕藝',
+        type: 'MARTIAL',
+        sect: 'NEUTRAL',
+        sectName: '江湖散人',
+        icon: '🥋',
+        cost: 15,
+        range: 1,
+        tier: '上品',
+        tierClass: 'tier-purple',
+        maxLevel: 20,
+        currentLevel: 1,
+        exp: 0,
+        desc: '匯聚百家所長自創之絕學，招式威力隨修為精進。',
+        levelBonuses: generateLevelBonuses('MARTIAL', { atk: 20, critRate: 8 })
+      };
+
+      martialsCatalog.unshift(newMartial);
+      renderSidebar();
+      selectMartial(newId);
+      showToast('➕ 已新增一部自創武學，最高可修練至 20 級！');
+    }
+
+    // 刪除武學
+    function deleteCurrentMartial() {
+      if (!currentSelectedId) return;
+      if (!confirm('確定要自資料庫中刪除這部武學/心法嗎？此操作不可逆！')) return;
+
+      const idx = martialsCatalog.findIndex(m => m.id === currentSelectedId);
+      if (idx !== -1) {
+        martialsCatalog.splice(idx, 1);
+        if (martialsCatalog.length > 0) {
+          selectMartial(martialsCatalog[0].id);
+        } else {
+          currentSelectedId = null;
+        }
+        renderSidebar();
+        showToast('🗑️ 已成功刪除指定武學');
+      }
+    }
+
+    // 重設為 Default
+    async function confirmResetToDefault() {
+      if (!confirm('確定要將全域武學庫重設為官方 Default 嗎？\n這將重設各大門派基準武功與心法 (共 18 部，各 20 級全階加成)！')) return;
+
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch('/api/martials/reset-default', { method: 'POST' });
+          if (res.ok) {
+            const json = await res.json();
+            showToast(`✅ ${json.message}`);
+            await loadCatalog();
+            return;
+          }
+        } catch (e) { }
+      }
+
+      martialsCatalog = generateDefaultMartials();
+      localStorage.setItem('JIANGHU_MARTIALS_CATALOG', JSON.stringify(martialsCatalog));
+      renderSidebar();
+      if (martialsCatalog.length > 0) selectMartial(martialsCatalog[0].id);
+      showToast('🔄 已在本地重設為 default 武學資料庫！');
+    }
+
+    // 另存新庫彈窗
+    function openNewSaveModal() {
+      document.getElementById('new-save-modal').classList.add('show');
+      document.getElementById('inp-new-save-filename').value = `martials_custom_${Date.now().toString(36)}.json`;
+    }
+    function closeNewSaveModal() {
+      document.getElementById('new-save-modal').classList.remove('show');
+    }
+    async function confirmCreateNewSave() {
+      let rawName = document.getElementById('inp-new-save-filename').value.trim();
+      if (!rawName) return alert('請輸入檔名！');
+      if (!rawName.endsWith('.json')) rawName += '.json';
+
+      closeNewSaveModal();
+      collectCurrentForm();
+      currentSaveFilename = rawName;
+
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/martials/files/${rawName}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(martialsCatalog, null, 2)
+          });
+          if (res.ok) {
+            await loadSaveFilesList();
+            showToast(`🎉 成功另存新庫為: ${rawName}`);
+            return;
+          }
+        } catch (e) { }
+      }
+
+      localStorage.setItem(`JIANGHU_MARTIALS_${rawName}`, JSON.stringify(martialsCatalog));
+      await loadSaveFilesList();
+      showToast(`🎉 已在本地儲存新庫: ${rawName}`);
+    }
+
+    // 隨機建議彈窗
+    function openRandomModal() {
+      document.getElementById('random-modal').classList.add('show');
+    }
+    function closeRandomModal() {
+      document.getElementById('random-modal').classList.remove('show');
+    }
+    function executeRandomSuggestion() {
+      const sectChoice = document.getElementById('rand-opt-sect').value;
+      const typeChoice = document.getElementById('rand-opt-type').value;
+
+      const sects = ['SHAOLIN', 'WUDANG', 'HUASHAN', 'GAIBANG', 'EMEI', 'XIAOYAO', 'NEUTRAL'];
+      const sect = sectChoice === 'RANDOM' ? sects[Math.floor(Math.random() * sects.length)] : sectChoice;
+      const type = typeChoice === 'RANDOM' ? (Math.random() > 0.5 ? 'MARTIAL' : 'CULTIVATION') : typeChoice;
+
+      const pfx = ['九霄', '純陽', '乾坤', '紫虛', '萬佛', '寒霜', '追魂', '落英', '金剛', '天樞', '太素', '神照'];
+      const sfxMartial = ['神劍', '絕戶爪', '破玉掌', '狂風刀法', '奪魄追魂刺', '穿心長槍', '霸王鐵肘'];
+      const sfxCultivation = ['真經', '神功', '心訣', '吐納篇', '導引術', '歸元秘錄', '洗髓篇'];
+
+      const chosenPfx = pfx[Math.floor(Math.random() * pfx.length)];
+      const chosenSfx = type === 'MARTIAL' ? sfxMartial[Math.floor(Math.random() * sfxMartial.length)] : sfxCultivation[Math.floor(Math.random() * sfxCultivation.length)];
+      const name = `${chosenPfx}${chosenSfx}`;
+      const newId = `mar_rand_${Date.now().toString(36)}`;
+
+      const newMartial = {
+        id: newId,
+        name,
+        type,
+        sect,
+        sectName: SECTS[sect]?.name || '江湖散人',
+        icon: type === 'MARTIAL' ? '⚔️' : '🧘',
+        cost: type === 'MARTIAL' ? Math.floor(Math.random() * 20) + 10 : 0,
+        range: type === 'MARTIAL' ? Math.floor(Math.random() * 2) + 1 : 0,
+        tier: '極品',
+        tierClass: 'tier-gold',
+        maxLevel: 20,
+        currentLevel: 1,
+        exp: 0,
+        desc: `源自${SECTS[sect]?.name || '名宿奇人'}真傳秘錄，威力隨等級修為層層攀升。`,
+        levelBonuses: generateLevelBonuses(type, { atk: 25, def: 18, hpMax: 50, qiMax: 40 })
+      };
+
+      closeRandomModal();
+      collectCurrentForm();
+      martialsCatalog.unshift(newMartial);
+      renderSidebar();
+      selectMartial(newId);
+      showToast(`🎲 成功隨機生成【${name}】(最高 20 級全階加成)！`);
+    }
+
+    // 篩選器切換
+    function setTypeFilter(t) {
+      currentTypeFilter = t;
+      document.querySelectorAll('#type-pills .pill').forEach((p, idx) => {
+        p.classList.toggle('active', (t === 'ALL' && idx === 0) || (t === 'MARTIAL' && idx === 1) || (t === 'CULTIVATION' && idx === 2));
+      });
+      renderSidebar();
+    }
+
+    function setSectFilter(s) {
+      currentSectFilter = s;
+      document.querySelectorAll('#sect-pills .pill').forEach(p => {
+        const txt = p.innerText;
+        const isMatch = (s === 'ALL' && txt.includes('全部')) ||
+                        (s === 'SHAOLIN' && txt.includes('少林')) ||
+                        (s === 'WUDANG' && txt.includes('武當')) ||
+                        (s === 'HUASHAN' && txt.includes('華山')) ||
+                        (s === 'GAIBANG' && txt.includes('丐幫')) ||
+                        (s === 'EMEI' && txt.includes('峨嵋')) ||
+                        (s === 'XIAOYAO' && txt.includes('逍遙')) ||
+                        (s === 'NEUTRAL' && txt.includes('散人'));
+        p.classList.toggle('active', isMatch);
+      });
+      renderSidebar();
+    }
+
+    function onFilterChange() {
+      renderSidebar();
+    }
+  </script>
+</body>
+
+</html>
