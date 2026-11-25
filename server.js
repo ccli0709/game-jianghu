@@ -11,9 +11,12 @@ const DEFAULT_FILE = path.join(DATA_DIR, 'default.json');
 const ITEMS_DEFAULT_FILE = path.join(DATA_DIR, 'items_default.json');
 const MARTIALS_FILE = path.join(DATA_DIR, 'martials.json');
 const MARTIALS_DEFAULT_FILE = path.join(DATA_DIR, 'martials_default.json');
+const CHARACTERS_FILE = path.join(DATA_DIR, 'characters.json');
+const CHARACTERS_DEFAULT_FILE = path.join(DATA_DIR, 'characters_default.json');
 
 const ItemGenerator = require('./src/core/ItemGenerator');
 const MartialGenerator = require('./src/core/MartialGenerator');
+const CharacterGenerator = require('./src/core/CharacterGenerator');
 
 // 確保 maps 與 data 目錄存在
 if (!fs.existsSync(MAPS_DIR)) {
@@ -65,6 +68,26 @@ function ensureDefaultMartials() {
   }
 }
 ensureDefaultMartials();
+
+// 檢測初始角色檔：若無則建立預設 default 角色實體庫 (三大種族、各形態、相異攻擊模式)
+function ensureDefaultCharacters() {
+  const needsDefault = !fs.existsSync(CHARACTERS_DEFAULT_FILE);
+  const needsCharacters = !fs.existsSync(CHARACTERS_FILE);
+
+  if (needsDefault || needsCharacters) {
+    console.log('⚡ 檢測到尚未具備初始角色實體檔，自動生成 default 三大種族全形態角色庫...');
+    const defaultCharacters = CharacterGenerator.generateDefaultCatalog();
+    const content = JSON.stringify(defaultCharacters, null, 2);
+    if (!fs.existsSync(CHARACTERS_DEFAULT_FILE)) {
+      fs.writeFileSync(CHARACTERS_DEFAULT_FILE, content, 'utf8');
+    }
+    if (!fs.existsSync(CHARACTERS_FILE)) {
+      fs.writeFileSync(CHARACTERS_FILE, content, 'utf8');
+    }
+    console.log(`✅ 已成功生成並保存 default 角色實體資料庫，共 ${defaultCharacters.length} 組角色！`);
+  }
+}
+ensureDefaultCharacters();
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -383,6 +406,26 @@ const server = http.createServer((req, res) => {
     const targetFile = pathname === '/api/martials/default' ? MARTIALS_DEFAULT_FILE : MARTIALS_FILE;
     if (!fs.existsSync(targetFile)) {
       ensureDefaultMartials();
+
+      // 檢測初始角色檔：若無則建立預設 default 角色實體庫 (三大種族、各形態、相異攻擊模式)
+      function ensureDefaultCharacters() {
+        const needsDefault = !fs.existsSync(CHARACTERS_DEFAULT_FILE);
+        const needsCharacters = !fs.existsSync(CHARACTERS_FILE);
+
+        if (needsDefault || needsCharacters) {
+          console.log('⚡ 檢測到尚未具備初始角色實體檔，自動生成 default 三大種族全形態角色庫...');
+          const defaultCharacters = CharacterGenerator.generateDefaultCatalog();
+          const content = JSON.stringify(defaultCharacters, null, 2);
+          if (!fs.existsSync(CHARACTERS_DEFAULT_FILE)) {
+            fs.writeFileSync(CHARACTERS_DEFAULT_FILE, content, 'utf8');
+          }
+          if (!fs.existsSync(CHARACTERS_FILE)) {
+            fs.writeFileSync(CHARACTERS_FILE, content, 'utf8');
+          }
+          console.log(`✅ 已成功生成並保存 default 角色實體資料庫，共 ${defaultCharacters.length} 組角色！`);
+        }
+      }
+      ensureDefaultCharacters();
     }
 
     fs.readFile(fs.existsSync(targetFile) ? targetFile : MARTIALS_DEFAULT_FILE, 'utf8', (err, data) => {
@@ -442,6 +485,146 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ==========================================
+  // 角色全域設計管理 API (Characters & Monsters)
+  // ==========================================
+
+  // API 7.1: 取得所有角色存檔檔案清單
+  if (req.method === 'GET' && pathname === '/api/characters/files') {
+    ensureDefaultCharacters();
+    fs.readdir(DATA_DIR, (err, files) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      const jsonFiles = files.filter(f => f.startsWith('character') && f.endsWith('.json'));
+      if (files.includes('characters.json') && !jsonFiles.includes('characters.json')) jsonFiles.push('characters.json');
+      if (files.includes('characters_default.json') && !jsonFiles.includes('characters_default.json')) jsonFiles.push('characters_default.json');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(jsonFiles.length > 0 ? jsonFiles : ['characters.json', 'characters_default.json']));
+    });
+    return;
+  }
+
+  // API 7.2: 讀取指定角色存檔檔案
+  if (req.method === 'GET' && pathname.startsWith('/api/characters/files/')) {
+    const filename = path.basename(pathname.replace('/api/characters/files/', ''));
+    const filePath = path.join(DATA_DIR, filename);
+
+    if (!fs.existsSync(filePath)) {
+      ensureDefaultCharacters();
+    }
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: `找不到角色存檔檔案: ${filename}` }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // API 7.3: 寫入/儲存指定角色存檔檔案
+  if (req.method === 'POST' && pathname.startsWith('/api/characters/files/')) {
+    const filename = path.basename(pathname.replace('/api/characters/files/', ''));
+    const filePath = path.join(DATA_DIR, filename);
+
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        if (!Array.isArray(parsed)) throw new Error('角色資料必須為陣列清單格式');
+        fs.writeFile(filePath, JSON.stringify(parsed, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            message: `角色存檔已成功寫入 ${filename}，共 ${parsed.length} 組角色`,
+            filename,
+            count: parsed.length
+          }));
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message || '無效的 JSON 數據格式' }));
+      }
+    });
+    return;
+  }
+
+  // API 7.4: 取得預設/當前角色庫
+  if (req.method === 'GET' && (pathname === '/api/characters' || pathname === '/api/characters/default')) {
+    const targetFile = pathname === '/api/characters/default' ? CHARACTERS_DEFAULT_FILE : CHARACTERS_FILE;
+    if (!fs.existsSync(targetFile)) {
+      ensureDefaultCharacters();
+    }
+
+    fs.readFile(fs.existsSync(targetFile) ? targetFile : CHARACTERS_DEFAULT_FILE, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // API 7.5: 重設生成預設三大種族角色庫
+  if (req.method === 'POST' && pathname === '/api/characters/reset-default') {
+    try {
+      const defaultChars = CharacterGenerator.generateDefaultCatalog();
+      const content = JSON.stringify(defaultChars, null, 2);
+      fs.writeFileSync(CHARACTERS_DEFAULT_FILE, content, 'utf8');
+      fs.writeFileSync(CHARACTERS_FILE, content, 'utf8');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        message: `已重設生成預設三大種族角色庫，共 ${defaultChars.length} 組角色！`,
+        count: defaultChars.length
+      }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
+  // API 7.6: 儲存至當前角色庫 (characters.json)
+  if (req.method === 'POST' && pathname === '/api/characters') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        if (!Array.isArray(parsed)) throw new Error('角色資料必須為陣列清單格式');
+        fs.writeFile(CHARACTERS_FILE, JSON.stringify(parsed, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, message: `全域角色庫已更新，共 ${parsed.length} 組角色`, count: parsed.length }));
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message || '無效的 JSON 數據格式' }));
+      }
+    });
+    return;
+  }
+
   // 靜態檔案託管
   let filePath = path.join(ROOT_DIR, pathname === '/' ? 'index.html' : pathname);
 
@@ -469,12 +652,14 @@ if (require.main === module) {
     console.log(`  世界編輯器: http://localhost:${PORT}/world_editor.html`);
     console.log(`  物品設計總管: http://localhost:${PORT}/item_manager.html`);
     console.log(`  武學心法總管: http://localhost:${PORT}/martial_manager.html`);
+    console.log(`  角色實體總管: http://localhost:${PORT}/character_manager.html`);
     console.log(`  地圖儲存目錄: ${MAPS_DIR}`);
     console.log(`  物品資料檔案: ${ITEMS_FILE}`);
     console.log(`  武學資料檔案: ${MARTIALS_FILE}`);
+    console.log(`  角色資料檔案: ${CHARACTERS_FILE}`);
     console.log(`  預設基準檔案: ${DEFAULT_FILE}`);
     console.log(`===============================================`);
   });
 }
 
-module.exports = { server, ensureDefaultItems, ensureDefaultMartials };
+module.exports = { server, ensureDefaultItems, ensureDefaultMartials, ensureDefaultCharacters };

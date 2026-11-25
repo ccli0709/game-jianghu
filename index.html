@@ -14,6 +14,7 @@
   </script>
   <script src="src/core/ItemGenerator.js"></script>
   <script src="src/core/MartialGenerator.js"></script>
+  <script src="src/core/CharacterGenerator.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -983,6 +984,9 @@
           style="padding:4px 10px; font-size:0.78rem; border-color:#8b5cf6; background:#2e1065;"
           onclick="window.location.href='martial_manager.html'">📜 武學心法</button></div>
       <div class="status-item"><button class="btn"
+          style="padding:4px 10px; font-size:0.78rem; border-color:#ec4899; background:#500724;"
+          onclick="window.location.href='character_manager.html'">👾 角色總管</button></div>
+      <div class="status-item"><button class="btn"
           style="padding:4px 10px; font-size:0.78rem; border-color:#3b82f6; background:#1a2333;"
           onclick="toggleCharacterDialog()"><kbd>C</kbd> 人物屬性</button></div>
       <div class="status-item"><button class="btn"
@@ -1012,8 +1016,9 @@
               <div style="font-size:1.15rem; font-weight:bold; color:#f8fafc;" id="char-name">李暮雲</div>
               <div style="font-size:0.76rem; color:#94a3b8; margin-top:2px;">
                 <span style="color:#60a5fa;" id="char-title">初入江湖的無名散客</span> ·
-                <span style="color:#fbbf24; font-weight:bold;" id="char-realm">二流高手</span> ·
+                <span style="color:#fbbf24; font-weight:bold;" id="char-realm">平民百姓</span> ·
                 等級: <span style="color:#fde047; font-weight:bold;" id="char-level-badge">Lv.1</span> ·
+                形態: <span style="color:#38bdf8; font-weight:bold;" id="char-form-badge">人類 · 鄉井平民</span> ·
                 門派: <span class="sect-tag" id="char-sect-header">尚未加入</span>
               </div>
             </div>
@@ -1025,9 +1030,17 @@
           <!-- 左側：門派、修為等級、自由點數分配與戰鬥綜合指標 -->
           <div class="char-col">
             <div class="char-section-title">核心修為與潛能境界</div>
+            <div id="c-breakthrough-alert"
+              style="display:none; background:#450a0a; border:1px solid #dc2626; color:#fca5a5; font-size:0.74rem; padding:6px 10px; border-radius:4px; margin-bottom:8px; line-height:1.4;">
+              ⚡ <b>【形態封頂瓶頸】</b> 修為已達極限！大地圖已出現特殊突破魔物，前往誅滅魔煞方可破繭進化！
+            </div>
             <div class="stat-row">
               <span>所屬門派</span>
               <b id="c-sect" style="color:#a7f3d0;">尚未加入 (江湖散人)</b>
+            </div>
+            <div class="stat-row">
+              <span>種族與形態</span>
+              <b id="c-race-form" style="color:#38bdf8;">人類 · 鄉井平民 (上限 Lv.5)</b>
             </div>
             <div class="stat-row">
               <span>人物境界等級</span>
@@ -1552,6 +1565,61 @@
 
       idx(x, y) { return y * this.w + x; }
 
+      createRoamingEnemy(x, y, biome = 'PLAINS', isBoss = false) {
+        let charData = null;
+        const playerLevel = (typeof game !== 'undefined' && game && game.player) ? (game.player.level || 1) : 1;
+        const catalog = (typeof game !== 'undefined' && game && game.characterCatalog) ? game.characterCatalog : null;
+
+        if (typeof CharacterGenerator !== 'undefined' && typeof CharacterGenerator.selectEnemyForEncounter === 'function') {
+          charData = CharacterGenerator.selectEnemyForEncounter(biome, playerLevel, catalog);
+        }
+
+        if (!charData) {
+          charData = {
+            id: `enemy_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+            name: '荒野巡山客',
+            race: 'HUMAN',
+            form: 'OUTLAW',
+            formName: '綠林草莽',
+            level: playerLevel,
+            attackPattern: 'MARTIAL_COMBO',
+            color: '#ef4444',
+            attributes: { hp: 80, speed: 85, def: 10, str: 15, agi: 15 }
+          };
+        }
+
+        let parsedColor = 0xf87171;
+        if (typeof charData.color === 'string') {
+          parsedColor = parseInt(charData.color.replace('#', '0x'), 16) || 0xf87171;
+        } else if (typeof charData.color === 'number') {
+          parsedColor = charData.color;
+        }
+
+        return {
+          id: charData.id || `enemy_${Date.now()}`,
+          name: charData.name,
+          race: charData.race || 'HUMAN',
+          form: charData.form || 'OUTLAW',
+          formName: charData.formName || '綠林草莽',
+          level: charData.level || playerLevel,
+          attackPattern: charData.attackPattern || 'MARTIAL_COMBO',
+          skillName: charData.skillName || '外家絕技',
+          x,
+          y,
+          isBoss: isBoss || !!charData.isBoss,
+          isEvolutionBoss: false,
+          color: parsedColor,
+          visualX: x * TILE_PX,
+          visualY: y * TILE_PX,
+          hp: charData.attributes?.hp || 75,
+          maxHp: charData.attributes?.hp || 75,
+          speed: charData.attributes?.speed || 85,
+          def: charData.attributes?.def || 10,
+          atk: (charData.attributes?.str || 15) * 1.5,
+          icon: charData.icon || '⚔️'
+        };
+      }
+
       initWorld() {
         this.tiles.fill(this.defs.PLAINS.id);
 
@@ -1575,16 +1643,9 @@
         this.tiles[this.idx(7, 3)] = this.defs.INN.id;
         this.tiles[this.idx(13, 11)] = this.defs.TOWN.id;
 
-        this.roamingEnemies.push({
-          id: 'bandit_scout',
-          name: '黑風寨巡山嘍囉',
-          x: 4,
-          y: 3,
-          isBoss: false,
-          color: 0xf87171,
-          visualX: 4 * TILE_PX,
-          visualY: 3 * TILE_PX
-        });
+        this.roamingEnemies = [
+          this.createRoamingEnemy(4, 3, 'PLAINS', false)
+        ];
       }
 
       getTileData(x, y) {
@@ -1622,40 +1683,24 @@
             this.tiles[i] = gidMap[gid] !== undefined ? gidMap[gid] : 0;
           }
         }
-        // 重設遊蕩怪
+        // 重設遊蕩怪，採用角色設定生成
+        const curBiome = this.properties?.biome || 'PLAINS';
         this.roamingEnemies = [];
         const objLayer = tiledJson.layers.find(l => l.type === 'objectgroup');
         let spawnEnemy = true;
         if (objLayer && objLayer.objects) {
-          // 若有定義 INN / TOWN 等 POI
           for (const obj of objLayer.objects) {
             if (obj.type === 'SPAWNER' || obj.name.includes('怪') || obj.name.includes('寨')) {
-              this.roamingEnemies.push({
-                id: `enemy_${obj.id || Date.now()}`,
-                name: obj.name || '荒野悍匪',
-                x: Math.floor(obj.x / TILE_PX),
-                y: Math.floor(obj.y / TILE_PX),
-                isBoss: false,
-                color: 0xf87171,
-                visualX: obj.x,
-                visualY: obj.y
-              });
+              const gx = Math.floor(obj.x / TILE_PX);
+              const gy = Math.floor(obj.y / TILE_PX);
+              const isBoss = obj.name.includes('首領') || obj.name.includes('王') || obj.name.includes('寨主');
+              this.roamingEnemies.push(this.createRoamingEnemy(gx, gy, curBiome, isBoss));
               spawnEnemy = false;
             }
           }
         }
         if (spawnEnemy) {
-          // 隨機產生一位遊蕩散客
-          this.roamingEnemies.push({
-            id: `enemy_rand_${Date.now()}`,
-            name: '荒野巡山嘍囉',
-            x: 6,
-            y: 6,
-            isBoss: false,
-            color: 0xf87171,
-            visualX: 6 * TILE_PX,
-            visualY: 6 * TILE_PX
-          });
+          this.roamingEnemies.push(this.createRoamingEnemy(6, 6, curBiome, false));
         }
       }
 
@@ -1680,16 +1725,9 @@
           for (let i = 0; i < 30; i++) this.tiles[Math.floor(Math.random() * 256)] = this.defs.MOUNTAIN.id;
           this.tiles[this.idx(8, 8)] = this.defs.INN.id;
         }
-        this.roamingEnemies = [{
-          id: `enemy_biome_${Date.now()}`,
-          name: '荒野異域巡客',
-          x: 4,
-          y: 4,
-          isBoss: false,
-          color: 0xf87171,
-          visualX: 4 * TILE_PX,
-          visualY: 4 * TILE_PX
-        }];
+        this.roamingEnemies = [
+          this.createRoamingEnemy(4, 4, biome, false)
+        ];
       }
     }
 
@@ -1760,6 +1798,11 @@
         return tile.cost;
       }
 
+      isPassable(x, y) {
+        if (x < 0 || x >= this.w || y < 0 || y >= this.h) return false;
+        return this.getMovementCost(x, y) < 9999;
+      }
+
       tickEnvironment(log) {
         const nextSurf = new Uint8Array(this.surfaces);
         const nextDur = new Int16Array(this.duration);
@@ -1823,9 +1866,15 @@
 
         this.player = {
           name: '李暮雲',
-          title: '初入江湖的無名散客',
-          realm: '初入江湖',
+          title: '初入江湖的鄉民',
+          realm: '平民百姓',
+          race: 'HUMAN',
+          form: 'CIVILIAN',
+          formName: '鄉井平民',
           level: 1,
+          minLevel: 1,
+          maxLevel: 5,
+          isBreakthroughPending: false,
           exp: 0,
           maxExp: 100,
           freeAttributePoints: 5, // 初始提供 5 點自由分配潛能點
@@ -2238,16 +2287,31 @@
         this.owEnemiesContainer.removeChildren();
         for (const e of this.overworld.roamingEnemies) {
           const g = new PIXI.Graphics();
-          g.beginFill(e.color);
-          g.drawCircle(0, 0, 13);
-          g.endFill();
+
+          if (e.isEvolutionBoss) {
+            // 特殊突破魔物：渲染雙層煞氣光環與紫色微光
+            g.lineStyle(2, 0xd8b4fe, 0.85);
+            g.beginFill(0x581c87, 0.45);
+            g.drawCircle(0, 0, 18);
+            g.endFill();
+            g.lineStyle(1, 0xef4444, 0.9);
+            g.beginFill(0x9333ea);
+            g.drawCircle(0, 0, 12);
+            g.endFill();
+          } else {
+            g.beginFill(e.color || 0xf87171);
+            g.drawCircle(0, 0, 13);
+            g.endFill();
+          }
+
           g.x = e.x * TILE_PX + 20;
           g.y = e.y * TILE_PX + 20;
 
-          const nameText = new PIXI.Text(e.isBoss ? '首領' : '盜匪', {
+          const label = e.isEvolutionBoss ? '⚡【魔煞】' : (e.isBoss ? '【首領】' : (e.name ? (e.name.length > 5 ? e.name.substring(0, 4) : e.name) : '敵寇'));
+          const nameText = new PIXI.Text(label, {
             fontFamily: 'sans-serif',
-            fontSize: 10,
-            fill: 0xffffff,
+            fontSize: e.isEvolutionBoss ? 10 : 9,
+            fill: e.isEvolutionBoss ? 0xfbcfe8 : 0xffffff,
             fontWeight: 'bold'
           });
           nameText.anchor.set(0.5);
@@ -2731,14 +2795,102 @@
         `).join('');
       }
 
-      // 增加人物修為經驗值 (升級系統)
+      // 當等級到達形態最高級時，在地圖生成特殊魔物
+      spawnEvolutionBoss() {
+        if (!this.player || !this.overworld) return;
+        const p = this.player;
+        const existingBoss = this.overworld.roamingEnemies.find(e => e.isEvolutionBoss);
+        if (existingBoss) return;
+
+        const evoDef = typeof CharacterGenerator !== 'undefined' && typeof CharacterGenerator.getEvolutionBreakthrough === 'function'
+          ? CharacterGenerator.getEvolutionBreakthrough(p.form)
+          : null;
+        if (!evoDef) return;
+
+        const bossSpec = evoDef.boss;
+
+        // 搜尋玩家周邊 2~5 格內的通行空地
+        let spawnX = Math.min(this.overworld.w - 2, Math.max(1, this.player.owX + (Math.random() < 0.5 ? 3 : -3)));
+        let spawnY = Math.min(this.overworld.h - 2, Math.max(1, this.player.owY + (Math.random() < 0.5 ? 3 : -3)));
+
+        for (let r = 2; r <= 6; r++) {
+          let found = false;
+          for (let dx = -r; dx <= r; dx++) {
+            for (let dy = -r; dy <= r; dy++) {
+              const tx = this.player.owX + dx;
+              const ty = this.player.owY + dy;
+              if (tx > 0 && tx < this.overworld.w - 1 && ty > 0 && ty < this.overworld.h - 1) {
+                if (this.overworld.isPassable(tx, ty) && !this.overworld.roamingEnemies.some(e => e.x === tx && e.y === ty)) {
+                  spawnX = tx;
+                  spawnY = ty;
+                  found = true;
+                  break;
+                }
+              }
+            }
+            if (found) break;
+          }
+          if (found) break;
+        }
+
+        const evoBoss = {
+          id: `boss_evo_${p.form.toLowerCase()}_${Date.now()}`,
+          name: bossSpec.name,
+          race: bossSpec.race,
+          form: bossSpec.form,
+          formName: bossSpec.formName,
+          level: bossSpec.level,
+          isBoss: true,
+          isEvolutionBoss: true,
+          targetForm: evoDef.nextForm,
+          targetFormName: evoDef.nextFormName,
+          attackPattern: bossSpec.attackPattern,
+          color: bossSpec.color || 0x9333ea,
+          x: spawnX,
+          y: spawnY,
+          visualX: spawnX * TILE_PX,
+          visualY: spawnY * TILE_PX,
+          hp: bossSpec.hp,
+          maxHp: bossSpec.hp,
+          speed: bossSpec.speed,
+          atk: bossSpec.atk,
+          def: bossSpec.def,
+          icon: bossSpec.icon,
+          desc: bossSpec.desc
+        };
+
+        this.overworld.roamingEnemies.push(evoBoss);
+        this.updateOverworldEnemiesDisplay();
+
+        this.addLog(`<span class="log-combat" style="font-size:0.95rem; color:#f43f5e; font-weight:bold;">⚡【天地異變·魔煞降世】</span>你已修至【${p.formName}】極限瓶頸 (Lv.${p.level})！天道引動九幽魔煞，【${bossSpec.name}】降臨於大地圖 (${spawnX}, ${spawnY})！速速前往誅滅，方可破關進化至【${evoDef.nextFormName}】！`);
+      }
+
+      // 增加人物修為經驗值 (升級系統，受種族與形態最高等級約束)
       addPlayerExp(amount = 60) {
         if (!this.player) return;
         const p = this.player;
+
+        // 若已處於瓶頸鎖定狀態，經驗無法突破，並提示前往斬殺魔煞
+        if (p.isBreakthroughPending) {
+          this.addLog(`<span class="log-warn">【修為瓶頸封頂】</span>你已達【${p.formName}】形態最高等級 (Lv.${p.level})！當前地圖已有突破魔物現世，需前往將其誅滅方可突破進化！`);
+          this.updateUI();
+          if (typeof updateCharacterUI === 'function') updateCharacterUI();
+          return;
+        }
+
         p.exp = (p.exp || 0) + amount;
         let leveledUp = false;
 
         while (p.exp >= p.maxExp) {
+          // 檢查是否已達當前形態之最高等級上限
+          if (p.level >= (p.maxLevel || 5)) {
+            p.exp = p.maxExp; // 封頂滿經驗
+            p.isBreakthroughPending = true;
+            this.spawnEvolutionBoss();
+            this.addLog(`<span class="log-warn" style="font-size:0.88rem; color:#f87171;">⚡【形態極限瓶頸】俠客修為已達【${p.formName}】巔峰 (Lv.${p.level} / 上限 Lv.${p.maxLevel})！需戰勝大地圖上的特殊突破魔物方能打破桎梏！</span>`);
+            break;
+          }
+
           p.exp -= p.maxExp;
           p.level = (p.level || 1) + 1;
           p.freeAttributePoints = (p.freeAttributePoints || 0) + 5; // 升級獎勵 5 點自由潛能點
@@ -2753,9 +2905,16 @@
           leveledUp = true;
 
           this.addLog(`<span class="log-world" style="font-size:0.92rem; color:#fde047;">🌟【境界突破】俠客修為精進，突破至 Lv.${p.level}【${p.realm}】！獲得 5 點自由分配潛能點，氣血內力完全充盈！</span>`);
+
+          // 升級後若恰好達到形態極限，立刻鎖定並召喚突破魔物
+          if (p.level >= (p.maxLevel || 5)) {
+            p.isBreakthroughPending = true;
+            this.spawnEvolutionBoss();
+            break;
+          }
         }
 
-        if (!leveledUp) {
+        if (!leveledUp && !p.isBreakthroughPending) {
           this.addLog(`<span class="log-world" style="font-size:0.75rem; color:#93c5fd;">【修為積累】獲得人物經驗 +${amount} (${p.exp}/${p.maxExp} XP)</span>`);
         }
 
@@ -3015,8 +3174,8 @@
           if (res.ok) {
             const json = await res.json();
             if (json && json.cells) {
-             this.worldData = json;
-              ths.worldData.width = json.width || json.dimensions?.width || 16;
+              this.worldData = json;
+              this.worldData.width = json.width || json.dimensions?.width || 16;
               this.worldData.height = json.height || json.dimensions?.height || 16;
             }
           }
@@ -3098,8 +3257,8 @@
 
         // 2. 檢測世界地圖中是否有相鄰大地圖
         const cellKey = `${targetChunkX},${targetChunkY}`;
-        const targetCell = this.worldData?.cells?.[cllKey];
-        if (!targetCell || !trgetCell.mapFile) {
+        const targetCell = this.worldData?.cells?.[cellKey];
+        if (!targetCell || !targetCell.mapFile) {
           this.triggerBump(dx, dy);
           this.addLog(`<span class="log-warn">【世界邊界阻絕】</span>相鄰區塊 (${targetChunkX}, ${targetChunkY}) 尚未開闢大地圖，無路可通！可於【世界地圖編輯器】中指派大地圖。`);
           this.flashRadarAlert();
@@ -3302,18 +3461,26 @@
         this.battleEnemies = [{
           id: enemyData.id,
           name: enemyData.name,
+          race: enemyData.race || 'HUMAN',
+          form: enemyData.form || 'OUTLAW',
+          attackPattern: enemyData.attackPattern || 'MARTIAL_COMBO',
+          skillName: enemyData.skillName || '外家絕技',
           x: 12,
           y: 7,
           visualX: 12 * TILE_PX,
           visualY: 7 * TILE_PX,
-          hp: enemyData.isBoss ? 160 : 75,
-          maxHp: enemyData.isBoss ? 160 : 75,
-          speed: enemyData.isBoss ? 110 : 85,
+          hp: enemyData.hp || (enemyData.isBoss ? 160 : 75),
+          maxHp: enemyData.maxHp || (enemyData.isBoss ? 160 : 75),
+          speed: enemyData.speed || (enemyData.isBoss ? 110 : 85),
+          atk: enemyData.atk || (enemyData.isBoss ? 45 : 30),
+          def: enemyData.def || 10,
           energy: 0,
           stunnedTurns: 0,
           hitShake: 0,
           hitFlash: 0,
-          color: enemyData.color
+          color: enemyData.color,
+          isBoss: !!enemyData.isBoss,
+          isEvolutionBoss: !!enemyData.isEvolutionBoss
         }];
 
         // 清理任何遺留特效
@@ -3548,43 +3715,121 @@
         if (enemy.stunnedTurns > 0) {
           enemy.stunnedTurns--;
           enemy.energy -= 100;
+          this.addLog(`<span class="log-combat">${enemy.name}</span> 身中眩暈，經脈閉塞無法出招！`);
           return;
         }
 
-        const dist = Math.abs(this.player.bx - enemy.x) + Math.abs(this.player.by - enemy.y);
-        if (dist === 1) {
+        const patternId = enemy.attackPattern || 'MARTIAL_COMBO';
+        const patternDef = typeof ATTACK_PATTERNS !== 'undefined' ? ATTACK_PATTERNS[patternId] : null;
+        let dist = Math.abs(this.player.bx - enemy.x) + Math.abs(this.player.by - enemy.y);
+
+        // 1. BEAST_POUNCE 猛獸突進撲擊特判：距離 2~3 格時直接暴衝撲至玩家身邊
+        if (patternId === 'BEAST_POUNCE' && dist >= 2 && dist <= 3) {
+          // 尋找玩家周圍 4 鄰可停留的空格
+          const adjOffsets = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
+          for (const off of adjOffsets) {
+            const tx = this.player.bx + off.dx;
+            const ty = this.player.by + off.dy;
+            if (this.battleArena.isPassable(tx, ty) && !this.battleEnemies.some(o => o !== enemy && o.x === tx && o.y === ty && o.hp > 0)) {
+              enemy.x = tx;
+              enemy.y = ty;
+              enemy.visualX = tx * TILE_PX;
+              enemy.visualY = ty * TILE_PX;
+              this.addLog(`<span class="log-combat" style="color:#f97316;">🐾【疾影猛撲】</span>${enemy.name} 身形如電暴起撲擊，直衝至你面前！`);
+              dist = 1;
+              break;
+            }
+          }
+        }
+
+        // 判定當前距離是否在技能招式射程內
+        const effectiveRange = patternDef ? (patternDef.range || 1) : 1;
+        const canAttack = dist <= effectiveRange;
+
+        if (canAttack) {
           const stats = this.calcPlayerCombatStats();
 
-          // 1. 身法閃避檢定 (由敏捷、福緣、裝備、心法及狀態綜合決定)
+          // 身法閃避檢定
           const isDodged = (Math.random() * 100) < stats.dodge;
           if (isDodged) {
             this.spawnDamageText(this.player.bx, this.player.by, '閃避!', false, true, 'DODGE');
-            this.addLog(`<span class="log-combat">${enemy.name}</span> 招式凌厲刺來，你身法如電隨風一折，輕巧【閃避】！`);
+            this.addLog(`<span class="log-combat">${enemy.name}</span> 施展【${patternDef?.name || enemy.skillName || '殺招'}】，你身法如電隨風一折，輕巧【閃避】！`);
             enemy.energy -= 100;
             return;
           }
 
-          // 2. 防禦減傷計算 (自身根骨、臂力、裝備防具、心法護體及狀態綜合決定)
-          const enemyBaseAtk = enemy.isBoss ? 45 : 30;
-          const dmg = Math.max(5, Math.round(enemyBaseAtk * (120 / (120 + stats.def))));
+          // 傷害與防禦減傷計算
+          const baseAtk = enemy.atk || (enemy.isBoss ? 45 : 30);
+          const mult = patternDef ? (patternDef.dmgMultiplier || 1.0) : 1.0;
+          let dmg = Math.max(5, Math.round(baseAtk * mult * (120 / (120 + stats.def))));
           this.player.hp -= dmg;
 
-          // 顯示攻擊圖案與受傷數字
-          this.spawnAttackIcon(this.player.bx, this.player.by, '🩸');
+          // 視覺特效與打擊震顫
+          const skillIcon = patternDef?.icon || '🩸';
+          this.spawnAttackIcon(this.player.bx, this.player.by, skillIcon);
           this.spawnDamageText(this.player.bx, this.player.by, dmg, false, true);
-
-          // 被攻擊方的圖案要有被打擊到的感覺：震顫與受創血紅
           this.player.hitShake = 12;
           this.player.hitFlash = 9;
 
-          this.addLog(`<span class="log-combat">${enemy.name}</span> 施展毒刃，造成 ${dmg} 點傷害 (防護減免後)！`);
+          this.addLog(`<span class="log-combat">${enemy.name}</span> 施展【${patternDef?.name || enemy.skillName || '攻勢'}】，造成 ${dmg} 點傷害！`);
 
-          // 3. 狀態附加判定 (中毒、受傷)
-          if (Math.random() < 0.30) {
-            this.applyStatus('POISONED', 3);
-          }
-          if (dmg >= 16 || Math.random() < 0.20) {
+          // 各種相異攻擊模式特殊效果處理
+          if (patternId === 'BEAST_POUNCE') {
+            if (Math.random() < 0.45) {
+              this.applyStatus('STUNNED', 1);
+              this.player.stunnedTurns = 1;
+              this.addLog('<span class="log-warn">【猛撲衝擊】</span>巨力撞擊下，你陷入了【暈眩】脫力！');
+            }
+          } else if (patternId === 'FRENZY_BITE') {
+            if (Math.random() < 0.80) {
+              this.applyStatus('WOUNDED', 3);
+            }
+          } else if (patternId === 'TERRIFYING_ROAR') {
             this.applyStatus('WOUNDED', 3);
+            this.addLog(`<span class="log-combat" style="color:#f97316;">📢【震天狂吼】</span>狂暴吼聲震盪經脈，護體防禦大降！`);
+          } else if (patternId === 'VENOM_SPRAY') {
+            if (Math.random() < 0.85) {
+              this.applyStatus('POISONED', 3);
+            }
+          } else if (patternId === 'CHAOS_SURFACE') {
+            // 地獄深淵腐蝕：將玩家當前地格點燃為 FIRE
+            const tileIdx = this.battleArena.idx(this.player.bx, this.player.by);
+            this.battleArena.surfaces[tileIdx] = BATTLE_SURFACE.FIRE;
+            this.redrawBattleSurfaces();
+            this.addLog('<span class="log-warn" style="color:#ef4444;">🔥【幽冥鬼火】</span>魔物引動地獄深淵煞氣，你腳下地格化為熊熊火海！');
+          } else if (patternId === 'LIFE_DRAIN') {
+            // 血魄冥氣汲取：60% 傷害轉化為回復自身氣血
+            const healAmt = Math.max(8, Math.round(dmg * 0.60));
+            enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmt);
+            this.spawnDamageText(enemy.x, enemy.y, `+${healAmt}`, false, false, 'HEAL');
+            this.addLog(`<span class="log-combat" style="color:#a855f7;">🦇【血魄汲取】</span>${enemy.name} 吞噬精血，回復自身 <b>+${healAmt}</b> 點氣血！`);
+          } else if (patternId === 'AOE_NOVA') {
+            // 滅世魔煞爆震：擊退玩家 1 格
+            const kx = this.player.bx + Math.sign(this.player.bx - enemy.x);
+            const ky = this.player.by + Math.sign(this.player.by - enemy.y);
+            if (this.battleArena.isPassable(kx, ky)) {
+              this.player.bx = kx;
+              this.player.by = ky;
+              this.player.visualX = kx * TILE_PX;
+              this.player.visualY = ky * TILE_PX;
+              this.addLog('<span class="log-warn" style="color:#dc2626;">💥【魔煞震波】</span>狂暴衝擊波將你硬生生擊退一格！');
+            }
+          } else if (patternId === 'STUN_GAZE') {
+            if (Math.random() < 0.80) {
+              this.applyStatus('STUNNED', 1);
+              this.player.stunnedTurns = 1;
+              this.addLog('<span class="log-warn" style="color:#c084fc;">👁️【恐懼凝視】</span>魔物陰冷目光穿透心神，你陷入神智僵滯【暈眩】！');
+            }
+          } else if (patternId === 'TACTICAL_KITE' || patternId === 'CIVILIAN_FLEE') {
+            // 游擊/逃避：攻擊後後撤 1 格拉開距離
+            const retreatX = enemy.x - Math.sign(this.player.bx - enemy.x);
+            const retreatY = enemy.y - Math.sign(this.player.by - enemy.y);
+            if (this.battleArena.isPassable(retreatX, retreatY) && !this.battleEnemies.some(o => o !== enemy && o.x === retreatX && o.y === retreatY && o.hp > 0)) {
+              enemy.x = retreatX;
+              enemy.y = retreatY;
+              enemy.visualX = retreatX * TILE_PX;
+              enemy.visualY = retreatY * TILE_PX;
+            }
           }
 
           if (this.player.hp <= 0) {
@@ -3601,6 +3846,7 @@
           return;
         }
 
+        // 距離不夠時向玩家移動
         const path = PathFinder.findPath(
           this.battleArena,
           enemy.x,
@@ -3687,18 +3933,57 @@
         if (typeof updateCharacterUI === 'function') updateCharacterUI();
       }
 
+      handlePlayerFormEvolution() {
+        const p = this.player;
+        if (!p) return;
+        const evoDef = typeof CharacterGenerator !== 'undefined' && typeof CharacterGenerator.getEvolutionBreakthrough === 'function'
+          ? CharacterGenerator.getEvolutionBreakthrough(p.form)
+          : null;
+        if (!evoDef) return;
+
+        const oldFormName = p.formName;
+        p.isBreakthroughPending = false;
+        p.form = evoDef.nextForm;
+        p.formName = evoDef.nextFormName;
+        p.maxLevel = evoDef.nextMaxLevel;
+        p.title = evoDef.newTitle || p.title;
+
+        // 全面提升人物屬性
+        if (!p.attributes) p.attributes = { str: 20, agi: 20, con: 20, wis: 20, lck: 20, rep: 10, strain: 0 };
+        ['str', 'agi', 'con', 'wis', 'lck'].forEach(k => {
+          p.attributes[k] = (p.attributes[k] || 20) + evoDef.statBonus;
+        });
+
+        // 獲得大幅自由分配潛能點
+        p.freeAttributePoints = (p.freeAttributePoints || 0) + evoDef.bonusPoints;
+
+        // 氣血內力完全充盈
+        this.calcPlayerCombatStats();
+        p.hp = p.maxHp;
+        p.qi = p.maxQi;
+
+        this.addLog(`<span class="log-world" style="font-size:1.02rem; color:#fde047; font-weight:bold;">🎊【形態超脫·進化大成】</span>斬滅天地魔煞！俠客歷經生死淬鍊，成功由【${oldFormName}】破繭進化為【${p.formName}】！等級上限拓展至 Lv.${p.maxLevel}！全基礎屬性永久 +${evoDef.statBonus}，獲得突破潛能點 +${evoDef.bonusPoints}，經脈通暢，內力氣血完全滿溢！`);
+      }
+
       checkBattleStatus() {
         const aliveEnemies = this.battleEnemies.filter(e => e.hp > 0);
         if (aliveEnemies.length === 0) {
-          const isBoss = this.overworld.roamingEnemies[this.currentEnemyIndex]?.isBoss;
-          const expGain = isBoss ? 180 : 65;
-          const silverGain = isBoss ? 80 : 35;
+          const defeatedEnemy = this.overworld.roamingEnemies[this.currentEnemyIndex];
+          const isBoss = defeatedEnemy?.isBoss;
+          const isEvoBoss = defeatedEnemy?.isEvolutionBoss;
+          const expGain = isEvoBoss ? 350 : (isBoss ? 180 : 65);
+          const silverGain = isEvoBoss ? 150 : (isBoss ? 80 : 35);
 
           this.addLog(`<span class="log-world">【大獲全勝】</span>敵手伏誅！搜得碎銀 ${silverGain} 兩。`);
           this.player.gold += silverGain;
 
+          // 若擊敗突破特殊魔物，解除瓶頸並晉昇形態
+          if (isEvoBoss) {
+            this.handlePlayerFormEvolution();
+          }
+
           // 心法經驗值累積方式：隨著戰鬥後打敗敵人時隨著等級經驗值一起得到
-          this.addCultivationExp(isBoss ? 120 : 50);
+          this.addCultivationExp(isEvoBoss ? 200 : (isBoss ? 120 : 50));
 
           // 人物經驗值累積與自動升級檢定
           this.addPlayerExp(expGain);
@@ -3719,6 +4004,7 @@
           if (radarHud) radarHud.style.display = 'flex';
           this.updateOverworldEnemiesDisplay();
           this.updateUI();
+          if (typeof updateCharacterUI === 'function') updateCharacterUI();
         }
       }
 
@@ -3850,6 +4136,17 @@
       setTxt('char-title', p.title);
       setTxt('char-realm', p.realm || getCharacterRealmTitle(lv));
       setTxt('char-level-badge', `Lv.${lv}`);
+
+      // 種族與形態資訊
+      const raceName = p.race === 'HUMAN' ? '人類' : (p.race === 'BEAST' ? '野獸' : '魔物');
+      const formDisplay = `${raceName} · ${p.formName || '鄉井平民'}`;
+      setTxt('char-form-badge', formDisplay);
+      setTxt('c-race-form', `${formDisplay} (當前上限 Lv.${p.maxLevel || 5})`);
+
+      const breakAlert = document.getElementById('c-breakthrough-alert');
+      if (breakAlert) {
+        breakAlert.style.display = p.isBreakthroughPending ? 'block' : 'none';
+      }
 
       // 門派資訊
       setTxt('char-sect-header', p.sect || '尚未加入');

@@ -237,6 +237,65 @@ interface WorldMapConfig {
   * 敵方進攻時優先檢驗玩家綜合閃避率，若判定為閃避，飄浮冰藍色「💨 閃避!」字樣且不受任何傷害；
   * 若未閃避，傷害依照敵方攻擊力經過玩家綜合防禦公式 $Dmg = \max(5, \text{EnemyAtk} \times \frac{120}{120 + \text{DEF}})$ 計算實質減免，並附帶受傷/中毒機率。
 
+### 3.8 角色實體、三大種族、形態等級區間與相異攻擊模式 (`CharacterSystem`)
+* **資料儲存路徑**：`data/characters.json`、`data/characters_default.json`
+* **獨立視覺化編輯器**：[character_manager.html](file:///d:/Repositories/game-jianghu/character_manager.html)
+* **三大主要種族 (`RACES`)**：
+  * **人類 (`HUMAN` 👤)**：萬物之靈，擅使各路兵刃拳腳與心法絕學，戰術靈動，著重招架與氣勁。
+  * **野獸 (`BEAST` 🐺)**：大自然孕育之猛獸靈禽，野性直覺敏銳，擅長高速猛撲、撕裂持續流血與狂暴咆哮。
+  * **魔物 (`MONSTER` 👹)**：幽冥冥界異化的妖魔邪物，行徑詭譎，擅長血魄汲取、地獄火毒腐蝕與心智恐懼。
+* **各族強度形態梯級與等級區間約束 (`FORMS & LEVEL_RANGES`)**：
+  * **人類 (`HUMAN`)**：
+    * `CIVILIAN` (鄉井平民 / 販夫走卒)：等級區間 **Lv 1 ~ 5**，慌亂推打或求饒逃竄。
+    * `OUTLAW` (綠林草莽 / 剪徑宵小)：等級區間 **Lv 4 ~ 12**，快刀暗箭與淬毒伏擊。
+    * `MARTIAL_ARTIST` (江湖遊俠 / 鏢頭劍客)：等級區間 **Lv 10 ~ 20**，正宗外家拳劍與招架反制。
+    * `SECT_ELITE` (名門菁英 / 舵主長老)：等級區間 **Lv 18 ~ 30**，門派絕學連擊與內功護體。
+    * `GRANDMASTER` (絕頂宗師 / 武林至尊)：等級區間 **Lv 28 ~ 50**，罡氣領域與氣勁破空碎甲。
+  * **野獸 (`BEAST`)**：
+    * `WILD_BEAST` (荒原群獸 / 惡狼獵犬)：等級區間 **Lv 1 ~ 8**，群聚撲咬與敏捷游走。
+    * `FERAL_PREDATOR` (兇殘猛獸 / 巨熊猛虎)：等級區間 **Lv 7 ~ 18**，重爪拍擊擊退與眩暈。
+    * `MUTATED_BEAST` (異變靈獸 / 赤目毒蛛)：等級區間 **Lv 15 ~ 28**，毒腺噴射與嗜血狂暴。
+    * `ANCIENT_CALAMITY` (上古凶獸 / 墨鱗神蛟)：等級區間 **Lv 26 ~ 50**，撼動山嶽與踐踏滅敵。
+  * **魔物 (`MONSTER`)**：
+    * `IMP_GHOUL` (幽魂腐屍 / 怨靈屍魅)：等級區間 **Lv 3 ~ 12**，物理抗性強，陰煞侵蝕。
+    * `ABYSSAL_FIEND` (地淵魔魁 / 嗜血狂魔)：等級區間 **Lv 10 ~ 22**，血魄冥氣汲取，以戰養血。
+    * `CHAOS_SORCERER` (冥幽術士 / 黃泉祭司)：等級區間 **Lv 20 ~ 32**，地獄火海腐蝕與恐懼凝視。
+    * `DEMON_LORD` (羅剎魔皇 / 滅世天魔)：等級區間 **Lv 30 ~ 50**，魔煞十字爆震，領域死境。
+* **相異攻擊模式體系 (`ATTACK_PATTERNS`)**：
+  * **人類專屬**：
+    * `MARTIAL_COMBO` (外功絕學連招)：消耗真氣施展武學，威力 1.35x，高暴擊率並附加破甲增傷。
+    * `TACTICAL_KITE` (戰術身法游擊)：遠程射程 3 格暗器連射，命中後靈動後撤拉開安全距離。
+    * `PARRY_COUNTER` (守勢招架反制)：進入高防禦格擋姿態，受擊後爆發 1.5x 反震傷害。
+    * `CIVILIAN_FLEE` (慌亂推搡擲石)：非戰鬥人員投擲石塊或推打，傷害微薄 (0.6x)，優先逃竄。
+  * **野獸專屬**：
+    * `BEAST_POUNCE` (疾影猛撲突進)：高速直線暴衝 2~3 格撲向目標，45% 造成擊退與暈眩 1 回合。
+    * `FRENZY_BITE` (狂暴撕裂撕咬)：尖牙狠咬皮肉，造成大撕裂傷口，80% 機率附加持續【受傷】流血。
+    * `TERRIFYING_ROAR` (萬獸狂暴怒吼)：震撼長嘯，削弱周遭 3 格敵人 25% 防禦，自身獲得【奮起】。
+    * `VENOM_SPRAY` (毒腺噴射毒液)：射程 2 格噴射烈性毒液，造成傷害並 85% 附加 3 輪【中毒】腐蝕。
+  * **魔物專屬**：
+    * `CHAOS_SURFACE` (地獄深淵腐蝕)：直接將目標及其鄰近地格轉化為烈焰火海 (`FIRE`) 焚燒敵手。
+    * `LIFE_DRAIN` (血魄冥氣汲取)：射程 2 格暗黑血線，將造成傷害的 60% 直接轉化為自身氣血回復。
+    * `AOE_NOVA` (滅世魔煞爆震)：以自身為中心蓄力引爆十字 4 格範圍魔氣衝擊波，威力 1.5x 並附帶眩暈擊退。
+    * `STUN_GAZE` (幽冥恐懼凝視)：射程 3 格雙目射出攝魂陰光，90% 必定造成目標陷入【暈眩】。
+
+### 3.9 主角形態進化、等級瓶頸與大地圖突破特殊魔物系統 (Character Evolution & Breakthrough Boss)
+
+1. **全域角色庫驅動**：
+   * 大地圖遊蕩散客與敵手（`roamingEnemies`）完全由 `src/core/CharacterGenerator.js` 角色庫資料庫及生態群落挑選演算法（`selectEnemyForEncounter`）動態生成，具備三大種族（`HUMAN`、`BEAST`、`MONSTER`）、形態與 12 種相異攻擊模式（`attackPattern`）。
+2. **主角人類初始規範**：
+   * 主角種族綁定為人類（`HUMAN`），初始為最低形態鄉井平民（`CIVILIAN`，等級 1，等級區間 `[1, 5]`）。
+   * 人物面板完整呈現種族、當前形態與當前形態等級上限（例如：`人類 · 鄉井平民 (當前上限 Lv.5)`）。
+3. **等級瓶頸約束與地圖特殊魔物降世**：
+   * 當主角修為達到當前形態之最高等級（如平民 Lv.5、草莽 Lv.12、遊俠 Lv.20、菁英 Lv.30）時，經驗值封頂，鎖定 `isBreakthroughPending = true`。
+   * 自動調用 `spawnEvolutionBoss()` 於當前大地圖玩家鄰近安全通行地格召喚對應階梯的特殊突破魔物（`isEvolutionBoss = true`，紫黑煞氣微光光環與標記 `⚡【魔煞】`）。
+   * 戰報廣播天地異變與魔煞降臨警訊，未擊滅魔煞前無法越級升級。
+4. **戰鬥中相異攻擊模式真實執行**：
+   * 戰鬥敵人行動（`executeEnemyAction`）完整對接執行其 `attackPattern`（如野獸疾影猛撲突進撲擊與暈眩、撕裂流血、怒吼削弱防禦、毒腺噴射中毒、魔物深淵地獄火海腐蝕地格、血魄冥氣吸血回復、滅世魔煞十字爆震擊退、幽冥恐懼凝視暈眩等），配合動態招式圖案、飄字傷害與受擊震顫動畫。
+5. **斬殺魔煞與形態涅槃進化結算**：
+   * 戰勝擊倒 `isEvolutionBoss` 後，解除 `isBreakthroughPending` 瓶頸。
+   * 呼叫 `handlePlayerFormEvolution()` 進化至下一形態（`CIVILIAN` -> `OUTLAW` -> `MARTIAL_ARTIST` -> `SECT_ELITE` -> `GRANDMASTER`）。
+   * 解鎖全新等級上限，全基礎屬性永久提升（+3 ~ +8），發放巨額突破自由潛能點（+15 ~ +35 點），內力氣血完全充盈滿溢，並可繼續累積經驗升級。
+
 ---
 
 ## 4. 本地開發與持久化 REST API 契約
@@ -272,3 +331,14 @@ interface WorldMapConfig {
     * 回傳：預設武學心法清單。
 13. `POST /api/martials/reset-default`
     * 動作：重設預設 18 部名門武學心法資料庫，寫入 `martials.json` 與 `martials_default.json`。
+14. `GET /api/characters/files`
+    * 回傳：專案 `data/` 目錄內所有角色存檔檔案名稱陣列（例如 `["characters.json", "characters_default.json"]`）。
+15. `GET /api/characters/files/:filename`
+    * 回傳：指定角色存檔檔案之完整 JSON 陣列。
+16. `POST /api/characters/files/:filename`
+    * 請求體：合法角色清單 JSON 陣列。
+    * 回傳：`{ success: true, message: string, filename: string, count: number }`，原子性寫入指定之存檔檔案。
+17. `GET /api/characters` 或 `GET /api/characters/default`
+    * 回傳：預設全角色資料庫清單。
+18. `POST /api/characters/reset-default`
+    * 動作：重設預設三大種族全形態角色資料庫，覆寫寫入 `characters.json` 與 `characters_default.json`。

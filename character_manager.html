@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮世江湖 · 角色與魔物全域設計總管</title>
+  <style>
+    :root {
+      --bg-dark: #0a0b10;
+      --panel-bg: #12141e;
+      --card-bg: #181b29;
+      --card-hover: #1f2336;
+      --border-color: #272d42;
+      --border-focus: #3b82f6;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --human: #38bdf8;
+      --beast: #f97316;
+      --monster: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    /* 頂部導航列 */
+    header {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: #090a0f;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #1e2235;
+    }
+
+    .header-stats b {
+      color: #38bdf8;
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-select {
+      background: #090a0f;
+      color: #38bdf8;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 0.82rem;
+      outline: none;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn {
+      background: #181b29;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: var(--card-hover);
+      border-color: #3b82f6;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: #2563eb;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+
+    .btn-danger {
+      background: #7f1d1d;
+      border-color: #991b1b;
+      color: #fecaca;
+    }
+
+    .btn-danger:hover {
+      background: #991b1b;
+      color: #ffffff;
+    }
+
+    .btn-success {
+      background: #064e3b;
+      border-color: #059669;
+      color: #a7f3d0;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+      color: #ffffff;
+    }
+
+    /* 主區域：左右佈局 */
+    .main-container {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* 左側側邊欄 (搜尋、種族切換、角色列表) */
+    .sidebar {
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-filter-box {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #0d0f17;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #141724;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 6px 10px;
+      color: #f8fafc;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .tabs-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .tab-btn {
+      background: #141724;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 5px 0;
+      text-align: center;
+      border-radius: 4px;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn:hover {
+      background: #1e2336;
+      color: #f1f5f9;
+    }
+
+    .tab-btn.active {
+      background: #1e3a8a;
+      border-color: #3b82f6;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .sidebar-actions-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .sidebar-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .char-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 9px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .char-card:hover {
+      background: var(--card-hover);
+      border-color: #475569;
+      transform: translateX(2px);
+    }
+
+    .char-card.selected {
+      background: #172554;
+      border-color: #3b82f6;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .char-avatar-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      background: #090a0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      border: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .char-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .char-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .char-card-name {
+      font-weight: bold;
+      font-size: 0.88rem;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .char-card-meta {
+      display: flex;
+      gap: 6px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+
+    /* 標籤 Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-human {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #0284c7;
+      color: #7dd3fc;
+    }
+
+    .badge-beast {
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid #ea580c;
+      color: #fdba74;
+    }
+
+    .badge-monster {
+      background: rgba(220, 38, 38, 0.15);
+      border: 1px solid #b91c1c;
+      color: #fca5a5;
+    }
+
+    .badge-level {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fbbf24;
+    }
+
+    /* 右側主要編輯面板 */
+    .content-area {
+      background: #0d0e15;
+      overflow-y: auto;
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .editor-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .editor-char-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .editor-avatar-preview {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #141724;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      border: 2px solid var(--border-color);
+    }
+
+    .editor-section {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 0.88rem;
+      font-weight: bold;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid #1e2336;
+      padding-bottom: 6px;
+    }
+
+    .grid-form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group label {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .form-control {
+      background: #090a0f;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 6px 10px;
+      color: #f8fafc;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--border-focus);
+    }
+
+    /* 戰鬥實戰戰力推演即時預覽卡 */
+    .combat-preview-panel {
+      background: linear-gradient(135deg, #131728 0%, #171b30 100%);
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .combat-metric-card {
+      background: rgba(9, 10, 15, 0.65);
+      border: 1px solid #232a42;
+      border-radius: 6px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .metric-val {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .metric-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .attack-pattern-box {
+      background: #111422;
+      border: 1px solid #313a58;
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #064e3b;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      border: 1px solid #10b981;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 頂部導航列 -->
+  <header>
+    <div class="header-left">
+      <div class="header-title">
+        <span>👾</span> 浮世江湖 · 角色與魔物實體總管
+      </div>
+      <div class="header-stats">
+        <span>總收錄: <b id="stat-total">0</b> 組</span> ·
+        <span>👤 人類: <b id="stat-human" style="color:#7dd3fc;">0</b></span> ·
+        <span>🐺 野獸: <b id="stat-beast" style="color:#fdba74;">0</b></span> ·
+        <span>👹 魔物: <b id="stat-monster" style="color:#fca5a5;">0</b></span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <span style="font-size:0.78rem; color:#94a3b8;">角色存檔:</span>
+      <select class="file-select" id="save-file-select" onchange="onSelectSaveFileChange(this.value)">
+        <option value="characters.json">characters.json (預設全角色庫)</option>
+        <option value="characters_default.json">characters_default.json (官方基準庫)</option>
+      </select>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="saveCharactersToProject()">💾 保存至專案磁碟 (Ctrl+S)</button>
+      <button class="btn" onclick="saveAsNewFile()">📄 另存為新檔</button>
+      <button class="btn" style="border-color:#ea580c; color:#fdba74;" onclick="resetDefaultCharacters()">🔄 重置預設庫</button>
+      <button class="btn" style="border-color:#3b82f6; color:#93c5fd;" onclick="window.location.href='index.html'">🎮 進入江湖</button>
+      <button class="btn" style="border-color:#10b981; color:#a7f3d0;" onclick="window.location.href='item_manager.html'">💎 物品總管</button>
+      <button class="btn" style="border-color:#8b5cf6; color:#c4b5fd;" onclick="window.location.href='martial_manager.html'">📜 武學心法</button>
+    </div>
+  </header>
+
+  <!-- 主區域 -->
+  <div class="main-container">
+    <!-- 左側側邊欄 -->
+    <aside class="sidebar">
+      <div class="sidebar-filter-box">
+        <input type="text" class="search-input" id="search-input" placeholder="🔍 搜尋角色名稱、稱號、ID..." oninput="onFilterChange()">
+        <div class="tabs-row">
+          <div class="tab-btn active" id="tab-all" onclick="selectRaceTab('ALL')">全部</div>
+          <div class="tab-btn" id="tab-human" onclick="selectRaceTab('HUMAN')">👤 人類</div>
+          <div class="tab-btn" id="tab-beast" onclick="selectRaceTab('BEAST')">🐺 野獸</div>
+          <div class="tab-btn" id="tab-monster" onclick="selectRaceTab('MONSTER')">👹 魔物</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <select class="form-control" id="form-filter" style="flex:1; padding:4px 8px; font-size:0.76rem;" onchange="onFilterChange()">
+            <option value="ALL">全部形態梯級</option>
+          </select>
+        </div>
+        <div class="sidebar-actions-row">
+          <button class="btn btn-success" style="flex:1; justify-content:center;" onclick="createNewCharacter()">+ 新增角色</button>
+          <button class="btn" style="border-color:#f59e0b; color:#fbbf24; justify-content:center;" onclick="generateRandomCharacter()">🎲 隨機生成</button>
+        </div>
+      </div>
+
+      <div class="sidebar-list" id="characters-list">
+        <!-- 動態渲染角色列表 -->
+      </div>
+    </aside>
+
+    <!-- 右側編輯區域 -->
+    <main class="content-area" id="editor-area">
+      <!-- 頂部工具列 -->
+      <div class="editor-top-bar">
+        <div class="editor-char-title">
+          <div class="editor-avatar-preview" id="preview-avatar">👤</div>
+          <div>
+            <div style="font-size:1.25rem; font-weight:bold; color:#f8fafc;" id="editor-title-name">落魄老農</div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;" id="editor-title-sub">
+              HUMAN · CIVILIAN · Lv.2 · 手無寸鐵的鄉民
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button class="btn" style="border-color:#38bdf8; color:#38bdf8;" onclick="autoBalanceStats()">⚖️ 依形態等級自動平衡數值</button>
+          <button class="btn" onclick="cloneCurrentCharacter()">📋 複製此角色</button>
+          <button class="btn btn-danger" onclick="deleteCurrentCharacter()">🗑️ 刪除角色</button>
+        </div>
+      </div>
+
+      <!-- 戰鬥實戰戰力推演即時預覽 -->
+      <div class="combat-preview-panel">
+        <div class="combat-metric-card">
+          <span class="metric-title">外功總攻擊力 (ATK)</span>
+          <span class="metric-val" id="metric-atk" style="color:#f43f5e;">--</span>
+          <span style="font-size:0.68rem; color:#64748b;" id="metric-atk-sub">臂力×1.8 + 招式加成</span>
+        </div>
+        <div class="combat-metric-card">
+          <span class="metric-title">護體總防禦力 (DEF)</span>
+          <span class="metric-val" id="metric-def" style="color:#38bdf8;">--</span>
+          <span style="font-size:0.68rem; color:#64748b;" id="metric-def-sub">根骨×1.3 + 基礎護甲</span>
+        </div>
+        <div class="combat-metric-card">
+          <span class="metric-title">身法閃避率 (DODGE)</span>
+          <span class="metric-val" id="metric-dodge" style="color:#34d399;">--</span>
+          <span style="font-size:0.68rem; color:#64748b;" id="metric-dodge-sub">身法×0.45% + 福緣×0.2%</span>
+        </div>
+        <div class="combat-metric-card">
+          <span class="metric-title">致命暴擊率 (CRIT)</span>
+          <span class="metric-val" id="metric-crit" style="color:#fbbf24;">--</span>
+          <span style="font-size:0.68rem; color:#64748b;" id="metric-crit-sub">身法×0.35% + 福緣×0.3%</span>
+        </div>
+      </div>
+
+      <!-- 一、身分與外觀設定 -->
+      <div class="editor-section">
+        <div class="section-title">👤 一、身分定位、種族形態與等級區間</div>
+        <div class="grid-form">
+          <div class="form-group">
+            <label>角色唯一標識 (ID)</label>
+            <input type="text" class="form-control" id="f-id" oninput="onFieldChange('id', this.value)">
+          </div>
+          <div class="form-group">
+            <label>角色名稱</label>
+            <input type="text" class="form-control" id="f-name" oninput="onFieldChange('name', this.value)">
+          </div>
+          <div class="form-group">
+            <label>江湖名號 / 稱謂</label>
+            <input type="text" class="form-control" id="f-title" oninput="onFieldChange('title', this.value)">
+          </div>
+
+          <div class="form-group">
+            <label>主要種族 (Race)</label>
+            <select class="form-control" id="f-race" onchange="onRaceChange(this.value)">
+              <option value="HUMAN">👤 人類 (HUMAN)</option>
+              <option value="BEAST">🐺 野獸 (BEAST)</option>
+              <option value="MONSTER">👹 魔物 (MONSTER)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>種族形態梯級 (Form)</label>
+            <select class="form-control" id="f-form" onchange="onFormChange(this.value)">
+              <!-- 動態載入當前種族的形態 -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>當前設定等級 (<span id="level-range-hint" style="color:#fbbf24;">範圍 1~5</span>)</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="number" class="form-control" id="f-level" style="width:70px;" oninput="onLevelChange(this.value)">
+              <input type="range" id="f-level-slider" style="flex:1;" oninput="onLevelSliderChange(this.value)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>頭像圖標 Emoji</label>
+            <input type="text" class="form-control" id="f-icon" oninput="onFieldChange('icon', this.value)">
+          </div>
+          <div class="form-group">
+            <label>代表色澤 (Color)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="color" id="f-color-picker" style="height:32px; width:44px; border:none; background:none; cursor:pointer;" onchange="onColorPickerChange(this.value)">
+              <input type="text" class="form-control" id="f-color" style="flex:1;" oninput="onFieldChange('color', this.value)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:4px;">
+          <label>典故身世與背景描述</label>
+          <textarea class="form-control" id="f-desc" rows="2" style="resize:vertical;" oninput="onFieldChange('desc', this.value)"></textarea>
+        </div>
+      </div>
+
+      <!-- 二、攻擊模式與戰術行為模式 (重要特色) -->
+      <div class="editor-section">
+        <div class="section-title">⚔️ 二、相異攻擊模式與戰術行為特徵</div>
+        <div class="attack-pattern-box">
+          <div class="grid-form">
+            <div class="form-group" style="grid-column: span 2;">
+              <label>主要攻擊模式 (Attack Pattern)</label>
+              <select class="form-control" id="f-pattern" style="font-weight:bold; color:#fde047;" onchange="onPatternChange(this.value)">
+                <!-- 動態注入各模式 -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label>專屬招式 / 技能名稱</label>
+              <input type="text" class="form-control" id="f-skill-name" oninput="onFieldChange('skillName', this.value)">
+            </div>
+          </div>
+
+          <div style="font-size:0.75rem; color:#93c5fd; background:rgba(30,58,138,0.25); border-left:3px solid #3b82f6; padding:6px 10px; border-radius:0 4px 4px 0;" id="pattern-desc-box">
+            模式說明載入中...
+          </div>
+        </div>
+      </div>
+
+      <!-- 三、核心六維修為與戰鬥屬性 -->
+      <div class="editor-section">
+        <div class="section-title">📊 三、核心六維屬性與戰鬥數值</div>
+        <div class="grid-form" style="grid-template-columns: repeat(5, 1fr);">
+          <div class="form-group">
+            <label>臂力 (STR - 外功)</label>
+            <input type="number" class="form-control" id="f-str" oninput="onAttrChange('str', this.value)">
+          </div>
+          <div class="form-group">
+            <label>身法 (AGI - 閃避)</label>
+            <input type="number" class="form-control" id="f-agi" oninput="onAttrChange('agi', this.value)">
+          </div>
+          <div class="form-group">
+            <label>根骨 (CON - 抗擊)</label>
+            <input type="number" class="form-control" id="f-con" oninput="onAttrChange('con', this.value)">
+          </div>
+          <div class="form-group">
+            <label>悟性 (WIS - 真氣)</label>
+            <input type="number" class="form-control" id="f-wis" oninput="onAttrChange('wis', this.value)">
+          </div>
+          <div class="form-group">
+            <label>福緣 (LCK - 機緣)</label>
+            <input type="number" class="form-control" id="f-lck" oninput="onAttrChange('lck', this.value)">
+          </div>
+        </div>
+
+        <div class="grid-form" style="grid-template-columns: repeat(4, 1fr); margin-top:4px;">
+          <div class="form-group">
+            <label>氣血生命 (HP)</label>
+            <input type="number" class="form-control" id="f-hp" oninput="onAttrChange('hp', this.value)">
+          </div>
+          <div class="form-group">
+            <label>真氣池 (QI)</label>
+            <input type="number" class="form-control" id="f-qi" oninput="onAttrChange('qi', this.value)">
+          </div>
+          <div class="form-group">
+            <label>速度 (Speed 基準 100)</label>
+            <input type="number" class="form-control" id="f-speed" oninput="onAttrChange('speed', this.value)">
+          </div>
+          <div class="form-group">
+            <label>護甲防禦 (DEF)</label>
+            <input type="number" class="form-control" id="f-def" oninput="onAttrChange('def', this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- 四、擊敗獎勵與掉落清單 -->
+      <div class="editor-section">
+        <div class="section-title">🎁 四、擊敗獎勵與掉落物清單</div>
+        <div class="grid-form">
+          <div class="form-group">
+            <label>掉落碎銀下限 (兩)</label>
+            <input type="number" class="form-control" id="f-gold-min" oninput="onDropChange('minGold', this.value)">
+          </div>
+          <div class="form-group">
+            <label>掉落碎銀上限 (兩)</label>
+            <input type="number" class="form-control" id="f-gold-max" oninput="onDropChange('maxGold', this.value)">
+          </div>
+          <div class="form-group">
+            <label>掉落概率 (0.0 ~ 1.0)</label>
+            <input type="number" step="0.05" class="form-control" id="f-drop-rate" oninput="onDropChange('dropRate', this.value)">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:4px;">
+          <label>掉落物品代碼 (Item ID)</label>
+          <input type="text" class="form-control" id="f-drop-item" placeholder="例如 food_steamed_bun, eq_knife_iron..." oninput="onDropChange('itemId', this.value)">
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast-msg"></div>
+
+  <script src="src/core/CharacterGenerator.js"></script>
+  <script>
+    // ==========================================
+    // 角色實體編輯器 SPA 控制邏輯
+    // ==========================================
+    let charactersCatalog = [];
+    let currentSelectedId = null;
+    let currentSaveFilename = 'characters.json';
+    let currentRaceTab = 'ALL';
+    let isConnectedToApi = false;
+
+    // 取得 Generator 常數定義
+    const RACES = typeof CharacterGenerator !== 'undefined' ? CharacterGenerator.RACES : {
+      HUMAN: { id: 'HUMAN', name: '人類', icon: '👤', forms: {} },
+      BEAST: { id: 'BEAST', name: '野獸', icon: '🐺', forms: {} },
+      MONSTER: { id: 'MONSTER', name: '魔物', icon: '👹', forms: {} }
+    };
+
+    const ATTACK_PATTERNS = typeof CharacterGenerator !== 'undefined' ? CharacterGenerator.ATTACK_PATTERNS : {};
+
+    window.onload = async () => {
+      initPatternSelect();
+      initFormFilter();
+      await loadCatalog();
+      bindShortcuts();
+    };
+
+    function bindShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          saveCharactersToProject();
+        }
+      });
+    }
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast-msg');
+      toast.innerText = msg;
+      toast.style.background = isSuccess ? '#064e3b' : '#7f1d1d';
+      toast.style.borderColor = isSuccess ? '#059669' : '#dc2626';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2600);
+    }
+
+    // 初始化攻擊模式選單
+    function initPatternSelect() {
+      const sel = document.getElementById('f-pattern');
+      sel.innerHTML = '';
+      Object.values(ATTACK_PATTERNS).forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.innerText = `[${p.race}] ${p.icon} ${p.name} (威力 ${p.dmgMultiplier}x ｜ 射程 ${p.range})`;
+        sel.appendChild(opt);
+      });
+    }
+
+    function initFormFilter() {
+      const sel = document.getElementById('form-filter');
+      sel.innerHTML = '<option value="ALL">全部形態梯級</option>';
+      Object.values(RACES).forEach(r => {
+        Object.values(r.forms).forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.id;
+          opt.innerText = `${r.name} · ${f.name} (Lv.${f.minLevel}~${f.maxLevel})`;
+          sel.appendChild(opt);
+        });
+      });
+    }
+
+    // 載入角色庫
+    async function loadCatalog() {
+      try {
+        const testRes = await fetch('/api/characters/files');
+        if (testRes.ok) {
+          isConnectedToApi = true;
+          await loadSaveFilesList();
+
+          const target = currentSaveFilename || 'characters.json';
+          const res = await fetch(`/api/characters/files/${target}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              charactersCatalog = data;
+              renderSidebar();
+              selectCharacter(charactersCatalog[0].id);
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('API 未連線，使用本地保底庫:', e);
+      }
+
+      // 本地離線保底
+      await loadSaveFilesList();
+      const local = localStorage.getItem('JIANGHU_CHARACTERS_CATALOG');
+      if (local) {
+        try { charactersCatalog = JSON.parse(local); } catch (e) { }
+      }
+      if (!charactersCatalog || charactersCatalog.length === 0) {
+        if (typeof CharacterGenerator !== 'undefined') {
+          charactersCatalog = CharacterGenerator.generateDefaultCatalog();
+        }
+        localStorage.setItem('JIANGHU_CHARACTERS_CATALOG', JSON.stringify(charactersCatalog));
+      }
+      renderSidebar();
+      if (charactersCatalog.length > 0) selectCharacter(charactersCatalog[0].id);
+    }
+
+    async function loadSaveFilesList() {
+      const select = document.getElementById('save-file-select');
+      if (!select) return;
+
+      try {
+        const res = await fetch('/api/characters/files');
+        if (res.ok) {
+          const files = await res.json();
+          if (Array.isArray(files) && files.length > 0) {
+            files.sort((a, b) => (a === 'characters.json' ? -1 : (b === 'characters.json' ? 1 : a.localeCompare(b))));
+            select.innerHTML = '';
+            files.forEach(f => {
+              const opt = document.createElement('option');
+              opt.value = f;
+              opt.innerText = f === 'characters.json' ? `${f} (當前全角色庫)` :
+                             (f === 'characters_default.json' ? `${f} (官方基準庫)` : f);
+              select.appendChild(opt);
+            });
+            select.value = currentSaveFilename;
+            return;
+          }
+        }
+      } catch (e) { }
+
+      select.innerHTML = `
+        <option value="characters.json">characters.json (預設全角色庫)</option>
+        <option value="characters_default.json">characters_default.json (官方基準庫)</option>
+      `;
+      select.value = currentSaveFilename;
+    }
+
+    async function onSelectSaveFileChange(filename) {
+      currentSaveFilename = filename;
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/characters/files/${filename}`);
+          if (res.ok) {
+            charactersCatalog = await res.json();
+            renderSidebar();
+            if (charactersCatalog.length > 0) selectCharacter(charactersCatalog[0].id);
+            showToast(`已載入角色庫: ${filename}`);
+            return;
+          }
+        } catch (e) { }
+      }
+      showToast(`切換至本地快取: ${filename}`);
+    }
+
+    // 渲染側邊欄卡片清單
+    function renderSidebar() {
+      const container = document.getElementById('characters-list');
+      const search = (document.getElementById('search-input').value || '').trim().toLowerCase();
+      const formFilter = document.getElementById('form-filter').value;
+
+      // 統計數據
+      document.getElementById('stat-total').innerText = charactersCatalog.length;
+      document.getElementById('stat-human').innerText = charactersCatalog.filter(c => c.race === 'HUMAN').length;
+      document.getElementById('stat-beast').innerText = charactersCatalog.filter(c => c.race === 'BEAST').length;
+      document.getElementById('stat-monster').innerText = charactersCatalog.filter(c => c.race === 'MONSTER').length;
+
+      container.innerHTML = '';
+
+      const filtered = charactersCatalog.filter(c => {
+        if (currentRaceTab !== 'ALL' && c.race !== currentRaceTab) return false;
+        if (formFilter !== 'ALL' && c.form !== formFilter) return false;
+        if (search) {
+          const text = `${c.name} ${c.title || ''} ${c.id} ${c.formName || ''}`.toLowerCase();
+          if (!text.includes(search)) return false;
+        }
+        return true;
+      });
+
+      filtered.forEach(c => {
+        const card = document.createElement('div');
+        card.className = `char-card ${c.id === currentSelectedId ? 'selected' : ''}`;
+        card.onclick = () => selectCharacter(c.id);
+
+        const raceBadgeClass = c.race === 'HUMAN' ? 'badge-human' : (c.race === 'BEAST' ? 'badge-beast' : 'badge-monster');
+        const pattern = ATTACK_PATTERNS[c.attackPattern] || { icon: '⚔️', name: '未知' };
+
+        card.innerHTML = `
+          <div class="char-avatar-box" style="border-color:${c.color || '#3b82f6'};">
+            ${c.icon || '👤'}
+          </div>
+          <div class="char-info">
+            <div class="char-card-top">
+              <span class="char-card-name" style="color:${c.color || '#f8fafc'};">${c.name}</span>
+              <span class="badge badge-level">Lv.${c.level}</span>
+            </div>
+            <div class="char-card-meta">
+              <span class="badge ${raceBadgeClass}">${RACES[c.race]?.name || c.race}</span>
+              <span>${c.formName || c.form}</span>
+              <span>${pattern.icon}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectRaceTab(race) {
+      currentRaceTab = race;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tab-${race.toLowerCase()}`).classList.add('active');
+      renderSidebar();
+    }
+
+    function onFilterChange() {
+      renderSidebar();
+    }
+
+    // 選取角色載入主表單
+    function selectCharacter(id) {
+      currentSelectedId = id;
+      const c = charactersCatalog.find(item => item.id === id);
+      if (!c) return;
+
+      document.querySelectorAll('.char-card').forEach(card => card.classList.remove('selected'));
+      renderSidebar();
+
+      // 頂部
+      document.getElementById('preview-avatar').innerText = c.icon || '👤';
+      document.getElementById('preview-avatar').style.borderColor = c.color || '#3b82f6';
+      document.getElementById('editor-title-name').innerText = c.name;
+      document.getElementById('editor-title-sub').innerText = `${c.race} · ${c.formName || c.form} · Lv.${c.level} · ${c.title || ''}`;
+
+      // 基本
+      document.getElementById('f-id').value = c.id;
+      document.getElementById('f-name').value = c.name;
+      document.getElementById('f-title').value = c.title || '';
+      document.getElementById('f-race').value = c.race;
+
+      updateFormSelectOptions(c.race);
+      document.getElementById('f-form').value = c.form;
+
+      const raceDef = RACES[c.race] || RACES.HUMAN;
+      const formDef = raceDef.forms[c.form] || Object.values(raceDef.forms)[0];
+      c.minLevel = formDef.minLevel;
+      c.maxLevel = formDef.maxLevel;
+
+      document.getElementById('level-range-hint').innerText = `範圍 ${formDef.minLevel}~${formDef.maxLevel}`;
+      document.getElementById('f-level').value = c.level;
+      document.getElementById('f-level-slider').min = formDef.minLevel;
+      document.getElementById('f-level-slider').max = formDef.maxLevel;
+      document.getElementById('f-level-slider').value = c.level;
+
+      document.getElementById('f-icon').value = c.icon || '👤';
+      document.getElementById('f-color').value = c.color || '#38bdf8';
+      document.getElementById('f-color-picker').value = c.color || '#38bdf8';
+      document.getElementById('f-desc').value = c.desc || '';
+
+      // 攻擊模式
+      document.getElementById('f-pattern').value = c.attackPattern || 'MARTIAL_COMBO';
+      document.getElementById('f-skill-name').value = c.skillName || '';
+      updatePatternDescBox(c.attackPattern);
+
+      // 屬性
+      const a = c.attributes || {};
+      document.getElementById('f-str').value = a.str || 20;
+      document.getElementById('f-agi').value = a.agi || 20;
+      document.getElementById('f-con').value = a.con || 20;
+      document.getElementById('f-wis').value = a.wis || 20;
+      document.getElementById('f-lck').value = a.lck || 20;
+
+      document.getElementById('f-hp').value = a.hp || 100;
+      document.getElementById('f-qi').value = a.qi || 50;
+      document.getElementById('f-speed').value = a.speed || 100;
+      document.getElementById('f-def').value = a.def || 15;
+
+      // 掉落
+      const d = c.drops || {};
+      document.getElementById('f-gold-min').value = d.minGold || 1;
+      document.getElementById('f-gold-max').value = d.maxGold || 10;
+      document.getElementById('f-drop-rate').value = d.dropRate || 0.4;
+      document.getElementById('f-drop-item').value = d.itemId || '';
+
+      recalcCombatPreview();
+    }
+
+    function updateFormSelectOptions(raceId) {
+      const sel = document.getElementById('f-form');
+      sel.innerHTML = '';
+      const race = RACES[raceId] || RACES.HUMAN;
+      Object.values(race.forms).forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.id;
+        opt.innerText = `${f.name} (等級 ${f.minLevel}~${f.maxLevel})`;
+        sel.appendChild(opt);
+      });
+    }
+
+    function updatePatternDescBox(patternId) {
+      const p = ATTACK_PATTERNS[patternId];
+      const box = document.getElementById('pattern-desc-box');
+      if (!p) {
+        box.innerText = '未知模式';
+        return;
+      }
+      const st = p.statusTrigger ? ` ｜ 觸發【${p.statusTrigger.id}】(${Math.round(p.statusTrigger.chance * 100)}%機率持續${p.statusTrigger.duration}輪)` : '';
+      box.innerText = `💡【${p.name}】: ${p.desc} (傷害倍率 ${p.dmgMultiplier}x ｜ 射程 ${p.range}格 ｜ 消耗 ${p.energyCost}能量${st})`;
+    }
+
+    // 表單修改即時同步
+    function getCurrent() {
+      return charactersCatalog.find(c => c.id === currentSelectedId);
+    }
+
+    function onFieldChange(field, val) {
+      const c = getCurrent();
+      if (!c) return;
+      c[field] = val;
+      if (field === 'name' || field === 'icon' || field === 'color') {
+        document.getElementById('preview-avatar').innerText = c.icon || '👤';
+        document.getElementById('preview-avatar').style.borderColor = c.color || '#3b82f6';
+        document.getElementById('editor-title-name').innerText = c.name;
+        renderSidebar();
+      }
+      recalcCombatPreview();
+    }
+
+    function onRaceChange(raceId) {
+      const c = getCurrent();
+      if (!c) return;
+      c.race = raceId;
+      updateFormSelectOptions(raceId);
+      const race = RACES[raceId];
+      const firstForm = Object.values(race.forms)[0];
+      onFormChange(firstForm.id);
+    }
+
+    function onFormChange(formId) {
+      const c = getCurrent();
+      if (!c) return;
+      c.form = formId;
+      const race = RACES[c.race] || RACES.HUMAN;
+      const f = race.forms[formId] || Object.values(race.forms)[0];
+      c.formName = f.name;
+      c.minLevel = f.minLevel;
+      c.maxLevel = f.maxLevel;
+
+      document.getElementById('level-range-hint').innerText = `範圍 ${f.minLevel}~${f.maxLevel}`;
+      document.getElementById('f-level-slider').min = f.minLevel;
+      document.getElementById('f-level-slider').max = f.maxLevel;
+
+      // 檢查當前等級是否在範圍內，若否則自動鎖定在範圍邊緣
+      if (c.level < f.minLevel) c.level = f.minLevel;
+      if (c.level > f.maxLevel) c.level = f.maxLevel;
+      document.getElementById('f-level').value = c.level;
+      document.getElementById('f-level-slider').value = c.level;
+
+      // 自動切換一個匹配種族的攻擊模式
+      const patterns = Object.values(ATTACK_PATTERNS).filter(p => p.race === c.race);
+      if (patterns.length > 0 && !patterns.some(p => p.id === c.attackPattern)) {
+        c.attackPattern = patterns[0].id;
+        document.getElementById('f-pattern').value = c.attackPattern;
+        updatePatternDescBox(c.attackPattern);
+      }
+
+      renderSidebar();
+      recalcCombatPreview();
+    }
+
+    function onLevelChange(val) {
+      const c = getCurrent();
+      if (!c) return;
+      let lv = parseInt(val, 10);
+      if (isNaN(lv)) lv = c.minLevel;
+      lv = Math.max(c.minLevel, Math.min(c.maxLevel, lv));
+      c.level = lv;
+      document.getElementById('f-level').value = lv;
+      document.getElementById('f-level-slider').value = lv;
+      renderSidebar();
+      recalcCombatPreview();
+    }
+
+    function onLevelSliderChange(val) {
+      onLevelChange(val);
+    }
+
+    function onColorPickerChange(val) {
+      document.getElementById('f-color').value = val;
+      onFieldChange('color', val);
+    }
+
+    function onPatternChange(val) {
+      const c = getCurrent();
+      if (!c) return;
+      c.attackPattern = val;
+      updatePatternDescBox(val);
+      recalcCombatPreview();
+    }
+
+    function onAttrChange(key, val) {
+      const c = getCurrent();
+      if (!c) return;
+      if (!c.attributes) c.attributes = {};
+      c.attributes[key] = parseInt(val, 10) || 0;
+      recalcCombatPreview();
+    }
+
+    function onDropChange(key, val) {
+      const c = getCurrent();
+      if (!c) return;
+      if (!c.drops) c.drops = {};
+      if (key === 'itemId') {
+        c.drops[key] = val;
+      } else {
+        c.drops[key] = parseFloat(val) || 0;
+      }
+    }
+
+    // 計算預覽戰鬥力指標
+    function recalcCombatPreview() {
+      const c = getCurrent();
+      if (!c) return;
+      const a = c.attributes || {};
+      const str = a.str || 20;
+      const agi = a.agi || 20;
+      const con = a.con || 20;
+      const lck = a.lck || 20;
+
+      const pattern = ATTACK_PATTERNS[c.attackPattern] || { dmgMultiplier: 1.0 };
+      const atk = Math.round((str * 1.8 + (c.level * 3)) * pattern.dmgMultiplier);
+      const def = Math.round(con * 1.3 + (a.def || 0));
+      const dodge = Math.min(75, Math.max(0, Math.round(agi * 0.45 + lck * 0.2)));
+      const crit = Math.min(80, Math.max(0, Math.round(agi * 0.35 + lck * 0.3)));
+
+      document.getElementById('metric-atk').innerText = `${atk} 點`;
+      document.getElementById('metric-def').innerText = `${def} 點`;
+      document.getElementById('metric-dodge').innerText = `${dodge}%`;
+      document.getElementById('metric-crit').innerText = `${crit}%`;
+    }
+
+    // 自動依形態與等級平衡數值
+    function autoBalanceStats() {
+      const c = getCurrent();
+      if (!c) return;
+      const lv = c.level || c.minLevel || 1;
+      const baseMult = 1 + (lv - 1) * 0.12;
+
+      c.attributes.str = Math.round(14 * baseMult);
+      c.attributes.agi = Math.round(14 * baseMult);
+      c.attributes.con = Math.round(14 * baseMult);
+      c.attributes.wis = Math.round((c.race === 'BEAST' ? 8 : 14) * baseMult);
+      c.attributes.lck = Math.round(12 + Math.random() * 6);
+
+      c.attributes.hp = Math.round(70 + c.attributes.con * 5 * baseMult);
+      c.attributes.qi = c.race === 'BEAST' ? 0 : Math.round(30 + c.attributes.wis * 4 * baseMult);
+      c.attributes.speed = Math.round(90 + c.attributes.agi * 0.4);
+      c.attributes.def = Math.round(8 + (c.attributes.con * 0.8 + c.attributes.str * 0.3) * baseMult);
+
+      selectCharacter(c.id);
+      showToast(`已根據 Lv.${lv} 平衡重算【${c.name}】的六維與氣血！`);
+    }
+
+    // 新增角色
+    function createNewCharacter() {
+      const raceId = currentRaceTab === 'ALL' ? 'HUMAN' : currentRaceTab;
+      const newChar = CharacterGenerator.generateRandomCharacter(raceId);
+      newChar.name = '自訂新俠士';
+      charactersCatalog.unshift(newChar);
+      renderSidebar();
+      selectCharacter(newChar.id);
+      showToast(`已新增角色: ${newChar.name}`);
+    }
+
+    // 隨機生成角色
+    function generateRandomCharacter() {
+      const raceId = currentRaceTab === 'ALL' ? (Math.random() < 0.4 ? 'HUMAN' : (Math.random() < 0.5 ? 'BEAST' : 'MONSTER')) : currentRaceTab;
+      const newChar = CharacterGenerator.generateRandomCharacter(raceId);
+      charactersCatalog.unshift(newChar);
+      renderSidebar();
+      selectCharacter(newChar.id);
+      showToast(`🎲 成功生成【${newChar.name}】(${newChar.race} · ${newChar.formName})！`);
+    }
+
+    // 複製角色
+    function cloneCurrentCharacter() {
+      const c = getCurrent();
+      if (!c) return;
+      const clone = JSON.parse(JSON.stringify(c));
+      clone.id = `char_${c.race.toLowerCase()}_${Date.now().toString(36)}`;
+      clone.name = `${c.name} (影)`;
+      charactersCatalog.unshift(clone);
+      renderSidebar();
+      selectCharacter(clone.id);
+      showToast(`已複製出新角色: ${clone.name}`);
+    }
+
+    // 刪除角色
+    function deleteCurrentCharacter() {
+      const c = getCurrent();
+      if (!c) return;
+      if (charactersCatalog.length <= 1) {
+        alert('至少保留一組角色！');
+        return;
+      }
+      if (!confirm(`確定要刪除角色【${c.name}】嗎？`)) return;
+
+      const idx = charactersCatalog.findIndex(item => item.id === c.id);
+      if (idx !== -1) {
+        charactersCatalog.splice(idx, 1);
+        renderSidebar();
+        selectCharacter(charactersCatalog[0].id);
+        showToast('角色已刪除');
+      }
+    }
+
+    // 儲存至專案檔案
+    async function saveCharactersToProject() {
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/characters/files/${currentSaveFilename}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(charactersCatalog, null, 2)
+          });
+          if (res.ok) {
+            const data = await res.json();
+            showToast(`✅ ${data.message || '儲存成功！'}`);
+            return;
+          }
+        } catch (e) {
+          console.warn('API 寫入失敗，切換至本地快取:', e);
+        }
+      }
+
+      localStorage.setItem('JIANGHU_CHARACTERS_CATALOG', JSON.stringify(charactersCatalog));
+      showToast('✅ 已儲存至本地快取 (離線模式)');
+    }
+
+    // 另存為新檔
+    async function saveAsNewFile() {
+      const newName = prompt('請輸入新角色存檔檔案名稱 (例如 characters_custom.json):', `characters_${Date.now().toString(36)}.json`);
+      if (!newName || !newName.trim()) return;
+
+      const finalName = newName.trim().endsWith('.json') ? newName.trim() : `${newName.trim()}.json`;
+      currentSaveFilename = finalName;
+
+      await saveCharactersToProject();
+      await loadSaveFilesList();
+      document.getElementById('save-file-select').value = finalName;
+    }
+
+    // 重設官方預設庫
+    async function resetDefaultCharacters() {
+      if (!confirm('確定要重新生成並還原為官方 default 角色資料庫嗎？當前未保存更動將會遺失。')) return;
+
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch('/api/characters/reset-default', { method: 'POST' });
+          if (res.ok) {
+            await loadCatalog();
+            showToast('✅ 預設角色庫已重設生成成功！');
+            return;
+          }
+        } catch (e) { }
+      }
+
+      charactersCatalog = CharacterGenerator.generateDefaultCatalog();
+      localStorage.setItem('JIANGHU_CHARACTERS_CATALOG', JSON.stringify(charactersCatalog));
+      renderSidebar();
+      if (charactersCatalog.length > 0) selectCharacter(charactersCatalog[0].id);
+      showToast('✅ 已還原為官方預設角色庫');
+    }
+  </script>
+</body>
+
+</html>
