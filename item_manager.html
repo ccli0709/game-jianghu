@@ -651,6 +651,8 @@
 
     <div class="header-actions">
       <span id="storage-badge" class="storage-status status-api">探測環境中...</span>
+      <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#f3e8ff;"
+        onclick="openBatchItemsModal()">✨ 一鍵生成隨機物品</button>
       <button class="btn" style="border-color:#d97706; color:#fde047;" onclick="confirmResetToDefault()"
         title="各類別各種等級分別隨機生成 3 樣 (共108件)">🔄 重設為 Default</button>
       <button class="btn btn-random" onclick="openRandomModal()">🎲 隨機建議</button>
@@ -695,6 +697,15 @@
           <button class="pill-btn" data-tier="RARE" onclick="setTierFilter('RARE')">上品</button>
           <button class="pill-btn" data-tier="EPIC" onclick="setTierFilter('EPIC')">極品</button>
           <button class="pill-btn" data-tier="LEGENDARY" onclick="setTierFilter('LEGENDARY')">寶器</button>
+          <button class="pill-btn" data-tier="MYTHIC" onclick="setTierFilter('MYTHIC')">神兵絕品</button>
+        </div>
+
+        <!-- 適用種族篩選 -->
+        <div class="filter-pills" id="race-pills" style="margin-top:2px;">
+          <button class="pill-btn active" data-race="ALL" onclick="setRaceFilter('ALL')">全種族</button>
+          <button class="pill-btn" data-race="HUMAN_USABLE" onclick="setRaceFilter('HUMAN_USABLE')">👤 人類可用</button>
+          <button class="pill-btn" data-race="BEAST" onclick="setRaceFilter('BEAST')">🐺 野獸敵裝</button>
+          <button class="pill-btn" data-race="MONSTER" onclick="setRaceFilter('MONSTER')">👹 魔物敵裝</button>
         </div>
       </div>
 
@@ -771,7 +782,7 @@
           </div>
         </div>
 
-        <div class="form-grid-3">
+        <div class="form-grid-4">
           <div class="form-group">
             <label class="form-label">市井賣出價值 (碎銀/兩)</label>
             <input type="number" id="inp-value" class="form-input" min="0" value="50">
@@ -783,6 +794,15 @@
           <div class="form-group">
             <label class="form-label">行囊重量 (斤)</label>
             <input type="number" id="inp-weight" class="form-input" min="0" step="0.1" value="2.0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">適用種族 (武器防具)</label>
+            <select id="inp-equip-race" class="form-select">
+              <option value="HUMAN">👤 人類專用</option>
+              <option value="BEAST">🐺 野獸專用 (敵人裝備)</option>
+              <option value="MONSTER">👹 魔物專用 (敵人裝備)</option>
+              <option value="ALL">🌐 全種族通用</option>
+            </select>
           </div>
         </div>
 
@@ -887,6 +907,47 @@
   <div id="toast-msg"></div>
 
   <script src="src/core/ItemGenerator.js"></script>
+  <!-- 一鍵生成隨機物品 Modal -->
+  <div class="modal-overlay" id="batch-items-modal">
+    <div class="modal-content" style="width: 680px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-title" style="justify-content: space-between;">
+        <span>✨ 一鍵生成隨機物品（保留現有 6 大類與 6 品階）</span>
+        <button class="btn" style="padding: 3px 9px;" onclick="closeBatchItemsModal()">✕ 關閉</button>
+      </div>
+      <div style="font-size:0.78rem; color:#94a3b8; line-height:1.5;">
+        依照各種族專用武器防具生成：<b>👤 人類種族可使用</b>（預設每品質 <b>5</b> 種）、<b>🐺 野獸與 👹 魔物專用武器防具</b>（預設每品質各 <b>2</b> 種，作為敵人裝備使用）。
+      </div>
+
+      <div
+        style="background:#0e111a; border:1px solid #262c40; border-radius:6px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+        <div
+          style="display:grid; grid-template-columns: 140px 1fr 1fr 1fr; gap:8px; font-size:0.75rem; color:#cbd5e1; font-weight:bold; border-bottom:1px solid #23283b; padding-bottom:6px;">
+          <span>品質品階</span>
+          <span>👤 人類可用 (每類)</span>
+          <span>🐺 野獸敵裝 (每武器防具類)</span>
+          <span>👹 魔物敵裝 (每武器防具類)</span>
+        </div>
+        <div id="batch-items-rows" style="display:flex; flex-direction:column; gap:6px;"></div>
+      </div>
+
+      <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:#fde68a; cursor:pointer;">
+        <input type="checkbox" id="batch-items-clear" checked>
+        <span>生成前清空目前物品庫中的所有舊物品（推薦）</span>
+      </label>
+
+      <div id="batch-items-summary"
+        style="font-size:0.78rem; color:#38bdf8; background:#0b0e17; border:1px solid #1e293b; padding:8px 10px; border-radius:6px;">
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn" onclick="closeBatchItemsModal()">取消</button>
+        <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#fff;"
+          onclick="executeBatchItemsGeneration()">🚀 一鍵生成並保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="src/core/ItemGenerator.js"></script>
   <script>
     // ========================================================
     // 全域狀態與初始化
@@ -895,6 +956,7 @@
     let currentSelectedId = null;
     let currentCatFilter = 'ALL';
     let currentTierFilter = 'ALL';
+    let currentRaceFilter = 'ALL';
     let currentSuggestion = null;
     let isConnectedToApi = false;
     let currentSaveFilename = 'default.json';
@@ -1220,6 +1282,9 @@
       const filtered = itemsCatalog.filter(item => {
         if (currentCatFilter !== 'ALL' && item.category !== currentCatFilter) return false;
         if (currentTierFilter !== 'ALL' && item.tier !== currentTierFilter) return false;
+        const itemRace = item.equipRace || ((item.category === 'MELEE_WEAPON' || item.category === 'RANGED_WEAPON' || item.category === 'ARMOR') ? 'HUMAN' : 'ALL');
+        if (currentRaceFilter === 'HUMAN_USABLE' && itemRace !== 'HUMAN' && itemRace !== 'ALL') return false;
+        if ((currentRaceFilter === 'BEAST' || currentRaceFilter === 'MONSTER') && itemRace !== currentRaceFilter) return false;
         if (query) {
           const matchName = item.name.toLowerCase().includes(query);
           const matchId = item.id.toLowerCase().includes(query);
@@ -1251,6 +1316,9 @@
         else if (item.category === 'ENHANCEMENT') statSummary = item.attributes?.upgradeBonus || '強化胚料';
         else statSummary = '特殊效果';
 
+        const raceLabelMap = { HUMAN: '👤 人類', BEAST: '🐺 野獸敵裝', MONSTER: '👹 魔物敵裝', ALL: '🌐 通用' };
+        const raceTag = raceLabelMap[item.equipRace || 'HUMAN'] || '👤 人類';
+
         card.innerHTML = `
           <div class="item-card-icon">${item.icon || '📦'}</div>
           <div class="item-card-info">
@@ -1261,6 +1329,7 @@
             <div class="item-card-tags">
               <span class="tier-badge ${tierInfo.class}">${tierInfo.name}</span>
               <span class="category-badge">${catName}</span>
+              <span class="category-badge" style="color:#c4b5fd;">${raceTag}</span>
               <span class="item-card-price">🪙 ${item.value || 0} 兩</span>
             </div>
           </div>
@@ -1293,6 +1362,14 @@
       renderSidebar();
     }
 
+    function setRaceFilter(race) {
+      currentRaceFilter = race;
+      document.querySelectorAll('#race-pills .pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.race === race);
+      });
+      renderSidebar();
+    }
+
     function applyFilters() {
       renderSidebar();
     }
@@ -1320,6 +1397,7 @@
       document.getElementById('inp-value').value = item.value ?? 50;
       document.getElementById('inp-stack').value = item.stackMax ?? 1;
       document.getElementById('inp-weight').value = item.weight ?? 2.0;
+      document.getElementById('inp-equip-race').value = item.equipRace || ((item.category === 'MELEE_WEAPON' || item.category === 'RANGED_WEAPON' || item.category === 'ARMOR') ? 'HUMAN' : 'ALL');
       document.getElementById('inp-desc').value = item.desc || '';
 
       // 更新頂部卡片預覽
@@ -1354,6 +1432,7 @@
       item.value = parseInt(document.getElementById('inp-value').value) || 0;
       item.stackMax = parseInt(document.getElementById('inp-stack').value) || 1;
       item.weight = parseFloat(document.getElementById('inp-weight').value) || 0.1;
+      item.equipRace = document.getElementById('inp-equip-race').value || 'HUMAN';
       item.desc = document.getElementById('inp-desc').value.trim();
 
       // 收集專屬類型屬性
@@ -2106,6 +2185,81 @@
           }
         }
       ];
+    }
+
+    // ========================================================
+    // 一鍵生成隨機物品 Modal 控制邏輯
+    // ========================================================
+    const batchItemConfig = {
+      human: { COMMON: 5, UNCOMMON: 5, RARE: 5, EPIC: 5, LEGENDARY: 5, MYTHIC: 5 },
+      beast: { COMMON: 2, UNCOMMON: 2, RARE: 2, EPIC: 2, LEGENDARY: 2, MYTHIC: 2 },
+      monster: { COMMON: 2, UNCOMMON: 2, RARE: 2, EPIC: 2, LEGENDARY: 2, MYTHIC: 2 }
+    };
+
+    function openBatchItemsModal() {
+      const container = document.getElementById('batch-items-rows');
+      container.innerHTML = '';
+
+      Object.keys(TIER_CONFIG).forEach(tierKey => {
+        const info = TIER_CONFIG[tierKey];
+        const row = document.createElement('div');
+        row.style.cssText = 'display:grid; grid-template-columns: 140px 1fr 1fr 1fr; gap:8px; align-items:center;';
+        row.innerHTML = `
+          <span class="tier-badge ${info.class}" style="text-align:center;">${info.name} (${tierKey})</span>
+          <input type="number" class="form-input" style="padding:4px 8px;" min="0" max="20" value="${batchItemConfig.human[tierKey]}" onchange="onBatchItemCountChange('human','${tierKey}',this.value)">
+          <input type="number" class="form-input" style="padding:4px 8px;" min="0" max="20" value="${batchItemConfig.beast[tierKey]}" onchange="onBatchItemCountChange('beast','${tierKey}',this.value)">
+          <input type="number" class="form-input" style="padding:4px 8px;" min="0" max="20" value="${batchItemConfig.monster[tierKey]}" onchange="onBatchItemCountChange('monster','${tierKey}',this.value)">
+        `;
+        container.appendChild(row);
+      });
+
+      updateBatchItemsSummary();
+      document.getElementById('batch-items-modal').classList.add('show');
+    }
+
+    function closeBatchItemsModal() {
+      document.getElementById('batch-items-modal').classList.remove('show');
+    }
+
+    function onBatchItemCountChange(raceKey, tierKey, rawVal) {
+      batchItemConfig[raceKey][tierKey] = Math.max(0, Math.min(20, parseInt(rawVal, 10) || 0));
+      updateBatchItemsSummary();
+    }
+
+    function updateBatchItemsSummary() {
+      let hTotal = 0, bTotal = 0, mTotal = 0;
+      Object.keys(TIER_CONFIG).forEach(t => {
+        hTotal += batchItemConfig.human[t] * 6; // 6 大類
+        bTotal += batchItemConfig.beast[t] * 3; // 3 裝備大類
+        mTotal += batchItemConfig.monster[t] * 3; // 3 裝備大類
+      });
+      const total = hTotal + bTotal + mTotal;
+      document.getElementById('batch-items-summary').innerText =
+        `預計生成共 ${total} 件物品：👤 人類可用 ${hTotal} 件 ｜ 🐺 野獸敵裝 ${bTotal} 件 ｜ 👹 魔物敵裝 ${mTotal} 件`;
+    }
+
+    async function executeBatchItemsGeneration() {
+      const clearOld = document.getElementById('batch-items-clear').checked;
+      const generated = ItemGenerator.generateRaceBalancedCatalog({
+        humanCountsByTier: batchItemConfig.human,
+        beastCountsByTier: batchItemConfig.beast,
+        monsterCountsByTier: batchItemConfig.monster
+      });
+
+      if (clearOld) {
+        itemsCatalog = generated;
+      } else {
+        itemsCatalog = itemsCatalog.concat(generated);
+      }
+
+      currentSelectedId = null;
+      renderSidebar();
+      if (itemsCatalog.length > 0) {
+        selectItem(itemsCatalog[0].id);
+      }
+      await saveItemsToProject();
+      closeBatchItemsModal();
+      showToast(`✨ 已生成 ${generated.length} 件三族專屬與通用隨機物品並保存！`);
     }
   </script>
 </body>

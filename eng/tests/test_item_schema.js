@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
-const { generateDefaultCatalog, CATEGORIES, TIER_DEFS } = require('../../src/core/ItemGenerator');
+const { generateDefaultCatalog, generateRaceBalancedCatalog, CATEGORIES, TIER_DEFS } = require('../../src/core/ItemGenerator');
 
 const ITEMS_FILE = path.join(__dirname, '../../data/items.json');
 const DEFAULT_FILE = path.join(__dirname, '../../data/default.json');
@@ -104,7 +104,24 @@ function runTests() {
     assert.strictEqual(tierCount, 18, `品質 ${tier} 應剛好有 18 件 (6 類別 * 3 樣)，實際為: ${tierCount}`);
   });
 
-  console.log(`✅ Item Schema 驗證通過：共檢查了現存與生成之物品，全部符合各類各級 3 樣之 default 規範！`);
+  // 6. 依種族專用武器防具一鍵生成驗證 (人類預設 5 種，野獸/魔物預設 2 種)
+  const raceGenerated = generateRaceBalancedCatalog();
+  const equipCats = ['MELEE_WEAPON', 'RANGED_WEAPON', 'ARMOR'];
+  // 預期總數 = 6品質 * (人類 6類*5 + 野獸 3類*2 + 魔物 3類*2) = 6 * (30 + 6 + 6) = 252
+  assert.strictEqual(raceGenerated.length, 252, `預設三族一鍵生成應為 252 件，實際為: ${raceGenerated.length}`);
+  Object.keys(TIER_DEFS).forEach(tier => {
+    const humanEquip = raceGenerated.filter(i => i.tier === tier && i.equipRace === 'HUMAN');
+    const beastEquip = raceGenerated.filter(i => i.tier === tier && i.equipRace === 'BEAST');
+    const monsterEquip = raceGenerated.filter(i => i.tier === tier && i.equipRace === 'MONSTER');
+    assert.strictEqual(humanEquip.length, 15, `${tier} 人類專屬武器防具應為 3類*5 = 15 件`);
+    assert.strictEqual(beastEquip.length, 6, `${tier} 野獸敵人裝備應為 3類*2 = 6 件`);
+    assert.strictEqual(monsterEquip.length, 6, `${tier} 魔物敵人裝備應為 3類*2 = 6 件`);
+    beastEquip.concat(monsterEquip).forEach(eq => {
+      assert.ok(equipCats.includes(eq.category), `非人類敵裝 ${eq.name} 必須屬於武器或防具類別`);
+    });
+  });
+
+  console.log(`✅ Item Schema 驗證通過：共檢查了現存與生成之物品，全部符合各類各級 3 樣與三族專屬裝備之規範！`);
 }
 
 module.exports = { runTests };

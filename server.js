@@ -466,26 +466,6 @@ const server = http.createServer((req, res) => {
     const targetFile = pathname === '/api/martials/default' ? MARTIALS_DEFAULT_FILE : MARTIALS_FILE;
     if (!fs.existsSync(targetFile)) {
       ensureDefaultMartials();
-
-      // 檢測初始角色檔：若無則建立預設 default 角色實體庫 (三大種族、各形態、相異攻擊模式)
-      function ensureDefaultCharacters() {
-        const needsDefault = !fs.existsSync(CHARACTERS_DEFAULT_FILE);
-        const needsCharacters = !fs.existsSync(CHARACTERS_FILE);
-
-        if (needsDefault || needsCharacters) {
-          console.log('⚡ 檢測到尚未具備初始角色實體檔，自動生成 default 三大種族全形態角色庫...');
-          const defaultCharacters = CharacterGenerator.generateDefaultCatalog();
-          const content = JSON.stringify(defaultCharacters, null, 2);
-          if (!fs.existsSync(CHARACTERS_DEFAULT_FILE)) {
-            fs.writeFileSync(CHARACTERS_DEFAULT_FILE, content, 'utf8');
-          }
-          if (!fs.existsSync(CHARACTERS_FILE)) {
-            fs.writeFileSync(CHARACTERS_FILE, content, 'utf8');
-          }
-          console.log(`✅ 已成功生成並保存 default 角色實體資料庫，共 ${defaultCharacters.length} 組角色！`);
-        }
-      }
-      ensureDefaultCharacters();
     }
 
     fs.readFile(fs.existsSync(targetFile) ? targetFile : MARTIALS_DEFAULT_FILE, 'utf8', (err, data) => {

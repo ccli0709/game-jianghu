@@ -497,6 +497,51 @@
       display: none;
       z-index: 9999;
     }
+
+    /* 一鍵生成隨機角色 Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 6, 10, 0.82);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      width: 640px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #131622;
+      border: 1px solid #313852;
+      border-radius: 10px;
+      padding: 20px 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .modal-section {
+      background: #181c2b;
+      border: 1px solid #272e45;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tier-preview-box {
+      background: #0e111a;
+      border: 1px solid #242a3d;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 0.74rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
   </style>
 </head>
 
@@ -524,6 +569,7 @@
     </div>
 
     <div class="header-actions">
+      <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#f3e8ff;" onclick="openBatchCharModal()">✨ 一鍵生成隨機角色</button>
       <button class="btn btn-primary" onclick="saveCharactersToProject()">💾 保存至專案磁碟 (Ctrl+S)</button>
       <button class="btn" onclick="saveAsNewFile()">📄 另存為新檔</button>
       <button class="btn" style="border-color:#ea580c; color:#fdba74;" onclick="resetDefaultCharacters()">🔄 重置預設庫</button>
@@ -760,6 +806,58 @@
 
   <div id="toast-msg"></div>
 
+  <!-- 一鍵生成隨機角色 Modal -->
+  <div id="modal-batch-chars" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #24293d; padding-bottom:10px;">
+        <h2 style="font-size:1.05rem; color:#f8fafc;">✨ 一鍵生成隨機角色（《神龍大俠傳》《巫山傳》設定）</h2>
+        <button class="btn" style="padding:4px 10px;" onclick="closeBatchCharModal()">✕ 關閉</button>
+      </div>
+
+      <div style="background:#451a03; border:1px solid #b45309; color:#fde68a; padding:8px 12px; border-radius:6px; font-size:0.78rem;">
+        ⚠️ <b>注意</b>：執行後將<b>清空並刪除目前全部原有角色</b>，依下方設定重新生成三大種族、等級不重疊且三族戰力平衡的全新角色庫。
+      </div>
+
+      <div class="modal-section">
+        <div style="font-size:0.84rem; font-weight:700; color:#e2e8f0;">1. 設定三大種族形態層級數量（預設各 5 種）</div>
+        <div class="grid-form" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="form-group">
+            <label>👤 人類形態數 (1~10)</label>
+            <input type="number" class="form-control" id="batch-human-forms" value="5" min="1" max="10" oninput="updateBatchCharPreview()">
+          </div>
+          <div class="form-group">
+            <label>🐺 野獸形態數 (1~10)</label>
+            <input type="number" class="form-control" id="batch-beast-forms" value="5" min="1" max="10" oninput="updateBatchCharPreview()">
+          </div>
+          <div class="form-group">
+            <label>👹 魔物形態數 (1~10)</label>
+            <input type="number" class="form-control" id="batch-monster-forms" value="5" min="1" max="10" oninput="updateBatchCharPreview()">
+          </div>
+        </div>
+        <div class="grid-form" style="grid-template-columns: repeat(2, 1fr); margin-top:4px;">
+          <div class="form-group">
+            <label>每個形態生成角色數 (1~5)</label>
+            <input type="number" class="form-control" id="batch-chars-per-form" value="2" min="1" max="5" oninput="updateBatchCharPreview()">
+          </div>
+          <div class="form-group">
+            <label>世界等級上限 (10~100)</label>
+            <input type="number" class="form-control" id="batch-max-level" value="50" min="10" max="100" oninput="updateBatchCharPreview()">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div style="font-size:0.84rem; font-weight:700; color:#e2e8f0;">2. 層級與非重疊等級區間即時預覽</div>
+        <div id="batch-tier-preview" class="tier-preview-box"></div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn" onclick="closeBatchCharModal()">取消</button>
+        <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#fff;" onclick="executeBatchCharGeneration()">🚀 清空原角色並一鍵生成</button>
+      </div>
+    </div>
+  </div>
+
   <script src="src/core/CharacterGenerator.js"></script>
   <script>
     // ==========================================
@@ -771,14 +869,17 @@
     let currentRaceTab = 'ALL';
     let isConnectedToApi = false;
 
-    // 取得 Generator 常數定義
-    const RACES = typeof CharacterGenerator !== 'undefined' ? CharacterGenerator.RACES : {
-      HUMAN: { id: 'HUMAN', name: '人類', icon: '👤', forms: {} },
-      BEAST: { id: 'BEAST', name: '野獸', icon: '🐺', forms: {} },
-      MONSTER: { id: 'MONSTER', name: '魔物', icon: '👹', forms: {} }
-    };
-
-    const ATTACK_PATTERNS = typeof CharacterGenerator !== 'undefined' ? CharacterGenerator.ATTACK_PATTERNS : {};
+    // 確保常數參考存在 (CharacterGenerator.js 已注入 window.RACES / window.ATTACK_PATTERNS)
+    if (!window.RACES) {
+      window.RACES = {
+        HUMAN: { id: 'HUMAN', name: '人類', icon: '👤', forms: {} },
+        BEAST: { id: 'BEAST', name: '野獸', icon: '🐺', forms: {} },
+        MONSTER: { id: 'MONSTER', name: '魔物', icon: '👹', forms: {} }
+      };
+    }
+    if (!window.ATTACK_PATTERNS) {
+      window.ATTACK_PATTERNS = {};
+    }
 
     window.onload = async () => {
       initPatternSelect();
@@ -1049,11 +1150,27 @@
       recalcCombatPreview();
     }
 
+    function getRaceFormMap(raceId) {
+      const race = RACES[raceId] || RACES.HUMAN;
+      const map = { ...(race.forms || {}) };
+      charactersCatalog.forEach(ch => {
+        if (ch.race === raceId && ch.form && !map[ch.form]) {
+          map[ch.form] = {
+            id: ch.form,
+            name: ch.formName || ch.form,
+            minLevel: ch.minLevel || 1,
+            maxLevel: ch.maxLevel || 50
+          };
+        }
+      });
+      return map;
+    }
+
     function updateFormSelectOptions(raceId) {
       const sel = document.getElementById('f-form');
       sel.innerHTML = '';
-      const race = RACES[raceId] || RACES.HUMAN;
-      Object.values(race.forms).forEach(f => {
+      const formMap = getRaceFormMap(raceId);
+      Object.values(formMap).forEach(f => {
         const opt = document.createElement('option');
         opt.value = f.id;
         opt.innerText = `${f.name} (等級 ${f.minLevel}~${f.maxLevel})`;
@@ -1104,8 +1221,8 @@
       const c = getCurrent();
       if (!c) return;
       c.form = formId;
-      const race = RACES[c.race] || RACES.HUMAN;
-      const f = race.forms[formId] || Object.values(race.forms)[0];
+      const formMap = getRaceFormMap(c.race);
+      const f = formMap[formId] || Object.values(formMap)[0];
       c.formName = f.name;
       c.minLevel = f.minLevel;
       c.maxLevel = f.maxLevel;
@@ -1334,6 +1451,69 @@
       renderSidebar();
       if (charactersCatalog.length > 0) selectCharacter(charactersCatalog[0].id);
       showToast('✅ 已還原為官方預設角色庫');
+    }
+
+    // ==========================================
+    // 一鍵生成隨機角色 Modal 控制邏輯
+    // ==========================================
+    function openBatchCharModal() {
+      updateBatchCharPreview();
+      document.getElementById('modal-batch-chars').classList.add('open');
+    }
+
+    function closeBatchCharModal() {
+      document.getElementById('modal-batch-chars').classList.remove('open');
+    }
+
+    function updateBatchCharPreview() {
+      const hForms = Math.max(1, Math.min(10, parseInt(document.getElementById('batch-human-forms').value, 10) || 5));
+      const bForms = Math.max(1, Math.min(10, parseInt(document.getElementById('batch-beast-forms').value, 10) || 5));
+      const mForms = Math.max(1, Math.min(10, parseInt(document.getElementById('batch-monster-forms').value, 10) || 5));
+      const perForm = Math.max(1, Math.min(5, parseInt(document.getElementById('batch-chars-per-form').value, 10) || 2));
+      const maxLv = Math.max(10, Math.min(100, parseInt(document.getElementById('batch-max-level').value, 10) || 50));
+
+      const previewEl = document.getElementById('batch-tier-preview');
+      const configs = [
+        { id: 'HUMAN', label: '👤 人類', count: hForms },
+        { id: 'BEAST', label: '🐺 野獸', count: bForms },
+        { id: 'MONSTER', label: '👹 魔物', count: mForms }
+      ];
+
+      let html = '';
+      let totalChars = 0;
+      configs.forEach(cfg => {
+        const tiers = CharacterGenerator.buildNonOverlappingTiers(cfg.id, cfg.count, maxLv);
+        totalChars += cfg.count * perForm;
+        const tierStr = tiers.map(t => `${t.name} (Lv.${t.minLevel}~${t.maxLevel})`).join(' → ');
+        html += `<div style="margin-bottom:4px;"><b style="color:#e2e8f0;">${cfg.label} (${cfg.count}階 × ${perForm}名 = ${cfg.count * perForm}名)：</b><br>${tierStr}</div>`;
+      });
+      html += `<div style="margin-top:6px; color:#38bdf8; font-weight:bold;">預計總計生成：${totalChars} 名全新角色（原有角色將全數清空）</div>`;
+      previewEl.innerHTML = html;
+    }
+
+    async function executeBatchCharGeneration() {
+      const humanForms = Math.max(1, Math.min(10, parseInt(document.getElementById('batch-human-forms').value, 10) || 5));
+      const beastForms = Math.max(1, Math.min(10, parseInt(document.getElementById('batch-beast-forms').value, 10) || 5));
+      const monsterForms = Math.max(1, Math.min(10, parseInt(document.getElementById('batch-monster-forms').value, 10) || 5));
+      const charsPerForm = Math.max(1, Math.min(5, parseInt(document.getElementById('batch-chars-per-form').value, 10) || 2));
+      const maxLevelCap = Math.max(10, Math.min(100, parseInt(document.getElementById('batch-max-level').value, 10) || 50));
+
+      // 清空原有全部角色並重新生成平衡角色庫
+      charactersCatalog = CharacterGenerator.generateBalancedCatalog({
+        humanForms,
+        beastForms,
+        monsterForms,
+        charsPerForm,
+        maxLevelCap
+      });
+
+      renderSidebar();
+      if (charactersCatalog.length > 0) {
+        selectCharacter(charactersCatalog[0].id);
+      }
+      await saveCharactersToProject();
+      closeBatchCharModal();
+      showToast(`✨ 已清空舊角色並成功生成 ${charactersCatalog.length} 名三族平衡角色！`);
     }
   </script>
 </body>

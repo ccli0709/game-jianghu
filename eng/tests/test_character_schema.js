@@ -81,6 +81,47 @@ function runTests() {
   });
   console.log('  ✓ 三大種族動態隨機生成與等級邊界約束校驗通過');
 
+  // 6. 一鍵生成三族自訂形態數、非重疊等級區間與三族屬性平衡校驗
+  ['HUMAN', 'BEAST', 'MONSTER'].forEach(raceId => {
+    [3, 5, 7].forEach(cnt => {
+      const tiers = CharacterGenerator.buildNonOverlappingTiers(raceId, cnt, 50);
+      assert.strictEqual(tiers.length, cnt, `${raceId} 應生成 ${cnt} 種形態`);
+      assert.strictEqual(tiers[0].minLevel, 1, '第 1 階起點必須為 Lv.1');
+      assert.strictEqual(tiers[tiers.length - 1].maxLevel, 50, '最終階上限必須為 Lv.50');
+      for (let i = 0; i < tiers.length - 1; i++) {
+        assert.strictEqual(tiers[i].maxLevel + 1, tiers[i + 1].minLevel, `${raceId} 層級 ${i + 1} 與 ${i + 2} 等級區間不得重疊且須連續`);
+      }
+    });
+  });
+
+  const balancedCatalog = CharacterGenerator.generateBalancedCatalog({
+    humanForms: 5,
+    beastForms: 5,
+    monsterForms: 5,
+    charsPerForm: 2,
+    maxLevelCap: 50
+  });
+  assert.strictEqual(balancedCatalog.length, 30, '3族 × 5形態 × 2名 應生成 30 名角色');
+  const balancedNames = new Set();
+  balancedCatalog.forEach(c => {
+    const v = CharacterGenerator.validateCharacterSchema(c);
+    assert(v.valid, `一鍵生成角色 [${c.name}] 驗證失敗: ${v.message}`);
+    assert(!balancedNames.has(c.name), `角色名稱重複: ${c.name}`);
+    balancedNames.add(c.name);
+  });
+
+  // 同等級三種族屬性戰力平衡驗證
+  const calcPower = (attr) => attr.hp * 0.2 + attr.str * 2.2 + attr.agi * 1.8 + attr.con * 1.8 + attr.wis * 1.8 + attr.def * 2.5 + attr.speed * 0.4;
+  const pH = calcPower(CharacterGenerator.computeBalancedAttributes('HUMAN', 25, () => 0.5));
+  const pB = calcPower(CharacterGenerator.computeBalancedAttributes('BEAST', 25, () => 0.5));
+  const pM = calcPower(CharacterGenerator.computeBalancedAttributes('MONSTER', 25, () => 0.5));
+  const avgP = (pH + pB + pM) / 3;
+  [pH, pB, pM].forEach(p => {
+    const diffRatio = Math.abs(p - avgP) / avgP;
+    assert(diffRatio <= 0.1, `同等級三種族綜合戰力偏差過大 (${(diffRatio * 100).toFixed(1)}%)`);
+  });
+  console.log('  ✓ 一鍵生成自訂形態數、非重疊等級區間與三族屬性平衡校驗通過');
+
   console.log('✅ 角色實體、種族形態與相異攻擊模式 Schema 全數通過校驗！');
 }
 
