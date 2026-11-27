@@ -13,13 +13,13 @@
 ```
 +-------------------------------------------------------------------------+
 | Level 1: 世界地圖宏觀佈局 (World Map Grid)                                |
-| 規模: 寬高 1~128 區塊 (預設 16x16, 最大 16,384 個獨立大地圖)                 |
-| 規格約束: 每格代表一張專屬大地圖，嚴格唯一性排他約束 (非重複不可佔用)        |
+| 規模: 寬高 1~128 區塊 (預設 16x16, 最大 16,384 個獨立區域地圖)                 |
+| 規格約束: 每格代表一張專屬區域地圖，嚴格唯一性排他約束 (非重複不可佔用)        |
 +-------------------------------------------------------------------------+
                                    |
                                    v (雙向導航 / 跨界漫遊)
 +-------------------------------------------------------------------------+
-| Level 2: 大地圖探索區塊 (Overworld Chunk)                                 |
+| Level 2: 區域地圖探索區塊 (Overworld Chunk)                                 |
 | 規模: 16x16 網格地貌 (256 格, 單格 40x40 像素)                            |
 | 職責: 宏觀時序推演 (小時/時辰)、據點交互 (客棧/城鎮)、邊界無縫切換           |
 +-------------------------------------------------------------------------+
@@ -56,7 +56,7 @@ interface WorldMapConfig {
   chunkTileSize: number;    // 16
   cells: {
     [coordKey: string]: {   // 鍵值格式: "chunkX,chunkY" (例: "7,7")
-      mapFile: string;      // 大地圖檔案檔名 (例: "overworld_default.tmj")
+      mapFile: string;      // 區域地圖檔案檔名 (例: "overworld_default.tmj")
       name: string;         // 分境名稱 (例: "中原核心郡縣 (洛陽·龍門)")
       biome: BiomeType;     // 風貌類型: 'PLAINS' | 'MOUNTAIN' | 'SWAMP' | 'DESERT' | 'SNOW'
       assignedAt: string;   // ISO 8601 時間戳
@@ -65,7 +65,7 @@ interface WorldMapConfig {
 }
 ```
 
-### 2.2 大地圖與戰術地圖 Tiled 規範 (`.tmj` / `.json`)
+### 2.2 區域地圖與戰術地圖 Tiled 規範 (`.tmj` / `.json`)
 
 地圖檔案遵循 **Tiled Map Editor JSON 1.10** 工業規範，並透過頂層 `properties` 陣列承載江湖情報與任務鏈：
 
@@ -83,7 +83,7 @@ interface WorldMapConfig {
 #### 圖層規範
 1. **`Terrain_Layer` (tilelayer)**：
    * 尺寸: $16 \times 16$，`data` 陣列共 256 個 GID (1-based)。
-   * **大地圖 GID 映射**：
+   * **區域地圖 GID 映射**：
      * `1`: PLAINS (平原官道, 耗時 1h)
      * `2`: MOUNTAIN (高聳崇山, 耗時 999h 不可通行)
      * `3`: FOREST (黑風密林, 耗時 3h)
@@ -126,19 +126,19 @@ interface WorldMapConfig {
   * $05:00 \sim 06:00$：拂曉破曉 (冷藍色, Alpha 0.18)
 
 ### 3.2 跨區塊漫遊與 3×3 邊界雷達狀態機 (`ChunkTransitionSystem`)
-* **觸發條件**：玩家在大地圖網格坐標挪移，產生目標 $(nx, ny)$ 超出 $[0, 15]$ 邊界。
+* **觸發條件**：玩家在區域地圖網格坐標挪移，產生目標 $(nx, ny)$ 超出 $[0, 15]$ 邊界。
 * **跨圖向量轉換矩陣**：
   $$\begin{cases} nx < 0 \implies targetChunkX = curChunkX - 1, & enterX = 15, & enterY = ny \\ nx \ge 16 \implies targetChunkX = curChunkX + 1, & enterX = 0, & enterY = ny \\ ny < 0 \implies targetChunkY = curChunkY - 1, & enterX = nx, & enterY = 15 \\ ny \ge 16 \implies targetChunkY = curChunkY + 1, & enterX = nx, & enterY = 0 \end{cases}$$
 * **邊界裁決規則 (Boundary Arbitration)**：
   1. 若 $targetChunkX \notin [0, width-1]$ 或 $targetChunkY \notin [0, height-1]$ $\implies$ 觸發「世界極限邊界阻絕」，留在原地，雷達閃爍警示。
-  2. 若目標區塊未配置大地圖（`!worldData.cells[key]`） $\implies$ 觸發「未拓荒原阻絕」，留在原地，雷達閃爍警示。
-  3. 若目標區塊已配置大地圖 $\implies$ 執行無縫載入，耗時 1 小時，重構 SceneGraph，中心格轉移至新區塊。
+  2. 若目標區塊未配置區域地圖（`!worldData.cells[key]`） $\implies$ 觸發「未拓荒原阻絕」，留在原地，雷達閃爍警示。
+  3. 若目標區塊已配置區域地圖 $\implies$ 執行無縫載入，耗時 1 小時，重構 SceneGraph，中心格轉移至新區塊。
 * **3×3 雷達渲染狀態與佈局**：
   * **視窗佈局**：雷達 HUD 置於右側情報面板 (`#panel-overworld`) 最頂端，完全獨立於 640×640 遊戲畫布之外，確保遊戲地圖視野 100% 無遮擋。
   * 遍歷 $(\Delta x, \Delta y) \in \{-1, 0, 1\}^2$ 共 9 格。
   * 四正方向 $(\Delta x=0 \lor \Delta y=0)$ 若皆通暢，雷達狀態指示燈為綠燈；若任一正向受阻，狀態燈轉為黃燈並標註阻絕方位。
 
-### 3.3 大地圖移動速度與時辰耗費動態補間 (`MovementDynamics`)
+### 3.3 區域地圖移動速度與時辰耗費動態補間 (`MovementDynamics`)
 * **動態補間公式**：
   $$\text{lerpFactor} = \text{baseSpeed}(\text{hourCost}) \times \Delta t$$
   其中：
@@ -278,16 +278,16 @@ interface WorldMapConfig {
     * `AOE_NOVA` (滅世魔煞爆震)：以自身為中心蓄力引爆十字 4 格範圍魔氣衝擊波，威力 1.5x 並附帶眩暈擊退。
     * `STUN_GAZE` (幽冥恐懼凝視)：射程 3 格雙目射出攝魂陰光，90% 必定造成目標陷入【暈眩】。
 
-### 3.9 主角形態進化、等級瓶頸與大地圖突破特殊魔物系統 (Character Evolution & Breakthrough Boss)
+### 3.9 主角形態進化、等級瓶頸與區域地圖突破特殊魔物系統 (Character Evolution & Breakthrough Boss)
 
 1. **全域角色庫驅動**：
-   * 大地圖遊蕩散客與敵手（`roamingEnemies`）完全由 `src/core/CharacterGenerator.js` 角色庫資料庫及生態群落挑選演算法（`selectEnemyForEncounter`）動態生成，具備三大種族（`HUMAN`、`BEAST`、`MONSTER`）、形態與 12 種相異攻擊模式（`attackPattern`）。
+   * 區域地圖遊蕩散客與敵手（`roamingEnemies`）完全由 `src/core/CharacterGenerator.js` 角色庫資料庫及生態群落挑選演算法（`selectEnemyForEncounter`）動態生成，具備三大種族（`HUMAN`、`BEAST`、`MONSTER`）、形態與 12 種相異攻擊模式（`attackPattern`）。
 2. **主角人類初始規範**：
    * 主角種族綁定為人類（`HUMAN`），初始為最低形態鄉井平民（`CIVILIAN`，等級 1，等級區間 `[1, 5]`）。
    * 人物面板完整呈現種族、當前形態與當前形態等級上限（例如：`人類 · 鄉井平民 (當前上限 Lv.5)`）。
 3. **等級瓶頸約束與地圖特殊魔物降世**：
    * 當主角修為達到當前形態之最高等級（如平民 Lv.5、草莽 Lv.12、遊俠 Lv.20、菁英 Lv.30）時，經驗值封頂，鎖定 `isBreakthroughPending = true`。
-   * 自動調用 `spawnEvolutionBoss()` 於當前大地圖玩家鄰近安全通行地格召喚對應階梯的特殊突破魔物（`isEvolutionBoss = true`，紫黑煞氣微光光環與標記 `⚡【魔煞】`）。
+   * 自動調用 `spawnEvolutionBoss()` 於當前區域地圖玩家鄰近安全通行地格召喚對應階梯的特殊突破魔物（`isEvolutionBoss = true`，紫黑煞氣微光光環與標記 `⚡【魔煞】`）。
    * 戰報廣播天地異變與魔煞降臨警訊，未擊滅魔煞前無法越級升級。
 4. **戰鬥中相異攻擊模式真實執行**：
    * 戰鬥敵人行動（`executeEnemyAction`）完整對接執行其 `attackPattern`（如野獸疾影猛撲突進撲擊與暈眩、撕裂流血、怒吼削弱防禦、毒腺噴射中毒、魔物深淵地獄火海腐蝕地格、血魄冥氣吸血回復、滅世魔煞十字爆震擊退、幽冥恐懼凝視暈眩等），配合動態招式圖案、飄字傷害與受擊震顫動畫。
@@ -295,6 +295,16 @@ interface WorldMapConfig {
    * 戰勝擊倒 `isEvolutionBoss` 後，解除 `isBreakthroughPending` 瓶頸。
    * 呼叫 `handlePlayerFormEvolution()` 進化至下一形態（`CIVILIAN` -> `OUTLAW` -> `MARTIAL_ARTIST` -> `SECT_ELITE` -> `GRANDMASTER`）。
    * 解鎖全新等級上限，全基礎屬性永久提升（+3 ~ +8），發放巨額突破自由潛能點（+15 ~ +35 點），內力氣血完全充盈滿溢，並可繼續累積經驗升級。
+
+3.10 遊戲首頁、新江湖故事打包封裝與獨立遊戲存檔機制 (Story Home Screen & Save Isolation)
+---------------------------------------------------------------------------------------------------------
+1. **遊戲啟動首頁 (Home / Title Screen)**：
+   * 進入遊戲時優先展示沉浸式水墨江湖主選單（`#home-screen`），包含【踏入江湖 · 開啟新故事】、【故劍重溫 · 繼續江湖卷宗】與【乾坤推演 · 世界編輯器總覽】三大核心區塊。
+2. **全設定深拷貝打包另存機制**：
+   * 當啟動任一全新江湖故事時，系統自動將當前區域地圖（`maps/overworld_default.tmj`）、世界地圖 3x3 區塊配置（`world_default.json`）、全品類物品庫（`items.json`）、名門武學心法（`martials.json`）與全域角色庫（`characters.json`）深拷貝封裝，另存為獨立存檔檔案（`saves/story_<timestamp>.json`）。
+3. **冒險過程之資料隔離固化與編輯器隔離**：
+   * 遊戲進行中所有遭遇、物品掉落、敵人生成、招式研習與地貌漫遊，皆唯一讀寫當前存檔內的固化快照數據，絕不污染亦不受外部全域編輯器變更影響。
+   * 遊戲頂部 Header 完全移除所有 5 大編輯器跳轉按鈕，改為提供「📖 當前故事卷名」、「💾 保存進度」與「🚪 返回首頁」按鈕。
 
 ---
 
@@ -342,3 +352,12 @@ interface WorldMapConfig {
     * 回傳：預設全角色資料庫清單。
 18. `POST /api/characters/reset-default`
     * 動作：重設預設三大種族全形態角色資料庫，覆寫寫入 `characters.json` 與 `characters_default.json`。
+19. `GET /api/saves`
+    * 回傳：所有歷史故事存檔摘要陣列（包含 id, filename, title, heroName, level, formName, curChunkName, clock, updatedAt）。
+20. `GET /api/saves/:filename`
+    * 回傳：指定故事存檔之完整獨立封包 JSON。
+21. `POST /api/saves/:filename`
+    * 請求體：合法故事存檔 JSON 物件。
+    * 回傳：`{ success: true, message: string, filename: string, id: string }`，原子性保存至 `saves/` 目錄。
+22. `DELETE /api/saves/:filename`
+    * 動作：刪除指定存檔檔案。

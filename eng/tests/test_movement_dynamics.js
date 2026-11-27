@@ -1,6 +1,6 @@
 /**
  * test_movement_dynamics.js
- * 驗證 SPEC 3.3「大地圖移動速度與時辰耗費動態補間」與「防抖鎖定」計算
+ * 驗證 SPEC 3.3「區域地圖移動速度與時辰耗費動態補間」與「防抖鎖定」計算
  */
 const assert = require('assert');
 

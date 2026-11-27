@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000;
 const ROOT_DIR = __dirname;
 const MAPS_DIR = path.join(ROOT_DIR, 'maps');
 const DATA_DIR = path.join(ROOT_DIR, 'data');
+const SAVES_DIR = path.join(ROOT_DIR, 'saves');
 const ITEMS_FILE = path.join(DATA_DIR, 'items.json');
 const DEFAULT_FILE = path.join(DATA_DIR, 'default.json');
 const ITEMS_DEFAULT_FILE = path.join(DATA_DIR, 'items_default.json');
@@ -18,12 +19,15 @@ const ItemGenerator = require('./src/core/ItemGenerator');
 const MartialGenerator = require('./src/core/MartialGenerator');
 const CharacterGenerator = require('./src/core/CharacterGenerator');
 
-// 確保 maps 與 data 目錄存在
+// 確保 maps, data 與 saves 目錄存在
 if (!fs.existsSync(MAPS_DIR)) {
   fs.mkdirSync(MAPS_DIR, { recursive: true });
 }
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+if (!fs.existsSync(SAVES_DIR)) {
+  fs.mkdirSync(SAVES_DIR, { recursive: true });
 }
 
 // 檢測初始物品檔：若無則建立命名為 default (default.json)，各類物品各種等級分別隨機生成 3 樣並保存於 default
@@ -149,6 +153,51 @@ const server = http.createServer((req, res) => {
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(data);
+    });
+    return;
+  }
+
+  // API 3A: 批次儲存/清理並寫入多張區域地圖與世界地圖
+  if (req.method === 'POST' && pathname === '/api/maps/batch') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const payload = JSON.parse(body);
+        let deletedCount = 0;
+
+        if (payload.cleanupGenerated) {
+          const existingFiles = fs.readdirSync(MAPS_DIR);
+          for (const f of existingFiles) {
+            if (/^overworld_c\d+_\d+_/.test(f) && f.endsWith('.tmj')) {
+              fs.unlinkSync(path.join(MAPS_DIR, f));
+              deletedCount++;
+            }
+          }
+        }
+
+        let writtenCount = 0;
+        if (payload.maps && typeof payload.maps === 'object') {
+          for (const [fname, content] of Object.entries(payload.maps)) {
+            const safeName = path.basename(fname);
+            const filePath = path.join(MAPS_DIR, safeName);
+            const jsonStr = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
+            fs.writeFileSync(filePath, jsonStr, 'utf8');
+            writtenCount++;
+          }
+        }
+
+        if (payload.worldData) {
+          const worldPath = path.join(MAPS_DIR, 'world_default.json');
+          fs.writeFileSync(worldPath, JSON.stringify(payload.worldData, null, 2), 'utf8');
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, writtenCount, deletedCount }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: '批次寫入地圖失敗: ' + e.message }));
+      }
     });
     return;
   }
@@ -622,6 +671,129 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: e.message || '無效的 JSON 數據格式' }));
       }
     });
+    return;
+  }
+
+  // API 8.1: 取得所有遊戲故事存檔列表 (摘要資訊)
+  if (req.method === 'GET' && pathname === '/api/saves') {
+    fs.readdir(SAVES_DIR, (err, files) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      const jsonFiles = files.filter(f => f.endsWith('.json'));
+      const summaries = [];
+
+      for (const f of jsonFiles) {
+        try {
+          const content = fs.readFileSync(path.join(SAVES_DIR, f), 'utf8');
+          const save = JSON.parse(content);
+          summaries.push({
+            id: save.id || f.replace('.json', ''),
+            filename: f,
+            title: save.title || '江湖故事',
+            heroName: save.player?.name || save.heroName || '俠客',
+            realm: save.player?.realm || '初入江湖',
+            race: save.player?.race || 'HUMAN',
+            formName: save.player?.formName || '鄉井平民',
+            level: save.player?.level || 1,
+            gold: save.player?.gold || 0,
+            curChunkName: save.currentChunkName || '中原',
+            clock: save.clock || { day: 1, hour: 8 },
+            updatedAt: save.updatedAt || save.createdAt || new Date().toISOString(),
+            createdAt: save.createdAt || new Date().toISOString()
+          });
+        } catch (e) { }
+      }
+
+      // 按最後更新時間倒序排列
+      summaries.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(summaries));
+    });
+    return;
+  }
+
+  // API 8.2: 讀取指定獨立故事存檔完整資料
+  if (req.method === 'GET' && pathname.startsWith('/api/saves/')) {
+    const filename = path.basename(pathname.replace('/api/saves/', ''));
+    const safeName = filename.endsWith('.json') ? filename : `${filename}.json`;
+    const filePath = path.join(SAVES_DIR, safeName);
+
+    if (!fs.existsSync(filePath)) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: `存檔不存在: ${safeName}` }));
+      return;
+    }
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // API 8.3: 寫入/保存指定獨立故事存檔
+  if (req.method === 'POST' && pathname.startsWith('/api/saves/')) {
+    const filename = path.basename(pathname.replace('/api/saves/', ''));
+    const safeName = filename.endsWith('.json') ? filename : `${filename}.json`;
+    const filePath = path.join(SAVES_DIR, safeName);
+
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        parsed.updatedAt = new Date().toISOString();
+        const content = JSON.stringify(parsed, null, 2);
+        fs.writeFile(filePath, content, 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            message: `江湖故事存檔已保存至 ${safeName}`,
+            filename: safeName,
+            id: parsed.id || safeName.replace('.json', '')
+          }));
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message || '無效的 JSON 存檔格式' }));
+      }
+    });
+    return;
+  }
+
+  // API 8.4: 刪除指定故事存檔
+  if (req.method === 'DELETE' && pathname.startsWith('/api/saves/')) {
+    const filename = path.basename(pathname.replace('/api/saves/', ''));
+    const safeName = filename.endsWith('.json') ? filename : `${filename}.json`;
+    const filePath = path.join(SAVES_DIR, safeName);
+
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: `已成功刪除存檔 ${safeName}` }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    } else {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: `存檔不存在: ${safeName}` }));
+    }
     return;
   }
 

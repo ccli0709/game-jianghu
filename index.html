@@ -959,33 +959,364 @@
       color: #34d399;
       font-weight: 600;
     }
+
+    /* ========================================== */
+    /* 遊戲首頁 (Title / Home Screen) 專屬樣式 */
+    /* ========================================== */
+    #home-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(circle at 50% 35%, #18192a 0%, #08090d 85%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-y: auto;
+      user-select: none;
+    }
+
+    .home-badge {
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      padding: 4px 14px;
+      background: rgba(225, 29, 72, 0.18);
+      color: #fb7185;
+      border: 1px solid rgba(225, 29, 72, 0.4);
+      border-radius: 999px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .home-title {
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: 8px;
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, #ffffff 15%, #cbd5e1 55%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .home-subtitle {
+      font-size: 1rem;
+      color: #94a3b8;
+      letter-spacing: 4px;
+      margin-bottom: 40px;
+      font-weight: 500;
+    }
+
+    .home-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 260px);
+      gap: 20px;
+      margin-bottom: 25px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .home-menu-card {
+      background: #11131f;
+      border: 1px solid #23273c;
+      border-radius: 12px;
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s ease-in-out;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-menu-card:hover {
+      transform: translateY(-4px);
+      border-color: #3b82f6;
+      box-shadow: 0 16px 36px rgba(59, 130, 246, 0.25);
+      background: #141727;
+    }
+
+    .home-menu-card.primary {
+      border-color: #e11d48;
+      background: linear-gradient(180deg, #1f1422 0%, #11131f 100%);
+    }
+
+    .home-menu-card.primary:hover {
+      border-color: #fb7185;
+      box-shadow: 0 16px 36px rgba(225, 29, 72, 0.3);
+    }
+
+    .home-card-icon {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+    }
+
+    .home-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 6px;
+    }
+
+    .home-card-desc {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* 首頁模態彈窗 (建立新故事、讀檔、編輯器總覽) */
+    .home-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-modal-box {
+      background: #12141f;
+      border: 1px solid #292e46;
+      border-radius: 12px;
+      width: 580px;
+      max-width: 90vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+    }
+
+    .home-modal-header {
+      padding: 16px 22px;
+      background: #171927;
+      border-bottom: 1px solid #23273c;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .home-modal-body {
+      padding: 22px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .home-modal-footer {
+      padding: 14px 22px;
+      background: #171927;
+      border-top: 1px solid #23273c;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .save-slot-card {
+      background: #181b2a;
+      border: 1px solid #2b304a;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.18s;
+    }
+
+    .save-slot-card:hover {
+      border-color: #3b82f6;
+      background: #1e2236;
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- ========================================== -->
+  <!-- 遊戲首頁 (Title Screen) -->
+  <!-- ========================================== -->
+  <div id="home-screen">
+    <div class="home-badge">⚔️ 浮世漫遊 · 獨立卷宗體系</div>
+    <div class="home-title">浮世江湖</div>
+    <div class="home-subtitle">萬里關山孤劍去 · 一樽清酒酬恩仇</div>
+
+    <div class="home-menu-grid">
+      <div class="home-menu-card primary" onclick="openNewStoryModal()">
+        <div class="home-card-icon">⚔️</div>
+        <div class="home-card-title">踏入江湖</div>
+        <div class="home-card-desc">開啟新的江湖故事，將當前區域地圖、世界、物品、武學與角色庫另存打包為獨立存檔。</div>
+      </div>
+      <div class="home-menu-card" onclick="openLoadStoryModal()">
+        <div class="home-card-icon">📜</div>
+        <div class="home-card-title">故劍重溫</div>
+        <div class="home-card-desc">檢視並讀取過往已封裝的江湖故事卷宗，重返險惡江湖接續傳奇歷程。</div>
+      </div>
+      <div class="home-menu-card" onclick="openEditorsModal()">
+        <div class="home-card-icon">🔮</div>
+        <div class="home-card-title">乾坤推演</div>
+        <div class="home-card-desc">造物者專用：進入世界地圖、區域地圖、物品總管、武學心法與全域角色編輯器。</div>
+      </div>
+    </div>
+
+    <div style="color:#64748b; font-size:0.75rem; text-align:center; max-width:640px; line-height:1.6;">
+      ℹ️ <b>【封裝固化規範】</b> 每個江湖故事皆具備完全獨立之存檔封包，在冒險旅程中設定將徹底固化不可隨意變更，亦無需開啟編輯器。
+    </div>
+  </div>
+
+  <!-- 建立新江湖故事彈窗 -->
+  <div id="modal-new-story" class="home-modal-overlay">
+    <div class="home-modal-box">
+      <div class="home-modal-header">
+        <h3 style="font-size:1.1rem; color:#f8fafc; display:flex; align-items:center; gap:8px;">
+          <span>⚔️</span> 開啟新的江湖故事
+        </h3>
+        <button class="btn" style="padding:3px 9px;" onclick="closeModal('modal-new-story')">✕</button>
+      </div>
+      <div class="home-modal-body">
+        <div
+          style="background:#1e1b2e; border:1px solid #7c3aed; border-radius:6px; padding:10px 14px; margin-bottom:18px; font-size:0.78rem; color:#c4b5fd; line-height:1.5;">
+          ⚡ <b>存檔獨立封裝說明：</b><br>
+          本故事開啟時，系統將自動提取當前最新的<b>區域地圖、世界地圖 3x3
+            區塊、全品類物品庫、名門武學心法、三大種族角色設定</b>進行深拷貝打包，獨立保存為專屬故事存檔。冒險過程中數據完全自主獨立，絕不影響全域設定與其他故事。
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px; font-weight:bold;">
+            📖 江湖故事篇名
+          </label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="new-story-title" class="btn"
+              style="flex:1; text-align:left; padding:8px 12px; background:#0b0c10; border-color:#334155; color:#f8fafc;"
+              value="浮世行·暮雲初涉">
+            <button class="btn" style="padding:8px 12px; border-color:#6366f1; background:#312e81; color:#c7d2fe;"
+              onclick="randomizeStoryTitle()" title="隨機產生詩意篇名">🎲 隨機</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px; font-weight:bold;">
+            👤 主角俠客姓名 (初始人類·鄉井平民)
+          </label>
+          <input type="text" id="new-story-hero" class="btn"
+            style="width:100%; text-align:left; padding:8px 12px; background:#0b0c10; border-color:#334155; color:#f8fafc;"
+            value="李暮雲">
+        </div>
+
+        <div
+          style="background:#131522; border:1px solid #23273c; border-radius:6px; padding:12px; font-size:0.78rem; color:#94a3b8;">
+          <div style="color:#60a5fa; font-weight:bold; margin-bottom:4px;">📦 初始封裝包內含規格：</div>
+          <div>• 起始區域地圖：中原核心郡縣 (洛陽·龍門) [overworld_default.tmj]</div>
+          <div>• 世界地圖：中原核心 16x16 經緯宏觀九宮格</div>
+          <div>• 物品庫：全品類各級物品資料庫</div>
+          <div>• 武學庫：九大門派 18 部絕學心法</div>
+          <div>• 角色庫：三大種族 24 形態官方平衡角色設定</div>
+        </div>
+      </div>
+      <div class="home-modal-footer">
+        <button class="btn" onclick="closeModal('modal-new-story')">取消</button>
+        <button class="btn" id="btn-confirm-start-story"
+          style="background:#e11d48; border-color:#f43f5e; color:#ffffff; padding:6px 18px; font-weight:bold;"
+          onclick="handleStartNewStorySubmit()">正式啟程 · 進入江湖</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 讀取江湖故事卷宗彈窗 -->
+  <div id="modal-load-story" class="home-modal-overlay">
+    <div class="home-modal-box" style="width:680px;">
+      <div class="home-modal-header">
+        <h3 style="font-size:1.1rem; color:#f8fafc; display:flex; align-items:center; gap:8px;">
+          <span>📜</span> 故劍重溫 · 故事卷宗庫
+        </h3>
+        <button class="btn" style="padding:3px 9px;" onclick="closeModal('modal-load-story')">✕</button>
+      </div>
+      <div class="home-modal-body">
+        <div id="saves-list-container">
+          <div style="text-align:center; padding:30px; color:#64748b;">正在檢索江湖歷史卷宗...</div>
+        </div>
+      </div>
+      <div class="home-modal-footer">
+        <button class="btn" onclick="closeModal('modal-load-story')">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 乾坤推演 (世界編輯器總覽) 彈窗 -->
+  <div id="modal-editors" class="home-modal-overlay">
+    <div class="home-modal-box" style="width:620px;">
+      <div class="home-modal-header">
+        <h3 style="font-size:1.1rem; color:#f8fafc; display:flex; align-items:center; gap:8px;">
+          <span>🔮</span> 乾坤推演 · 全域世界編輯器
+        </h3>
+        <button class="btn" style="padding:3px 9px;" onclick="closeModal('modal-editors')">✕</button>
+      </div>
+      <div class="home-modal-body">
+        <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:14px;">
+          在此處可進入各項全域世界觀設定編輯器。請注意：編輯器修改之設定僅作為未來「新江湖故事」之預設範本，不會影響已在進行中的獨立故事存檔。
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <button class="btn" style="padding:14px; text-align:left; border-color:#059669; background:#064e3b;"
+            onclick="window.location.href='world_editor.html'">
+            <div style="font-size:1rem; font-weight:bold; color:#6ee7b7;">🌍 世界地圖編輯器</div>
+            <div style="font-size:0.72rem; color:#a7f3d0; margin-top:3px;">編排宏觀 16x16 世界區塊與相鄰漫遊配置</div>
+          </button>
+          <button class="btn" style="padding:14px; text-align:left; border-color:#0284c7; background:#0c2340;"
+            onclick="window.location.href='editor.html'">
+            <div style="font-size:1rem; font-weight:bold; color:#38bdf8;">🗺️ 區域地圖編輯器</div>
+            <div style="font-size:0.72rem; color:#bae6fd; margin-top:3px;">繪製局部 16x16 地貌瓦片與 POI 物件</div>
+          </button>
+          <button class="btn" style="padding:14px; text-align:left; border-color:#ea580c; background:#431407;"
+            onclick="window.location.href='item_manager.html'">
+            <div style="font-size:1rem; font-weight:bold; color:#fb923c;">💎 物品設計總管</div>
+            <div style="font-size:0.72rem; color:#fed7aa; margin-top:3px;">隨機生成與調校全品類裝備、丹藥與奇物</div>
+          </button>
+          <button class="btn" style="padding:14px; text-align:left; border-color:#8b5cf6; background:#2e1065;"
+            onclick="window.location.href='martial_manager.html'">
+            <div style="font-size:1rem; font-weight:bold; color:#c084fc;">📜 武學心法總管</div>
+            <div style="font-size:0.72rem; color:#e9d5ff; margin-top:3px;">配置外功招式、內功心法與 20 級成長矩陣</div>
+          </button>
+          <button class="btn"
+            style="padding:14px; text-align:left; border-color:#ec4899; background:#500724; grid-column:span 2;"
+            onclick="window.location.href='character_manager.html'">
+            <div style="font-size:1rem; font-weight:bold; color:#f472b6;">👾 角色實體總管</div>
+            <div style="font-size:0.72rem; color:#fbcfe8; margin-top:3px;">設定人類、野獸、魔物三大種族全形態與 12 種相異攻擊模式</div>
+          </button>
+        </div>
+      </div>
+      <div class="home-modal-footer">
+        <button class="btn" onclick="closeModal('modal-editors')">返回首頁</button>
+      </div>
+    </div>
+  </div>
+
   <header>
     <h1>
       浮世江湖
       <span class="engine-badge">Pixi.js v7 WebGL</span>
-      <span id="ui-mode-tag" class="mode-tag tag-overworld">大地圖漫遊</span>
+      <span id="ui-mode-tag" class="mode-tag tag-overworld">區域地圖漫遊</span>
     </h1>
     <div class="status-bar">
+      <!-- 遊戲進行中：移除所有編輯器按鈕，僅保留存檔與首頁導航 -->
+      <div class="status-item" id="header-story-badge"
+        style="background:#1e1b4b; border:1px solid #6366f1; border-radius:4px; padding:3px 9px; font-size:0.75rem; color:#c7d2fe; display:flex; align-items:center; gap:5px;">
+        📖 <b id="ui-story-title">江湖故事</b>
+      </div>
       <div class="status-item"><button class="btn"
-          style="padding:4px 10px; font-size:0.78rem; border-color:#059669; background:#064e3b;"
-          onclick="window.location.href='world_editor.html'">🌍 世界地圖</button></div>
+          style="padding:4px 10px; font-size:0.78rem; border-color:#059669; background:#064e3b; color:#6ee7b7;"
+          onclick="if(game) game.saveCurrentStory()">💾 保存進度</button></div>
       <div class="status-item"><button class="btn"
-          style="padding:4px 10px; font-size:0.78rem; border-color:#0284c7; background:#0c2340;"
-          onclick="window.location.href='editor.html'">🗺️ 地圖編輯器</button></div>
-      <div class="status-item"><button class="btn"
-          style="padding:4px 10px; font-size:0.78rem; border-color:#ea580c; background:#431407;"
-          onclick="window.location.href='item_manager.html'">💎 物品總管</button></div>
-      <div class="status-item"><button class="btn"
-          style="padding:4px 10px; font-size:0.78rem; border-color:#8b5cf6; background:#2e1065;"
-          onclick="window.location.href='martial_manager.html'">📜 武學心法</button></div>
-      <div class="status-item"><button class="btn"
-          style="padding:4px 10px; font-size:0.78rem; border-color:#ec4899; background:#500724;"
-          onclick="window.location.href='character_manager.html'">👾 角色總管</button></div>
+          style="padding:4px 10px; font-size:0.78rem; border-color:#64748b; background:#1e293b; color:#cbd5e1;"
+          onclick="returnToTitleScreen()">🚪 返回首頁</button></div>
       <div class="status-item"><button class="btn"
           style="padding:4px 10px; font-size:0.78rem; border-color:#3b82f6; background:#1a2333;"
           onclick="toggleCharacterDialog()"><kbd>C</kbd> 人物屬性</button></div>
@@ -1032,7 +1363,7 @@
             <div class="char-section-title">核心修為與潛能境界</div>
             <div id="c-breakthrough-alert"
               style="display:none; background:#450a0a; border:1px solid #dc2626; color:#fca5a5; font-size:0.74rem; padding:6px 10px; border-radius:4px; margin-bottom:8px; line-height:1.4;">
-              ⚡ <b>【形態封頂瓶頸】</b> 修為已達極限！大地圖已出現特殊突破魔物，前往誅滅魔煞方可破繭進化！
+              ⚡ <b>【形態封頂瓶頸】</b> 修為已達極限！區域地圖已出現特殊突破魔物，前往誅滅魔煞方可破繭進化！
             </div>
             <div class="stat-row">
               <span>所屬門派</span>
@@ -1237,7 +1568,7 @@
                 </div>
               </div>
               <div class="equip-name" id="eq-trinket-name">白玉長生珮</div>
-              <div class="equip-stat" id="eq-trinket-stat">生命上限 +20 ｜ 大地圖行進真氣自回 +2/h</div>
+              <div class="equip-stat" id="eq-trinket-stat">生命上限 +20 ｜ 區域地圖行進真氣自回 +2/h</div>
               <div class="equip-desc" id="eq-trinket-desc">溫潤羊脂古玉，暗藏靜氣凝神之微光。</div>
             </div>
           </div>
@@ -1283,7 +1614,7 @@
     </div>
 
     <aside id="sidebar">
-      <!-- 大地圖面板 -->
+      <!-- 區域地圖面板 -->
       <div class="panel" id="panel-overworld">
         <!-- 世界地圖 3x3 邊界雷達略縮圖 (獨立置於側邊欄，不遮擋遊戲畫布) -->
         <div id="world-radar-hud">
@@ -1301,7 +1632,7 @@
         </div>
 
         <div class="panel-title">
-          <span>大地圖目標與行囊</span>
+          <span>區域地圖目標與行囊</span>
           <span id="ui-lighting-tag" style="color:#fbbf24; font-size:0.75rem;">☼ 晨光熹微</span>
         </div>
 
@@ -1551,7 +1882,7 @@
     }
 
     // ==========================================
-    // 大地圖管理器
+    // 區域地圖管理器
     // ==========================================
     class OverworldManager {
       constructor(mapData) {
@@ -1568,7 +1899,10 @@
       createRoamingEnemy(x, y, biome = 'PLAINS', isBoss = false) {
         let charData = null;
         const playerLevel = (typeof game !== 'undefined' && game && game.player) ? (game.player.level || 1) : 1;
-        const catalog = (typeof game !== 'undefined' && game && game.characterCatalog) ? game.characterCatalog : null;
+        // 優先使用當前獨立存檔封裝固化之角色庫
+        const catalog = (typeof game !== 'undefined' && game && game.currentStory?.characters)
+          ? game.currentStory.characters
+          : ((typeof game !== 'undefined' && game && game.characterCatalog) ? game.characterCatalog : null);
 
         if (typeof CharacterGenerator !== 'undefined' && typeof CharacterGenerator.selectEnemyForEncounter === 'function') {
           charData = CharacterGenerator.selectEnemyForEncounter(biome, playerLevel, catalog);
@@ -2044,7 +2378,7 @@
               icon: '📿',
               tier: '寶器',
               tierClass: 'tier-gold',
-              stat: '生命上限 +20 ｜ 大地圖行進真氣自回 +2/h',
+              stat: '生命上限 +20 ｜ 區域地圖行進真氣自回 +2/h',
               desc: '溫潤羊脂古玉，暗藏靜氣凝神之微光。',
               attributes: { hpBonus: 20 }
             }
@@ -2128,6 +2462,9 @@
         this.overworld = new OverworldManager(DEFAULT_OVERWORLD_DATA);
         this.activeQuest = null;
 
+        // 故事存檔獨立封裝
+        this.currentStory = null;
+
         // 世界地圖當前區塊與巨觀資料
         this.curChunkX = 7;
         this.curChunkY = 7;
@@ -2175,7 +2512,7 @@
         this.battleContainer = new PIXI.Container();
         this.battleContainer.visible = false;
 
-        // 大地圖圖層
+        // 區域地圖圖層
         this.owTileGraphics = new PIXI.Graphics();
         this.owLabelsContainer = new PIXI.Container();
         this.owEnemiesContainer = new PIXI.Container();
@@ -2250,7 +2587,7 @@
         });
       }
 
-      // 重繪大地圖底層網格與據點文字
+      // 重繪區域地圖底層網格與據點文字
       rebuildOverworldDisplay() {
         this.owTileGraphics.clear();
         this.owLabelsContainer.removeChildren();
@@ -2862,7 +3199,7 @@
         this.overworld.roamingEnemies.push(evoBoss);
         this.updateOverworldEnemiesDisplay();
 
-        this.addLog(`<span class="log-combat" style="font-size:0.95rem; color:#f43f5e; font-weight:bold;">⚡【天地異變·魔煞降世】</span>你已修至【${p.formName}】極限瓶頸 (Lv.${p.level})！天道引動九幽魔煞，【${bossSpec.name}】降臨於大地圖 (${spawnX}, ${spawnY})！速速前往誅滅，方可破關進化至【${evoDef.nextFormName}】！`);
+        this.addLog(`<span class="log-combat" style="font-size:0.95rem; color:#f43f5e; font-weight:bold;">⚡【天地異變·魔煞降世】</span>你已修至【${p.formName}】極限瓶頸 (Lv.${p.level})！天道引動九幽魔煞，【${bossSpec.name}】降臨於區域地圖 (${spawnX}, ${spawnY})！速速前往誅滅，方可破關進化至【${evoDef.nextFormName}】！`);
       }
 
       // 增加人物修為經驗值 (升級系統，受種族與形態最高等級約束)
@@ -2887,7 +3224,7 @@
             p.exp = p.maxExp; // 封頂滿經驗
             p.isBreakthroughPending = true;
             this.spawnEvolutionBoss();
-            this.addLog(`<span class="log-warn" style="font-size:0.88rem; color:#f87171;">⚡【形態極限瓶頸】俠客修為已達【${p.formName}】巔峰 (Lv.${p.level} / 上限 Lv.${p.maxLevel})！需戰勝大地圖上的特殊突破魔物方能打破桎梏！</span>`);
+            this.addLog(`<span class="log-warn" style="font-size:0.88rem; color:#f87171;">⚡【形態極限瓶頸】俠客修為已達【${p.formName}】巔峰 (Lv.${p.level} / 上限 Lv.${p.maxLevel})！需戰勝區域地圖上的特殊突破魔物方能打破桎梏！</span>`);
             break;
           }
 
@@ -3075,7 +3412,7 @@
         const pBattle = document.getElementById('panel-battle');
 
         if (this.mode === MODE.OVERWORLD) {
-          modeTag.innerText = '大地圖漫遊';
+          modeTag.innerText = '區域地圖漫遊';
           modeTag.className = 'mode-tag tag-overworld';
           pOverworld.style.display = 'block';
           pBattle.style.display = 'none';
@@ -3106,7 +3443,7 @@
         }
       }
 
-      // --- 大地圖旅行與跨區塊漫遊 ---
+      // --- 區域地圖旅行與跨區塊漫遊 ---
       moveOverworld(dx, dy) {
         // 行走補間防抖鎖定：若上一格補間視覺未完成，暫緩連續跳步，確保跋涉沉浸節奏
         const curDist = Math.hypot(this.player.visualX - this.player.owX * TILE_PX, this.player.visualY - this.player.owY * TILE_PX);
@@ -3117,13 +3454,13 @@
         const nx = this.player.owX + dx;
         const ny = this.player.owY + dy;
 
-        // 1. 檢測是否跨越當前 16x16 大地圖邊緣 -> 觸發世界地圖相鄰區塊漫遊
+        // 1. 檢測是否跨越當前 16x16 區域地圖邊緣 -> 觸發世界地圖相鄰區塊漫遊
         if (nx < 0 || nx >= this.overworld.w || ny < 0 || ny >= this.overworld.h) {
           this.attemptChunkTransition(dx, dy, nx, ny);
           return;
         }
 
-        // 2. 當前大地圖內部地格通行性判斷
+        // 2. 當前區域地圖內部地格通行性判斷
         if (!this.overworld.isPassable(nx, ny)) {
           this.triggerBump(dx, dy);
           this.addLog('<span class="log-warn">【阻礙】</span>崇山峻嶺，無法翻越！');
@@ -3187,7 +3524,7 @@
           this.currentChunkName = curCell.name;
         }
 
-        // 載入當前大地圖檔案
+        // 載入當前區域地圖檔案
         await this.loadOverworldChunk(this.currentMapFile, curCell?.biome);
 
         this.updateWorldRadarUI();
@@ -3231,7 +3568,316 @@
         }
       }
 
-      // 嘗試跨越大地圖邊界
+      // 另存打包當前所有設定檔為全新獨立遊戲存檔並啟程
+      async startNewStory(title = '浮世行·暮雲初涉', heroName = '李暮雲') {
+        const storyId = `story_${Date.now()}`;
+        const finalTitle = (title || '').trim() || '浮世行·暮雲初涉';
+        const finalHero = (heroName || '').trim() || '李暮雲';
+
+        // 1. 抓取當前世界地圖設定 (深拷貝快照)
+        let worldDataSnapshot = {
+          width: 16,
+          height: 16,
+          cells: {
+            '7,7': { mapFile: 'overworld_default.tmj', name: '中原核心郡縣 (洛陽·龍門)', biome: 'PLAINS' },
+            '8,7': { mapFile: 'overworld_c8_7_plains_1uxj.tmj', name: '中原平原分境 (8, 7)', biome: 'PLAINS' },
+            '9,7': { mapFile: 'overworld_c9_7_plains_v4vu.tmj', name: '中原平原分境 (9, 7)', biome: 'PLAINS' },
+            '7,8': { mapFile: 'overworld_c7_8_mountain.tmj', name: '蜀道重巒分境 (7, 8)', biome: 'MOUNTAIN' },
+            '7,6': { mapFile: 'overworld_c7_6_snow.tmj', name: '長白雪域分境 (7, 6)', biome: 'SNOW' },
+            '6,7': { mapFile: 'overworld_c6_7_swamp.tmj', name: '苗疆迷沼分境 (6, 7)', biome: 'SWAMP' }
+          }
+        };
+        try {
+          const res = await fetch('/api/maps/world_default.json');
+          if (res.ok) {
+            const json = await res.json();
+            if (json && json.cells) worldDataSnapshot = json;
+          }
+        } catch (e) { }
+
+        // 2. 抓取起始區域地圖 TMJ 快照
+        const mapsSnapshot = {};
+        try {
+          const res = await fetch('/api/maps/overworld_default.tmj');
+          if (res.ok) {
+            mapsSnapshot['overworld_default.tmj'] = await res.json();
+          }
+        } catch (e) { }
+
+        // 3. 抓取物品庫設定 (固化)
+        let itemsSnapshot = [];
+        try {
+          const res = await fetch('/api/items');
+          if (res.ok) itemsSnapshot = await res.json();
+        } catch (e) { }
+        if (!itemsSnapshot || itemsSnapshot.length === 0) {
+          itemsSnapshot = typeof ItemGenerator !== 'undefined' ? ItemGenerator.generateDefaultCatalog(3) : [];
+        }
+
+        // 4. 抓取武學心法設定 (固化)
+        let martialsSnapshot = [];
+        try {
+          const res = await fetch('/api/martials');
+          if (res.ok) martialsSnapshot = await res.json();
+        } catch (e) { }
+        if (!martialsSnapshot || martialsSnapshot.length === 0) {
+          martialsSnapshot = typeof MartialGenerator !== 'undefined' ? MartialGenerator.generateDefaultMartials() : [];
+        }
+
+        // 5. 抓取角色實體設定 (固化)
+        let charactersSnapshot = [];
+        try {
+          const res = await fetch('/api/characters');
+          if (res.ok) charactersSnapshot = await res.json();
+        } catch (e) { }
+        if (!charactersSnapshot || charactersSnapshot.length === 0) {
+          charactersSnapshot = typeof CharacterGenerator !== 'undefined' ? CharacterGenerator.generateDefaultCatalog() : [];
+        }
+
+        // 6. 初始主角 (人類、鄉井平民、等級 1、上限 5)
+        const initialPlayer = {
+          name: finalHero,
+          title: '初入江湖的鄉民',
+          realm: '平民百姓',
+          race: 'HUMAN',
+          form: 'CIVILIAN',
+          formName: '鄉井平民',
+          level: 1,
+          minLevel: 1,
+          maxLevel: 5,
+          isBreakthroughPending: false,
+          exp: 0,
+          maxExp: 100,
+          freeAttributePoints: 5,
+          statuses: [],
+          sect: '尚未加入 (江湖散人)',
+          hp: 100,
+          maxHp: 100,
+          qi: 50,
+          maxQi: 50,
+          gold: 50,
+          speed: 85,
+          energy: 100,
+          stunnedTurns: 0,
+          hitShake: 0,
+          hitFlash: 0,
+          owX: 7,
+          owY: 4,
+          bx: 3,
+          by: 8,
+          currentMoveCost: 1,
+          visualX: 7 * TILE_PX,
+          visualY: 4 * TILE_PX,
+          attributes: { str: 20, agi: 20, con: 20, wis: 20, lck: 20, rep: 10, strain: 0 },
+          equipment: {
+            weapon: {
+              id: 'init_wpn_iron_sword',
+              name: '青銅短劍',
+              category: 'MELEE_WEAPON',
+              icon: '🗡️',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              stat: '攻擊 +12 ｜ 招式速度 +5%',
+              desc: '尋常市井防身所用青銅短劍，輕巧趁手。',
+              attributes: { atk: 12, speedMod: 5 }
+            },
+            armor: {
+              id: 'init_arm_cloth',
+              name: '粗布麻衣',
+              category: 'ARMOR',
+              icon: '🥋',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              stat: '防禦 +8 ｜ 氣血 +15',
+              desc: '尋常百姓所穿粗布麻衣，耐磨禦寒。',
+              attributes: { def: 8, hpBonus: 15 }
+            },
+            trinket: null
+          },
+          inventory: [
+            {
+              id: 'inv_init_bun',
+              name: '粗糧饅頭',
+              category: 'MEDICINE',
+              icon: '🥟',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              count: 4,
+              desc: '充飢果腹的市井乾糧，能溫暖腸胃回復些許氣血。',
+              stat: '氣血回復 +30 ｜ 真氣回復 +10',
+              attributes: { healHp: 30, healQi: 10 }
+            },
+            {
+              id: 'inv_init_herb',
+              name: '止血野草膏',
+              category: 'MEDICINE',
+              icon: '🌿',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              count: 2,
+              desc: '荒野採擷草藥搗製的藥膏，敷於傷處可止血。',
+              stat: '氣血回復 +45',
+              attributes: { healHp: 45, healQi: 0 }
+            }
+          ],
+          equippedCultivations: [
+            {
+              id: 'cul_neutral_basic_breathing',
+              name: '基礎吐納心法',
+              type: 'CULTIVATION',
+              sect: 'NEUTRAL',
+              sectName: '江湖散人',
+              icon: '🫁',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              maxLevel: 20,
+              currentLevel: 1,
+              exp: 0,
+              title: '初窺門徑',
+              desc: '江湖散客入門打坐行氣法門，調理內息，滋潤四肢百骸。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('CULTIVATION', { def: 8, hpMax: 25, qiMax: 20, regen: 2 }) : []
+            }
+          ],
+          equippedMartials: [
+            {
+              id: 'mar_neutral_taizu_fist',
+              name: '太祖長拳',
+              type: 'MARTIAL',
+              sect: 'NEUTRAL',
+              sectName: '江湖散人',
+              icon: '👊',
+              tier: '凡品',
+              tierClass: 'tier-white',
+              maxLevel: 20,
+              currentLevel: 1,
+              exp: 0,
+              title: '初窺門徑',
+              desc: '天下初學者通用外家拳術，招法樸實無華，出招時累積武功經驗。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('MARTIAL', { atk: 12, critRate: 5 }) : []
+            }
+          ],
+          learnedCultivations: [],
+          learnedMartials: []
+        };
+
+        // 7. 組合完整獨立存檔封包
+        const savePackage = {
+          id: storyId,
+          title: finalTitle,
+          heroName: initialPlayer.name,
+          version: '1.0.0',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          curChunkX: 7,
+          curChunkY: 7,
+          currentChunkName: '中原核心郡縣 (洛陽·龍門)',
+          currentMapFile: 'overworld_default.tmj',
+          worldData: worldDataSnapshot,
+          maps: mapsSnapshot,
+          items: itemsSnapshot,
+          martials: martialsSnapshot,
+          characters: charactersSnapshot,
+          player: initialPlayer,
+          clock: { day: 1, hour: 8 },
+          roamingEnemies: []
+        };
+
+        // 8. 儲存至伺服器 saves/ 與本地 LocalStorage
+        try {
+          await fetch(`/api/saves/${storyId}.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(savePackage)
+          });
+        } catch (e) { }
+
+        try {
+          localStorage.setItem(`JIANGHU_SAVE_${storyId}`, JSON.stringify(savePackage));
+        } catch (e) { }
+
+        // 9. 載入並開始冒險
+        await this.loadStory(savePackage);
+      }
+
+      // 載入指定獨立存檔並恢復所有固化設定
+      async loadStory(saveData) {
+        if (!saveData) return;
+        this.currentStory = saveData;
+
+        // 固化數據注入引擎
+        this.player = saveData.player;
+        this.clock = new WorldClock(saveData.clock?.day || 1, saveData.clock?.hour || 8);
+        this.curChunkX = saveData.curChunkX ?? 7;
+        this.curChunkY = saveData.curChunkY ?? 7;
+        this.currentChunkName = saveData.currentChunkName || '中原核心郡縣 (洛陽·龍門)';
+        this.currentMapFile = saveData.currentMapFile || 'overworld_default.tmj';
+        this.worldData = saveData.worldData;
+        this.itemsCatalog = saveData.items || [];
+        this.martialsCatalog = saveData.martials || [];
+        this.charactersCatalog = saveData.characters || [];
+
+        // 更新 Header 故事標題
+        const titleEl = document.getElementById('ui-story-title');
+        if (titleEl) titleEl.innerText = saveData.title || '江湖故事';
+
+        // 載入區域地圖資料 (優先使用存檔快照)
+        if (saveData.maps && saveData.maps[this.currentMapFile]) {
+          this.overworld.setFromTiled(saveData.maps[this.currentMapFile]);
+        } else {
+          await this.loadOverworldChunk(this.currentMapFile, 'PLAINS');
+        }
+
+        // 還原未消滅之敵人
+        if (Array.isArray(saveData.roamingEnemies) && saveData.roamingEnemies.length > 0) {
+          this.overworld.roamingEnemies = saveData.roamingEnemies;
+        }
+
+        // 隱藏首頁
+        const homeScreen = document.getElementById('home-screen');
+        if (homeScreen) homeScreen.style.display = 'none';
+
+        this.addLog(`<span class="log-world" style="font-size:0.95rem; color:#fde047; font-weight:bold;">📖【江湖卷宗展開】故事《${saveData.title}》已載入！少俠【${this.player.name}】重履江湖！</span>`);
+
+        this.updateUI();
+        if (typeof updateCharacterUI === 'function') updateCharacterUI();
+        if (typeof updateEquipmentUI === 'function') updateEquipmentUI();
+        this.rebuildOverworldDisplay();
+        this.updateWorldRadarUI();
+      }
+
+      // 保存當前故事進度至獨立存檔
+      async saveCurrentStory(silent = false) {
+        if (!this.currentStory) return;
+
+        // 同步所有動態遊戲狀態
+        this.currentStory.player = JSON.parse(JSON.stringify(this.player));
+        this.currentStory.clock = { day: this.clock.day, hour: this.clock.hour };
+        this.currentStory.curChunkX = this.curChunkX;
+        this.currentStory.curChunkY = this.curChunkY;
+        this.currentStory.currentChunkName = this.currentChunkName;
+        this.currentStory.currentMapFile = this.currentMapFile;
+        this.currentStory.roamingEnemies = JSON.parse(JSON.stringify(this.overworld.roamingEnemies));
+        this.currentStory.updatedAt = new Date().toISOString();
+
+        try {
+          await fetch(`/api/saves/${this.currentStory.id}.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(this.currentStory)
+          });
+        } catch (e) { }
+
+        try {
+          localStorage.setItem(`JIANGHU_SAVE_${this.currentStory.id}`, JSON.stringify(this.currentStory));
+        } catch (e) { }
+
+        if (!silent) {
+          this.addLog(`<span class="log-world" style="color:#6ee7b7; font-weight:bold;">💾【存檔成功】江湖歷程已妥善封存入卷宗《${this.currentStory.title}》！</span>`);
+          this.spawnDamageText(this.player.owX, this.player.owY, '進度已保存!', false, false, 'HEAL');
+        }
+      }
+
+      // 嘗試跨越區域地圖邊界
       async attemptChunkTransition(dx, dy, nx, ny) {
         let targetChunkX = this.curChunkX;
         let targetChunkY = this.curChunkY;
@@ -3255,12 +3901,12 @@
           return;
         }
 
-        // 2. 檢測世界地圖中是否有相鄰大地圖
+        // 2. 檢測世界地圖中是否有相鄰區域地圖
         const cellKey = `${targetChunkX},${targetChunkY}`;
         const targetCell = this.worldData?.cells?.[cellKey];
         if (!targetCell || !targetCell.mapFile) {
           this.triggerBump(dx, dy);
-          this.addLog(`<span class="log-warn">【世界邊界阻絕】</span>相鄰區塊 (${targetChunkX}, ${targetChunkY}) 尚未開闢大地圖，無路可通！可於【世界地圖編輯器】中指派大地圖。`);
+          this.addLog(`<span class="log-warn">【世界邊界阻絕】</span>相鄰區塊 (${targetChunkX}, ${targetChunkY}) 尚未開闢區域地圖，無路可通！可於【世界地圖編輯器】中指派區域地圖。`);
           this.flashRadarAlert();
           return;
         }
@@ -3286,7 +3932,7 @@
         // 跨越界碑耗時 1 小時
         this.clock.advance(1);
 
-        // 載入目標大地圖資料
+        // 載入目標區域地圖資料
         await this.loadOverworldChunk(targetCell.mapFile, targetCell.biome);
 
         this.addLog(`<span class="log-world">【跨界漫遊】</span>跨過界碑，自「${oldName}」踏入【${targetCell.name}】(${targetChunkX}, ${targetChunkY})！時序推移至 ${this.clock.getShichenName()}。`);
@@ -3297,10 +3943,20 @@
       }
 
       async loadOverworldChunk(mapFile, biome) {
+        // 若當前獨立存檔已有此區域地圖快照，直接使用存檔內容，絕不隨外部檔案變更！
+        if (this.currentStory?.maps?.[mapFile]) {
+          this.overworld.setFromTiled(this.currentStory.maps[mapFile]);
+          return;
+        }
+
         try {
           const res = await fetch(`/api/maps/${mapFile}`);
           if (res.ok) {
             const tiledJson = await res.json();
+            if (this.currentStory) {
+              if (!this.currentStory.maps) this.currentStory.maps = {};
+              this.currentStory.maps[mapFile] = tiledJson;
+            }
             this.overworld.setFromTiled(tiledJson);
             return;
           }
@@ -3352,16 +4008,16 @@
               if (isCenter) {
                 cell.className += ' radar-cell-center';
                 cell.innerHTML = `<span>★</span><span style="font-size:0.58rem;">${cx},${cy}</span>`;
-                cell.title = `【當前所在大地圖】(${cx}, ${cy}) ${this.currentChunkName}`;
+                cell.title = `【當前所在區域地圖】(${cx}, ${cy}) ${this.currentChunkName}`;
               } else if (chunkInfo) {
                 cell.className += ' radar-cell-connected';
                 const icon = this.getBiomeIcon(chunkInfo.biome);
                 cell.innerHTML = `<span>${icon}</span><span style="font-size:0.55rem;">${cx},${cy}</span>`;
-                cell.title = `[相鄰大地圖] (${cx}, ${cy}) ${chunkInfo.name} - 可直接漫遊跨越`;
+                cell.title = `[相鄰區域地圖] (${cx}, ${cy}) ${chunkInfo.name} - 可直接漫遊跨越`;
               } else {
                 cell.className += ' radar-cell-empty';
                 cell.innerHTML = '<span style="font-size:0.55rem; opacity:0.4;">—</span><span style="font-size:0.55rem; color:#64748b;">未拓</span>';
-                cell.title = `(${cx}, ${cy}) 未開闢大地圖 (無法通行)`;
+                cell.title = `(${cx}, ${cy}) 未開闢區域地圖 (無法通行)`;
                 if (isCard) blockedDirections.push(this.getDirectionName(dx, dy));
               }
             }
@@ -4051,12 +4707,245 @@
           }
         });
       }
+
+      // 返回江湖首頁
+      returnToTitleScreen() {
+        if (confirm('是否保存當前江湖歷程並返回首頁？')) {
+          if (this.currentStory) {
+            this.saveCurrentStory(true);
+          }
+          this.mode = MODE.OVERWORLD;
+          this.battleContainer.visible = false;
+          this.overworldContainer.visible = true;
+
+          const homeScreen = document.getElementById('home-screen');
+          if (homeScreen) homeScreen.style.display = 'flex';
+          initHomeScreen();
+        }
+      }
     }
 
     let game;
     window.onload = () => {
       game = new PixiGameEngine();
+      initHomeScreen();
     };
+
+    // ==========================================
+    // 遊戲首頁 (Title / Home Screen) 控制邏輯
+    // ==========================================
+    const POETIC_STORY_TITLES = [
+      '浮世行·暮雲初涉', '江南煙雨篇', '塞外狂沙錄', '洛陽殘陽曲',
+      '青衫走馬記', '幽燕白馬行', '巴蜀劍隱傳', '滄海橫流篇',
+      '長風破浪記', '冷月寒江錄', '風雲際會篇', '長安古道行',
+      '絕頂論劍錄', '碧血照丹青', '孤鴻踏雪記', '秋水明霞錄'
+    ];
+
+    function initHomeScreen() {
+      randomizeStoryTitle();
+    }
+
+    function randomizeStoryTitle() {
+      const input = document.getElementById('new-story-title');
+      if (input) {
+        const rand = POETIC_STORY_TITLES[Math.floor(Math.random() * POETIC_STORY_TITLES.length)];
+        input.value = rand;
+      }
+    }
+
+    function openNewStoryModal() {
+      randomizeStoryTitle();
+      const modal = document.getElementById('modal-new-story');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function openLoadStoryModal() {
+      const modal = document.getElementById('modal-load-story');
+      if (modal) {
+        modal.style.display = 'flex';
+        refreshSavesList();
+      }
+    }
+
+    function openEditorsModal() {
+      const modal = document.getElementById('modal-editors');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function handleStartNewStorySubmit() {
+      const titleInput = document.getElementById('new-story-title');
+      const heroInput = document.getElementById('new-story-hero');
+      const btn = document.getElementById('btn-confirm-start-story');
+
+      const title = (titleInput?.value || '').trim() || '浮世行·暮雲初涉';
+      const hero = (heroInput?.value || '').trim() || '李暮雲';
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = '正在封裝打包獨立存檔...';
+      }
+
+      try {
+        await game.startNewStory(title, hero);
+        closeModal('modal-new-story');
+      } catch (err) {
+        alert('啟動新故事失敗: ' + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = '正式啟程 · 進入江湖';
+        }
+      }
+    }
+
+    async function refreshSavesList() {
+      const container = document.getElementById('saves-list-container');
+      if (!container) return;
+
+      container.innerHTML = '<div style="text-align:center; padding:30px; color:#64748b;">正在檢索歷史卷宗...</div>';
+
+      const saveSummaries = [];
+      const seenIds = new Set();
+
+      // 1. 從伺服器拉取存檔
+      try {
+        const res = await fetch('/api/saves');
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list)) {
+            list.forEach(s => {
+              saveSummaries.push(s);
+              seenIds.add(s.id);
+            });
+          }
+        }
+      } catch (e) { }
+
+      // 2. 從本地 LocalStorage 拉取未同步或離線存檔
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('JIANGHU_SAVE_')) {
+            const raw = localStorage.getItem(key);
+            try {
+              const save = JSON.parse(raw);
+              if (save && save.id && !seenIds.has(save.id)) {
+                saveSummaries.push({
+                  id: save.id,
+                  filename: `${save.id}.json`,
+                  title: save.title || '江湖故事',
+                  heroName: save.player?.name || '俠客',
+                  realm: save.player?.realm || '初入江湖',
+                  race: save.player?.race || 'HUMAN',
+                  formName: save.player?.formName || '鄉井平民',
+                  level: save.player?.level || 1,
+                  gold: save.player?.gold || 0,
+                  curChunkName: save.currentChunkName || '中原',
+                  clock: save.clock || { day: 1, hour: 8 },
+                  updatedAt: save.updatedAt || new Date().toISOString()
+                });
+                seenIds.add(save.id);
+              }
+            } catch (e) { }
+          }
+        }
+      } catch (e) { }
+
+      if (saveSummaries.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:36px 20px; color:#64748b;">
+            <div style="font-size:2rem; margin-bottom:10px;">📜</div>
+            <div style="font-size:0.9rem; color:#94a3b8; font-weight:bold; margin-bottom:6px;">尚無江湖故事卷宗</div>
+            <div style="font-size:0.75rem;">請點擊首頁「踏入江湖」開啟一段全新的獨立江湖傳奇！</div>
+          </div>
+        `;
+        return;
+      }
+
+      // 按最後存檔時間倒序排列
+      saveSummaries.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      container.innerHTML = saveSummaries.map(s => {
+        const timeStr = s.clock ? `第 ${s.clock.day || 1} 日 ${s.clock.hour || 8}:00` : '';
+        const updatedTime = new Date(s.updatedAt).toLocaleString('zh-TW', { hour12: false });
+
+        return `
+          <div class="save-slot-card">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <b style="font-size:1.02rem; color:#f8fafc;">${s.title}</b>
+                <span style="font-size:0.72rem; padding:2px 8px; border-radius:4px; background:#1e1b4b; color:#a5b4fc; border:1px solid #4338ca;">
+                  ${s.race === 'HUMAN' ? '人類' : s.race} · ${s.formName || '鄉民'} (Lv.${s.level})
+                </span>
+              </div>
+              <div style="font-size:0.76rem; color:#94a3b8; margin-top:5px; display:flex; gap:12px;">
+                <span>👤 少俠: <b style="color:#60a5fa;">${s.heroName}</b></span>
+                <span>📍 境地: <b style="color:#fde047;">${s.curChunkName}</b></span>
+                <span>⏳ 時序: ${timeStr}</span>
+              </div>
+              <div style="font-size:0.7rem; color:#64748b; margin-top:4px;">
+                最後封存: ${updatedTime}
+              </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn" style="background:#2563eb; border-color:#3b82f6; color:#ffffff; padding:6px 14px; font-weight:bold;" onclick="loadStoryById('${s.id}')">進入故事</button>
+              <button class="btn" style="background:#450a0a; border-color:#dc2626; color:#fca5a5; padding:6px 10px;" onclick="deleteStoryById('${s.id}')" title="刪除此卷宗">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadStoryById(storyId) {
+      let saveData = null;
+
+      // 1. 先試從伺服器拉取
+      try {
+        const res = await fetch(`/api/saves/${storyId}.json`);
+        if (res.ok) saveData = await res.json();
+      } catch (e) { }
+
+      // 2. 若伺服器無則從 LocalStorage 讀取
+      if (!saveData) {
+        const localRaw = localStorage.getItem(`JIANGHU_SAVE_${storyId}`);
+        if (localRaw) {
+          try { saveData = JSON.parse(localRaw); } catch (e) { }
+        }
+      }
+
+      if (!saveData) {
+        alert('無法讀取該故事存檔，檔案可能已損壞或遺失！');
+        return;
+      }
+
+      closeModal('modal-load-story');
+      await game.loadStory(saveData);
+    }
+
+    async function deleteStoryById(storyId) {
+      if (!confirm('確定要永久刪除此江湖卷宗嗎？刪除後無法恢復！')) return;
+
+      try {
+        await fetch(`/api/saves/${storyId}.json`, { method: 'DELETE' });
+      } catch (e) { }
+
+      try {
+        localStorage.removeItem(`JIANGHU_SAVE_${storyId}`);
+      } catch (e) { }
+
+      refreshSavesList();
+    }
+
+    function returnToTitleScreen() {
+      if (game) {
+        game.returnToTitleScreen();
+      }
+    }
 
     // ==========================================
     // 人物詳細屬性視窗控制
@@ -4511,7 +5400,7 @@
       if (!p.inventory || p.inventory.length === 0) {
         invContainer.innerHTML = `
           <div style="text-align:center; padding:35px 10px; color:#64748b; font-size:0.8rem;">
-            隨身行囊空空如也，可在市鎮客棧購置或大地圖探尋獲取。
+            隨身行囊空空如也，可在市鎮客棧購置或區域地圖探尋獲取。
           </div>
         `;
         return;
@@ -4683,7 +5572,7 @@
       if (tile.id === 4 || tile.id === 3) {
         document.getElementById('town-title').innerText = tile.id === 4 ? '🍶 龍門客棧' : '🏯 洛陽大城官府';
 
-        // 1. 江湖說書打聽情報：直接取自大地圖的簡介與勢力設定
+        // 1. 江湖說書打聽情報：直接取自區域地圖的簡介與勢力設定
         const props = game.overworld.properties || {};
         const rumorP = document.getElementById('rumor-text');
         if (rumorP) {
@@ -4692,7 +5581,7 @@
           rumorP.innerText = `「${faction} ${desc}」`;
         }
 
-        // 2. 懸賞告示榜：隨機抽取大地圖設定的可能出現任務
+        // 2. 懸賞告示榜：隨機抽取區域地圖設定的可能出現任務
         const questsText = props.possibleQuests || '';
         const questList = questsText.split('\n').map(q => q.trim()).filter(Boolean);
         const questTitle = questList.length > 0

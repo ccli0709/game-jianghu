@@ -129,7 +129,7 @@ function runTests() {
   assert(player.level > 5, '進化後經驗值累積可順暢升級至 Lv.6+');
   console.log(`  ✓ 擊敗突破魔物成功進化至【${player.formName}】(上限 Lv.${player.maxLevel})，屬性與潛能獎勵派發無誤`);
 
-  // 5. 大地圖生態敵人挑選驗證
+  // 5. 區域地圖生態敵人挑選驗證
   const plainsEnemy = CharacterGenerator.selectEnemyForEncounter('PLAINS', 3);
   assert(plainsEnemy && plainsEnemy.name && plainsEnemy.attackPattern, '平原遭遇敵人必須合法');
   const swampEnemy = CharacterGenerator.selectEnemyForEncounter('SWAMP', 8);

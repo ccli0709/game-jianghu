@@ -4,12 +4,12 @@
 
 ## 1. 遊戲定位與核心哲學
 
-* **類型**：2D 俯視角（Top-Down）、**三層空間多尺度架構**（世界地圖宏觀佈局 $\rightarrow$ 大地圖小時時序探索 $\rightarrow$ 戰術小地圖死鬥博弈）。
+* **類型**：2D 俯視角（Top-Down）、**三層空間多尺度架構**（世界地圖宏觀佈局 $\rightarrow$ 區域地圖小時時序探索 $\rightarrow$ 戰術小地圖死鬥博弈）。
 * **平台目標**：Web 首發（瀏覽器即玩，HTML5 / WebGL / WebGPU），後續可無縫包裝跨平台（Electron / Tauri）。
 * **核心哲學**：
   * **三層空間多尺度分工**：
-    * **世界地圖（World Map，最大 128x128 區塊）**：掌管天下九州大勢、地理板塊接壤、門派領地疆界與大型天候生態圈。世界地圖上的每一格皆對應一張專屬大地圖，**且嚴格禁止重複使用相同大地圖（排他性唯一約束）**，確保天下山水千姿百態。
-    * **大地圖區塊（Overworld Chunk，16x16）**：專注於宏觀江湖旅行、時序推演（小時/十二時辰制）、情報打聽、門派勢力巡邏、懸賞接取與隨機奇遇。
+    * **世界地圖（World Map，最大 128x128 區塊）**：掌管天下九州大勢、地理板塊接壤、門派領地疆界與大型天候生態圈。世界地圖上的每一格皆對應一張專屬區域地圖，**且嚴格禁止重複使用相同區域地圖（排他性唯一約束）**，確保天下山水千姿百態。
+    * **區域地圖區塊（Overworld Chunk，16x16）**：專注於宏觀江湖旅行、時序推演（小時/十二時辰制）、情報打聽、門派勢力巡邏、懸賞接取與隨機奇遇。
     * **戰術小地圖（Tactical Arena，16x16）**：遇敵時依據當前地形（密林、客棧、水泊、荒野）動態生成微觀網格戰場，專注於招式預判、元素化學反應與擊退物理。
   * **環境即武器**：戰術場景內所有介質、地形、障礙具備物理/化學反應屬性。
   * **世界有記憶**：NPC 具備獨立記憶、動態人情網絡與死後生態位替補（權力真空）。
@@ -21,9 +21,9 @@
 
 ### 2.1 雙層時間流速體系
 
-遊戲劃分為「大地圖宏觀旅行時間」與「戰術微觀時間片」：
+遊戲劃分為「區域地圖宏觀旅行時間」與「戰術微觀時間片」：
 
-1. **大地圖小時與時辰制 (World Clock)**：
+1. **區域地圖小時與時辰制 (World Clock)**：
 
    * 宏觀時間以**小時 (Hour)** 與 **十二時辰**（子、丑、寅、卯、辰、巳、午、未、申、酉、戌、亥）為基本刻度。
    * **地塊小時消耗 (Overworld Terrain Time Cost)**：
@@ -42,10 +42,10 @@
 
 ### 2.2 跨區塊漫遊與 3×3 世界邊界雷達 (Seamless Transition & Boundary Radar)
 
-1. **大地圖相鄰跨區漫遊 (Chunk Transition)**：
-   * 當俠客在大地圖（16×16）移動抵達邊界時（如 $x=15$ 再向東、$y=15$ 再向南）：
+1. **區域地圖相鄰跨區漫遊 (Chunk Transition)**：
+   * 當俠客在區域地圖（16×16）移動抵達邊界時（如 $x=15$ 再向東、$y=15$ 再向南）：
      * 系統自動計算相鄰世界區塊坐標 $(targetChunkX, targetChunkY)$。
-     * 若世界地圖 [world_default.json](file:///d:/Repositories/game-jianghu/maps/world_default.json) 中已配置該相鄰大地圖，無縫執行跨界漫遊，消耗 1 小時旅途時序，出現在新大地圖之對應對側邊緣（如東出西進、南出北進），並即時載入該分境之 Tiled 地形與遊蕩生態。
+     * 若世界地圖 [world_default.json](file:///d:/Repositories/game-jianghu/maps/world_default.json) 中已配置該相鄰區域地圖，無縫執行跨界漫遊，消耗 1 小時旅途時序，出現在新區域地圖之對應對側邊緣（如東出西進、南出北進），並即時載入該分境之 Tiled 地形與遊蕩生態。
      * 若相鄰區塊未開闢或超出世界極限邊界（$<0$ 或 $\ge 128$），觸發阻絕警告並播放雷達紅光閃爍，杜絕穿模。
 2. **世界地圖 3×3 邊界略縮雷達 (Mini-World Boundary Radar)**：
    * 懸浮於遊戲畫布右上角，動態以當前玩家所在的區塊為中心繪製 9 個格子：
@@ -72,7 +72,7 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
 ### 3.2 業界標準 Tiled 宣告式地圖格式 (.tmj / .json)
 
 * 全面採用 2D 遊戲領域工業級標準 **Tiled Map Editor 格式**：
-  * **大地圖標準檔案**：[maps/overworld_default.tmj](file:///d:/Repositories/game-jianghu/maps/overworld_default.tmj)
+  * **區域地圖標準檔案**：[maps/overworld_default.tmj](file:///d:/Repositories/game-jianghu/maps/overworld_default.tmj)
     * `Terrain_Layer` (tilelayer)：1-indexed GID 映射地表類型（平原、崇山、密林、荒丘）。
     * `POIs_and_Entities` (objectgroup)：客棧 (INN)、城鎮 (TOWN) 與遊蕩怪生成點 (SPAWNER) 坐標與自訂屬性 (`hourCost`, `services`, `respawnHours`)。
   * **戰術地圖標準檔案**：[maps/arena_forest_ambush.tmj](file:///d:/Repositories/game-jianghu/maps/arena_forest_ambush.tmj)
@@ -84,7 +84,7 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
 專案自帶無需配置任何第三方服務的專屬地圖編輯工具 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)：
 
 * **專案地圖選單 (Project Map Selector)**：下拉選單直接檢視並切換專案 `maps/` 目錄內現有的所有 `.tmj` / `.json` 地圖，切換即時載入編輯。
-* **一鍵新增地圖 (New Map Modal)**：自訂地圖檔名（如 `arena_cave.tmj` 或 `overworld_south.tmj`）與地圖類型（大地圖 / 戰術圖），自動生成標準初始版型並直接納入專案。
+* **一鍵新增地圖 (New Map Modal)**：自訂地圖檔名（如 `arena_cave.tmj` 或 `overworld_south.tmj`）與地圖類型（區域地圖 / 戰術圖），自動生成標準初始版型並直接納入專案。
 * **江湖情報與城鎮任務配置 (Map Meta & Quest Pipeline)**：
   * **地圖簡介 (Description)**：自訂區域背景故事、地理險阻與風土傳聞。
   * **危險難度設定 (Difficulty)**：1~5 星級別評定（初入江湖、略有凶險、風雲變幻、凶險萬分、九死一生）。
@@ -101,12 +101,12 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
 
 專案提供掌管神州浩土宏觀佈局的專用編輯器 [world_editor.html](file:///d:/Repositories/game-jianghu/world_editor.html)：
 
-* **規格與規模**：支援最大 $128 \times 128$ 個大地圖區塊（即最多容納 $16,384$ 張獨立大地圖），預設規格為 $16 \times 16$ 區塊。
+* **規格與規模**：支援最大 $128 \times 128$ 個區域地圖區塊（即最多容納 $16,384$ 張獨立區域地圖），預設規格為 $16 \times 16$ 區塊。
 * **嚴格唯一性排他約束 (Non-duplication Guarantee)**：
-  * 世界地圖上的每一個區塊代表一張專屬大地圖。
-  * 挑選專案現有大地圖時，編輯器演算法自動排除所有已被其他區塊佔用的檔案，嚴格杜絕重複指派。
-* **程序化隨機大地圖生成 (Procedural Biome Generator)**：
-  * 當專案現有大地圖不足或需開闢新疆土時，可一鍵隨機生成五大地貌風格的大地圖：
+  * 世界地圖上的每一個區塊代表一張專屬區域地圖。
+  * 挑選專案現有區域地圖時，編輯器演算法自動排除所有已被其他區塊佔用的檔案，嚴格杜絕重複指派。
+* **程序化隨機區域地圖生成 (Procedural Biome Generator)**：
+  * 當專案現有區域地圖不足或需開闢新疆土時，可一鍵隨機生成五大地貌風格的區域地圖：
     * **中原草莽 (Plains)**：綠茵遍野、官道縱橫、散落客棧與茶棚。
     * **蜀道崇山 (Mountain)**：棧道險峰、高聳石壁阻絕、官道穿鑿峽谷。
     * **苗疆毒沼 (Swamp)**：迷離泥沼、毒草密林、水泊遍布。
@@ -118,7 +118,7 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
   * 支援滑鼠滾輪自由縮放 (12% ~ 400%)、滑鼠中鍵或空白鍵拖曳平移 (Pan/Zoom)。
 * **雙向無縫跳轉編輯**：
   * 點選任意已指派區塊，右側檢測器即時渲染 16x16 迷你地貌縮圖。
-  * 點擊「進入此大地圖編輯」一鍵跳轉至 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)，帶入該地圖檔名並直接進行細節微雕。
+  * 點擊「進入此區域地圖編輯」一鍵跳轉至 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)，帶入該地圖檔名並直接進行細節微雕。
 * **直存直取世界設定檔**：
   * 快捷鍵 <kbd>Ctrl+S</kbd> 或點擊保存，直接將世界架構持久化至專案 [maps/world_default.json](file:///d:/Repositories/game-jianghu/maps/world_default.json)。
 
@@ -211,7 +211,7 @@ export class TimeScheduler {
 ### 4.2 身上穿戴行頭 (Equipment Slots)
 
 * **主手兵刃 (Weapon)**：如【寒鐵青鋒劍】（上品），提供攻擊力、招式速度與特殊元素詞條（15% 觸發霜凍）。
-* **貼身防具 (Armor)**：如【流雲夜行袍】（良品），提供防禦力與大地圖夜行隱匿加成。
+* **貼身防具 (Armor)**：如【流雲夜行袍】（良品），提供防禦力與區域地圖夜行隱匿加成。
 * **腰佩靈寶 (Accessory)**：如【白玉長生珮】（寶器），提供生命上限與大圖行進真氣自回。
 * **快捷檢視操作**：任何時刻按下快捷鍵 <kbd>C</kbd> 或點擊頂部狀態欄「人物屬性與裝備」按鈕，即可瞬間喚出雙欄式人物儀表板。
 

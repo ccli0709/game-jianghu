@@ -1501,7 +1501,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">護身被動特質 / 特殊效果詞條</label>
-            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 大地圖行進真氣自回 +2/h ｜ 火傷害減免 20%">
+            <input type="text" id="attr-specialEffect" class="form-input" value="${attrs.specialEffect || ''}" placeholder="例如: 區域地圖行進真氣自回 +2/h ｜ 火傷害減免 20%">
           </div>
         `;
       } else if (category === 'MEDICINE') {
@@ -1538,7 +1538,7 @@
               <label class="form-label">戰鬥中是否可用</label>
               <select id="attr-combatUsable" class="form-select">
                 <option value="true" ${attrs.combatUsable !== false ? 'selected' : ''}>是 (戰鬥回合格中可服用)</option>
-                <option value="false" ${attrs.combatUsable === false ? 'selected' : ''}>否 (僅大地圖調息時使用)</option>
+                <option value="false" ${attrs.combatUsable === false ? 'selected' : ''}>否 (僅區域地圖調息時使用)</option>
               </select>
             </div>
             <div class="form-group">
@@ -1815,7 +1815,7 @@
         slots: ['貼身輕袍', '身軀重鎧', '踏雲軟靴', '護腕靈鐲', '腰佩靈寶', '護心重鏡'],
         effects: [
           '夜間旅行隱匿度 +25%，不易遭遇荒野仇家',
-          '大地圖行進真氣自回 +2/h，降低走火入魔風險',
+          '區域地圖行進真氣自回 +2/h，降低走火入魔風險',
           '受外功物理傷害降低 15%，堅若磐石',
           '戰鬥中挪移身法每步能量消耗減免 15 點',
           '免疫火海與沼澤的減速負面影響'
@@ -2079,7 +2079,7 @@
             strainRes: 25,
             dodgeMod: 5,
             stealthMod: 0,
-            specialEffect: '大地圖行進真氣自回 +2/h，降低走火入魔風險'
+            specialEffect: '區域地圖行進真氣自回 +2/h，降低走火入魔風險'
           }
         },
         {

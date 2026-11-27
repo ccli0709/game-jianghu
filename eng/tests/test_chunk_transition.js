@@ -37,13 +37,13 @@ class ChunkTransitionEngine {
       };
     }
 
-    // 2. 檢測相鄰大地圖是否存在
+    // 2. 檢測相鄰區域地圖是否存在
     const key = `${targetChunkX},${targetChunkY}`;
     const targetCell = this.cells[key];
     if (!targetCell || !targetCell.mapFile) {
       return {
         type: 'BLOCKED_UNEXPLORED',
-        reason: '相鄰區塊尚未開闢大地圖',
+        reason: '相鄰區塊尚未開闢區域地圖',
         targetChunk: [targetChunkX, targetChunkY]
       };
     }
@@ -114,7 +114,7 @@ function runTests() {
 
   // Test 3: 未開闢相鄰地圖阻絕 (在 x=0 向西走進入 6,7)
   const resWest = engine.calculateTransition(7, 7, 0, 8, -1, 0);
-  assert.strictEqual(resWest.type, 'BLOCKED_UNEXPLORED', '未配置大地圖之區塊必須攔截');
+  assert.strictEqual(resWest.type, 'BLOCKED_UNEXPLORED', '未配置區域地圖之區塊必須攔截');
 
   // Test 4: 世界極限邊界阻絕 (在 chunk 0,0 之 x=0 向西走出界)
   const resLimit = engine.calculateTransition(0, 0, 0, 5, -1, 0);

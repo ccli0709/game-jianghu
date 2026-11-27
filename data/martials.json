@@ -1,5 +1,243 @@
 [
   {
+    "id": "mar_rand_mwz3kzhv",
+    "name": "落英真經",
+    "type": "CULTIVATION",
+    "sect": "NEUTRAL",
+    "sectName": "江湖散人",
+    "icon": "🧘",
+    "cost": 0,
+    "range": 1,
+    "tier": "極品",
+    "tierClass": "tier-gold",
+    "maxLevel": 20,
+    "currentLevel": 1,
+    "exp": 0,
+    "desc": "源自江湖散人真傳秘錄，威力隨等級修為層層攀升。",
+    "levelBonuses": [
+      {
+        "level": 1,
+        "title": "初窺門徑",
+        "expNeeded": 50,
+        "def": 18,
+        "hpMax": 50,
+        "qiMax": 40,
+        "regen": 2,
+        "damageReduction": 0,
+        "summary": "護體防禦 +18 ｜ 氣血上限 +50 ｜ 真氣上限 +40 ｜ 每時辰調息 +2 ｜ 減傷 +0%"
+      },
+      {
+        "level": 2,
+        "title": "初窺門徑",
+        "expNeeded": 61,
+        "def": 23,
+        "hpMax": 64,
+        "qiMax": 51,
+        "regen": 3,
+        "damageReduction": 2,
+        "summary": "護體防禦 +23 ｜ 氣血上限 +64 ｜ 真氣上限 +51 ｜ 每時辰調息 +3 ｜ 減傷 +2%"
+      },
+      {
+        "level": 3,
+        "title": "初窺門徑",
+        "expNeeded": 74,
+        "def": 28,
+        "hpMax": 78,
+        "qiMax": 62,
+        "regen": 4,
+        "damageReduction": 4,
+        "summary": "護體防禦 +28 ｜ 氣血上限 +78 ｜ 真氣上限 +62 ｜ 每時辰調息 +4 ｜ 減傷 +4%"
+      },
+      {
+        "level": 4,
+        "title": "略有小成",
+        "expNeeded": 91,
+        "def": 33,
+        "hpMax": 92,
+        "qiMax": 74,
+        "regen": 4,
+        "damageReduction": 5,
+        "summary": "護體防禦 +33 ｜ 氣血上限 +92 ｜ 真氣上限 +74 ｜ 每時辰調息 +4 ｜ 減傷 +5%"
+      },
+      {
+        "level": 5,
+        "title": "略有小成",
+        "expNeeded": 111,
+        "def": 38,
+        "hpMax": 106,
+        "qiMax": 85,
+        "regen": 5,
+        "damageReduction": 7,
+        "summary": "護體防禦 +38 ｜ 氣血上限 +106 ｜ 真氣上限 +85 ｜ 每時辰調息 +5 ｜ 減傷 +7%"
+      },
+      {
+        "level": 6,
+        "title": "略有小成",
+        "expNeeded": 135,
+        "def": 43,
+        "hpMax": 120,
+        "qiMax": 96,
+        "regen": 6,
+        "damageReduction": 9,
+        "summary": "護體防禦 +43 ｜ 氣血上限 +120 ｜ 真氣上限 +96 ｜ 每時辰調息 +6 ｜ 減傷 +9%"
+      },
+      {
+        "level": 7,
+        "title": "駕輕就熟",
+        "expNeeded": 165,
+        "def": 48,
+        "hpMax": 134,
+        "qiMax": 107,
+        "regen": 7,
+        "damageReduction": 11,
+        "summary": "護體防禦 +48 ｜ 氣血上限 +134 ｜ 真氣上限 +107 ｜ 每時辰調息 +7 ｜ 減傷 +11%"
+      },
+      {
+        "level": 8,
+        "title": "駕輕就熟",
+        "expNeeded": 201,
+        "def": 53,
+        "hpMax": 148,
+        "qiMax": 118,
+        "regen": 8,
+        "damageReduction": 13,
+        "summary": "護體防禦 +53 ｜ 氣血上限 +148 ｜ 真氣上限 +118 ｜ 每時辰調息 +8 ｜ 減傷 +13%"
+      },
+      {
+        "level": 9,
+        "title": "駕輕就熟",
+        "expNeeded": 245,
+        "def": 58,
+        "hpMax": 162,
+        "qiMax": 130,
+        "regen": 8,
+        "damageReduction": 14,
+        "summary": "護體防禦 +58 ｜ 氣血上限 +162 ｜ 真氣上限 +130 ｜ 每時辰調息 +8 ｜ 減傷 +14%"
+      },
+      {
+        "level": 10,
+        "title": "融會貫通",
+        "expNeeded": 299,
+        "def": 63,
+        "hpMax": 176,
+        "qiMax": 141,
+        "regen": 9,
+        "damageReduction": 16,
+        "summary": "護體防禦 +63 ｜ 氣血上限 +176 ｜ 真氣上限 +141 ｜ 每時辰調息 +9 ｜ 減傷 +16%"
+      },
+      {
+        "level": 11,
+        "title": "融會貫通",
+        "expNeeded": 365,
+        "def": 68,
+        "hpMax": 190,
+        "qiMax": 152,
+        "regen": 10,
+        "damageReduction": 18,
+        "summary": "護體防禦 +68 ｜ 氣血上限 +190 ｜ 真氣上限 +152 ｜ 每時辰調息 +10 ｜ 減傷 +18%"
+      },
+      {
+        "level": 12,
+        "title": "融會貫通",
+        "expNeeded": 446,
+        "def": 73,
+        "hpMax": 204,
+        "qiMax": 163,
+        "regen": 11,
+        "damageReduction": 20,
+        "summary": "護體防禦 +73 ｜ 氣血上限 +204 ｜ 真氣上限 +163 ｜ 每時辰調息 +11 ｜ 減傷 +20%"
+      },
+      {
+        "level": 13,
+        "title": "爐火純青",
+        "expNeeded": 544,
+        "def": 78,
+        "hpMax": 218,
+        "qiMax": 174,
+        "regen": 12,
+        "damageReduction": 22,
+        "summary": "護體防禦 +78 ｜ 氣血上限 +218 ｜ 真氣上限 +174 ｜ 每時辰調息 +12 ｜ 減傷 +22%"
+      },
+      {
+        "level": 14,
+        "title": "爐火純青",
+        "expNeeded": 663,
+        "def": 84,
+        "hpMax": 232,
+        "qiMax": 186,
+        "regen": 12,
+        "damageReduction": 23,
+        "summary": "護體防禦 +84 ｜ 氣血上限 +232 ｜ 真氣上限 +186 ｜ 每時辰調息 +12 ｜ 減傷 +23%"
+      },
+      {
+        "level": 15,
+        "title": "爐火純青",
+        "expNeeded": 809,
+        "def": 89,
+        "hpMax": 246,
+        "qiMax": 197,
+        "regen": 13,
+        "damageReduction": 25,
+        "summary": "護體防禦 +89 ｜ 氣血上限 +246 ｜ 真氣上限 +197 ｜ 每時辰調息 +13 ｜ 減傷 +25%"
+      },
+      {
+        "level": 16,
+        "title": "出神入化",
+        "expNeeded": 987,
+        "def": 94,
+        "hpMax": 260,
+        "qiMax": 208,
+        "regen": 14,
+        "damageReduction": 27,
+        "summary": "護體防禦 +94 ｜ 氣血上限 +260 ｜ 真氣上限 +208 ｜ 每時辰調息 +14 ｜ 減傷 +27%"
+      },
+      {
+        "level": 17,
+        "title": "出神入化",
+        "expNeeded": 1204,
+        "def": 99,
+        "hpMax": 274,
+        "qiMax": 219,
+        "regen": 15,
+        "damageReduction": 29,
+        "summary": "護體防禦 +99 ｜ 氣血上限 +274 ｜ 真氣上限 +219 ｜ 每時辰調息 +15 ｜ 減傷 +29%"
+      },
+      {
+        "level": 18,
+        "title": "出神入化",
+        "expNeeded": 1469,
+        "def": 104,
+        "hpMax": 288,
+        "qiMax": 230,
+        "regen": 16,
+        "damageReduction": 31,
+        "summary": "護體防禦 +104 ｜ 氣血上限 +288 ｜ 真氣上限 +230 ｜ 每時辰調息 +16 ｜ 減傷 +31%"
+      },
+      {
+        "level": 19,
+        "title": "傲視群雄",
+        "expNeeded": 1792,
+        "def": 109,
+        "hpMax": 302,
+        "qiMax": 242,
+        "regen": 16,
+        "damageReduction": 32,
+        "summary": "護體防禦 +109 ｜ 氣血上限 +302 ｜ 真氣上限 +242 ｜ 每時辰調息 +16 ｜ 減傷 +32%"
+      },
+      {
+        "level": 20,
+        "title": "登峰造極",
+        "expNeeded": 0,
+        "def": 114,
+        "hpMax": 316,
+        "qiMax": 253,
+        "regen": 17,
+        "damageReduction": 34,
+        "summary": "護體防禦 +114 ｜ 氣血上限 +316 ｜ 真氣上限 +253 ｜ 每時辰調息 +17 ｜ 減傷 +34%"
+      }
+    ]
+  },
+  {
     "id": "mar_shaolin_luohan_fist",
     "name": "羅漢拳法",
     "type": "MARTIAL",
@@ -217,181 +455,181 @@
         "level": 1,
         "title": "初窺門徑",
         "expNeeded": 50,
-        "atk": 35,
-        "critRate": 14,
+        "atk": 16,
+        "critRate": 6,
         "armorPierce": 0,
-        "summary": "外功攻擊力 +35 ｜ 暴擊率 +14% ｜ 穿透護甲 +0"
+        "summary": "外功攻擊力 +16 ｜ 暴擊率 +6% ｜ 穿透護甲 +0"
       },
       {
         "level": 2,
         "title": "初窺門徑",
         "expNeeded": 61,
-        "atk": 45,
-        "critRate": 16,
+        "atk": 20,
+        "critRate": 8,
         "armorPierce": 3,
-        "summary": "外功攻擊力 +45 ｜ 暴擊率 +16% ｜ 穿透護甲 +3"
+        "summary": "外功攻擊力 +20 ｜ 暴擊率 +8% ｜ 穿透護甲 +3"
       },
       {
         "level": 3,
         "title": "初窺門徑",
         "expNeeded": 74,
-        "atk": 55,
-        "critRate": 18,
+        "atk": 25,
+        "critRate": 10,
         "armorPierce": 5,
-        "summary": "外功攻擊力 +55 ｜ 暴擊率 +18% ｜ 穿透護甲 +5"
+        "summary": "外功攻擊力 +25 ｜ 暴擊率 +10% ｜ 穿透護甲 +5"
       },
       {
         "level": 4,
         "title": "略有小成",
         "expNeeded": 91,
-        "atk": 64,
-        "critRate": 21,
+        "atk": 29,
+        "critRate": 13,
         "armorPierce": 8,
-        "summary": "外功攻擊力 +64 ｜ 暴擊率 +21% ｜ 穿透護甲 +8"
+        "summary": "外功攻擊力 +29 ｜ 暴擊率 +13% ｜ 穿透護甲 +8"
       },
       {
         "level": 5,
         "title": "略有小成",
         "expNeeded": 111,
-        "atk": 74,
-        "critRate": 23,
+        "atk": 34,
+        "critRate": 15,
         "armorPierce": 10,
-        "summary": "外功攻擊力 +74 ｜ 暴擊率 +23% ｜ 穿透護甲 +10"
+        "summary": "外功攻擊力 +34 ｜ 暴擊率 +15% ｜ 穿透護甲 +10"
       },
       {
         "level": 6,
         "title": "略有小成",
         "expNeeded": 135,
-        "atk": 84,
-        "critRate": 25,
+        "atk": 38,
+        "critRate": 17,
         "armorPierce": 13,
-        "summary": "外功攻擊力 +84 ｜ 暴擊率 +25% ｜ 穿透護甲 +13"
+        "summary": "外功攻擊力 +38 ｜ 暴擊率 +17% ｜ 穿透護甲 +13"
       },
       {
         "level": 7,
         "title": "駕輕就熟",
         "expNeeded": 165,
-        "atk": 94,
-        "critRate": 27,
+        "atk": 43,
+        "critRate": 19,
         "armorPierce": 15,
-        "summary": "外功攻擊力 +94 ｜ 暴擊率 +27% ｜ 穿透護甲 +15"
+        "summary": "外功攻擊力 +43 ｜ 暴擊率 +19% ｜ 穿透護甲 +15"
       },
       {
         "level": 8,
         "title": "駕輕就熟",
         "expNeeded": 201,
-        "atk": 104,
-        "critRate": 29,
+        "atk": 47,
+        "critRate": 21,
         "armorPierce": 18,
-        "summary": "外功攻擊力 +104 ｜ 暴擊率 +29% ｜ 穿透護甲 +18"
+        "summary": "外功攻擊力 +47 ｜ 暴擊率 +21% ｜ 穿透護甲 +18"
       },
       {
         "level": 9,
         "title": "駕輕就熟",
         "expNeeded": 245,
-        "atk": 113,
-        "critRate": 32,
+        "atk": 52,
+        "critRate": 24,
         "armorPierce": 20,
-        "summary": "外功攻擊力 +113 ｜ 暴擊率 +32% ｜ 穿透護甲 +20"
+        "summary": "外功攻擊力 +52 ｜ 暴擊率 +24% ｜ 穿透護甲 +20"
       },
       {
         "level": 10,
         "title": "融會貫通",
         "expNeeded": 299,
-        "atk": 123,
-        "critRate": 34,
+        "atk": 56,
+        "critRate": 26,
         "armorPierce": 23,
-        "summary": "外功攻擊力 +123 ｜ 暴擊率 +34% ｜ 穿透護甲 +23"
+        "summary": "外功攻擊力 +56 ｜ 暴擊率 +26% ｜ 穿透護甲 +23"
       },
       {
         "level": 11,
         "title": "融會貫通",
         "expNeeded": 365,
-        "atk": 133,
-        "critRate": 36,
+        "atk": 61,
+        "critRate": 28,
         "armorPierce": 25,
-        "summary": "外功攻擊力 +133 ｜ 暴擊率 +36% ｜ 穿透護甲 +25"
+        "summary": "外功攻擊力 +61 ｜ 暴擊率 +28% ｜ 穿透護甲 +25"
       },
       {
         "level": 12,
         "title": "融會貫通",
         "expNeeded": 446,
-        "atk": 143,
-        "critRate": 38,
+        "atk": 65,
+        "critRate": 30,
         "armorPierce": 28,
-        "summary": "外功攻擊力 +143 ｜ 暴擊率 +38% ｜ 穿透護甲 +28"
+        "summary": "外功攻擊力 +65 ｜ 暴擊率 +30% ｜ 穿透護甲 +28"
       },
       {
         "level": 13,
         "title": "爐火純青",
         "expNeeded": 544,
-        "atk": 153,
-        "critRate": 40,
+        "atk": 70,
+        "critRate": 32,
         "armorPierce": 30,
-        "summary": "外功攻擊力 +153 ｜ 暴擊率 +40% ｜ 穿透護甲 +30"
+        "summary": "外功攻擊力 +70 ｜ 暴擊率 +32% ｜ 穿透護甲 +30"
       },
       {
         "level": 14,
         "title": "爐火純青",
         "expNeeded": 663,
-        "atk": 162,
-        "critRate": 43,
+        "atk": 74,
+        "critRate": 35,
         "armorPierce": 33,
-        "summary": "外功攻擊力 +162 ｜ 暴擊率 +43% ｜ 穿透護甲 +33"
+        "summary": "外功攻擊力 +74 ｜ 暴擊率 +35% ｜ 穿透護甲 +33"
       },
       {
         "level": 15,
         "title": "爐火純青",
         "expNeeded": 809,
-        "atk": 172,
-        "critRate": 45,
+        "atk": 79,
+        "critRate": 37,
         "armorPierce": 35,
-        "summary": "外功攻擊力 +172 ｜ 暴擊率 +45% ｜ 穿透護甲 +35"
+        "summary": "外功攻擊力 +79 ｜ 暴擊率 +37% ｜ 穿透護甲 +35"
       },
       {
         "level": 16,
         "title": "出神入化",
         "expNeeded": 987,
-        "atk": 182,
-        "critRate": 47,
+        "atk": 83,
+        "critRate": 39,
         "armorPierce": 38,
-        "summary": "外功攻擊力 +182 ｜ 暴擊率 +47% ｜ 穿透護甲 +38"
+        "summary": "外功攻擊力 +83 ｜ 暴擊率 +39% ｜ 穿透護甲 +38"
       },
       {
         "level": 17,
         "title": "出神入化",
         "expNeeded": 1204,
-        "atk": 192,
-        "critRate": 49,
+        "atk": 88,
+        "critRate": 41,
         "armorPierce": 40,
-        "summary": "外功攻擊力 +192 ｜ 暴擊率 +49% ｜ 穿透護甲 +40"
+        "summary": "外功攻擊力 +88 ｜ 暴擊率 +41% ｜ 穿透護甲 +40"
       },
       {
         "level": 18,
         "title": "出神入化",
         "expNeeded": 1469,
-        "atk": 202,
-        "critRate": 51,
+        "atk": 92,
+        "critRate": 43,
         "armorPierce": 43,
-        "summary": "外功攻擊力 +202 ｜ 暴擊率 +51% ｜ 穿透護甲 +43"
+        "summary": "外功攻擊力 +92 ｜ 暴擊率 +43% ｜ 穿透護甲 +43"
       },
       {
         "level": 19,
         "title": "傲視群雄",
         "expNeeded": 1792,
-        "atk": 211,
-        "critRate": 54,
+        "atk": 97,
+        "critRate": 46,
         "armorPierce": 45,
-        "summary": "外功攻擊力 +211 ｜ 暴擊率 +54% ｜ 穿透護甲 +45"
+        "summary": "外功攻擊力 +97 ｜ 暴擊率 +46% ｜ 穿透護甲 +45"
       },
       {
         "level": 20,
         "title": "登峰造極",
         "expNeeded": 0,
-        "atk": 221,
-        "critRate": 56,
+        "atk": 101,
+        "critRate": 48,
         "armorPierce": 48,
-        "summary": "外功攻擊力 +221 ｜ 暴擊率 +56% ｜ 穿透護甲 +48"
+        "summary": "外功攻擊力 +101 ｜ 暴擊率 +48% ｜ 穿透護甲 +48"
       }
     ]
   },
@@ -891,181 +1129,181 @@
         "level": 1,
         "title": "初窺門徑",
         "expNeeded": 50,
-        "atk": 28,
-        "critRate": 10,
+        "atk": 16,
+        "critRate": 6,
         "armorPierce": 0,
-        "summary": "外功攻擊力 +28 ｜ 暴擊率 +10% ｜ 穿透護甲 +0"
+        "summary": "外功攻擊力 +16 ｜ 暴擊率 +6% ｜ 穿透護甲 +0"
       },
       {
         "level": 2,
         "title": "初窺門徑",
         "expNeeded": 61,
-        "atk": 36,
-        "critRate": 12,
+        "atk": 20,
+        "critRate": 8,
         "armorPierce": 3,
-        "summary": "外功攻擊力 +36 ｜ 暴擊率 +12% ｜ 穿透護甲 +3"
+        "summary": "外功攻擊力 +20 ｜ 暴擊率 +8% ｜ 穿透護甲 +3"
       },
       {
         "level": 3,
         "title": "初窺門徑",
         "expNeeded": 74,
-        "atk": 44,
-        "critRate": 14,
+        "atk": 25,
+        "critRate": 10,
         "armorPierce": 5,
-        "summary": "外功攻擊力 +44 ｜ 暴擊率 +14% ｜ 穿透護甲 +5"
+        "summary": "外功攻擊力 +25 ｜ 暴擊率 +10% ｜ 穿透護甲 +5"
       },
       {
         "level": 4,
         "title": "略有小成",
         "expNeeded": 91,
-        "atk": 52,
-        "critRate": 17,
+        "atk": 29,
+        "critRate": 13,
         "armorPierce": 8,
-        "summary": "外功攻擊力 +52 ｜ 暴擊率 +17% ｜ 穿透護甲 +8"
+        "summary": "外功攻擊力 +29 ｜ 暴擊率 +13% ｜ 穿透護甲 +8"
       },
       {
         "level": 5,
         "title": "略有小成",
         "expNeeded": 111,
-        "atk": 59,
-        "critRate": 19,
+        "atk": 34,
+        "critRate": 15,
         "armorPierce": 10,
-        "summary": "外功攻擊力 +59 ｜ 暴擊率 +19% ｜ 穿透護甲 +10"
+        "summary": "外功攻擊力 +34 ｜ 暴擊率 +15% ｜ 穿透護甲 +10"
       },
       {
         "level": 6,
         "title": "略有小成",
         "expNeeded": 135,
-        "atk": 67,
-        "critRate": 21,
+        "atk": 38,
+        "critRate": 17,
         "armorPierce": 13,
-        "summary": "外功攻擊力 +67 ｜ 暴擊率 +21% ｜ 穿透護甲 +13"
+        "summary": "外功攻擊力 +38 ｜ 暴擊率 +17% ｜ 穿透護甲 +13"
       },
       {
         "level": 7,
         "title": "駕輕就熟",
         "expNeeded": 165,
-        "atk": 75,
-        "critRate": 23,
+        "atk": 43,
+        "critRate": 19,
         "armorPierce": 15,
-        "summary": "外功攻擊力 +75 ｜ 暴擊率 +23% ｜ 穿透護甲 +15"
+        "summary": "外功攻擊力 +43 ｜ 暴擊率 +19% ｜ 穿透護甲 +15"
       },
       {
         "level": 8,
         "title": "駕輕就熟",
         "expNeeded": 201,
-        "atk": 83,
-        "critRate": 25,
+        "atk": 47,
+        "critRate": 21,
         "armorPierce": 18,
-        "summary": "外功攻擊力 +83 ｜ 暴擊率 +25% ｜ 穿透護甲 +18"
+        "summary": "外功攻擊力 +47 ｜ 暴擊率 +21% ｜ 穿透護甲 +18"
       },
       {
         "level": 9,
         "title": "駕輕就熟",
         "expNeeded": 245,
-        "atk": 91,
-        "critRate": 28,
+        "atk": 52,
+        "critRate": 24,
         "armorPierce": 20,
-        "summary": "外功攻擊力 +91 ｜ 暴擊率 +28% ｜ 穿透護甲 +20"
+        "summary": "外功攻擊力 +52 ｜ 暴擊率 +24% ｜ 穿透護甲 +20"
       },
       {
         "level": 10,
         "title": "融會貫通",
         "expNeeded": 299,
-        "atk": 99,
-        "critRate": 30,
+        "atk": 56,
+        "critRate": 26,
         "armorPierce": 23,
-        "summary": "外功攻擊力 +99 ｜ 暴擊率 +30% ｜ 穿透護甲 +23"
+        "summary": "外功攻擊力 +56 ｜ 暴擊率 +26% ｜ 穿透護甲 +23"
       },
       {
         "level": 11,
         "title": "融會貫通",
         "expNeeded": 365,
-        "atk": 106,
-        "critRate": 32,
+        "atk": 61,
+        "critRate": 28,
         "armorPierce": 25,
-        "summary": "外功攻擊力 +106 ｜ 暴擊率 +32% ｜ 穿透護甲 +25"
+        "summary": "外功攻擊力 +61 ｜ 暴擊率 +28% ｜ 穿透護甲 +25"
       },
       {
         "level": 12,
         "title": "融會貫通",
         "expNeeded": 446,
-        "atk": 114,
-        "critRate": 34,
+        "atk": 65,
+        "critRate": 30,
         "armorPierce": 28,
-        "summary": "外功攻擊力 +114 ｜ 暴擊率 +34% ｜ 穿透護甲 +28"
+        "summary": "外功攻擊力 +65 ｜ 暴擊率 +30% ｜ 穿透護甲 +28"
       },
       {
         "level": 13,
         "title": "爐火純青",
         "expNeeded": 544,
-        "atk": 122,
-        "critRate": 36,
+        "atk": 70,
+        "critRate": 32,
         "armorPierce": 30,
-        "summary": "外功攻擊力 +122 ｜ 暴擊率 +36% ｜ 穿透護甲 +30"
+        "summary": "外功攻擊力 +70 ｜ 暴擊率 +32% ｜ 穿透護甲 +30"
       },
       {
         "level": 14,
         "title": "爐火純青",
         "expNeeded": 663,
-        "atk": 130,
-        "critRate": 39,
+        "atk": 74,
+        "critRate": 35,
         "armorPierce": 33,
-        "summary": "外功攻擊力 +130 ｜ 暴擊率 +39% ｜ 穿透護甲 +33"
+        "summary": "外功攻擊力 +74 ｜ 暴擊率 +35% ｜ 穿透護甲 +33"
       },
       {
         "level": 15,
         "title": "爐火純青",
         "expNeeded": 809,
-        "atk": 138,
-        "critRate": 41,
+        "atk": 79,
+        "critRate": 37,
         "armorPierce": 35,
-        "summary": "外功攻擊力 +138 ｜ 暴擊率 +41% ｜ 穿透護甲 +35"
+        "summary": "外功攻擊力 +79 ｜ 暴擊率 +37% ｜ 穿透護甲 +35"
       },
       {
         "level": 16,
         "title": "出神入化",
         "expNeeded": 987,
-        "atk": 146,
-        "critRate": 43,
+        "atk": 83,
+        "critRate": 39,
         "armorPierce": 38,
-        "summary": "外功攻擊力 +146 ｜ 暴擊率 +43% ｜ 穿透護甲 +38"
+        "summary": "外功攻擊力 +83 ｜ 暴擊率 +39% ｜ 穿透護甲 +38"
       },
       {
         "level": 17,
         "title": "出神入化",
         "expNeeded": 1204,
-        "atk": 153,
-        "critRate": 45,
+        "atk": 88,
+        "critRate": 41,
         "armorPierce": 40,
-        "summary": "外功攻擊力 +153 ｜ 暴擊率 +45% ｜ 穿透護甲 +40"
+        "summary": "外功攻擊力 +88 ｜ 暴擊率 +41% ｜ 穿透護甲 +40"
       },
       {
         "level": 18,
         "title": "出神入化",
         "expNeeded": 1469,
-        "atk": 161,
-        "critRate": 47,
+        "atk": 92,
+        "critRate": 43,
         "armorPierce": 43,
-        "summary": "外功攻擊力 +161 ｜ 暴擊率 +47% ｜ 穿透護甲 +43"
+        "summary": "外功攻擊力 +92 ｜ 暴擊率 +43% ｜ 穿透護甲 +43"
       },
       {
         "level": 19,
         "title": "傲視群雄",
         "expNeeded": 1792,
-        "atk": 169,
-        "critRate": 50,
+        "atk": 97,
+        "critRate": 46,
         "armorPierce": 45,
-        "summary": "外功攻擊力 +169 ｜ 暴擊率 +50% ｜ 穿透護甲 +45"
+        "summary": "外功攻擊力 +97 ｜ 暴擊率 +46% ｜ 穿透護甲 +45"
       },
       {
         "level": 20,
         "title": "登峰造極",
         "expNeeded": 0,
-        "atk": 177,
-        "critRate": 52,
+        "atk": 101,
+        "critRate": 48,
         "armorPierce": 48,
-        "summary": "外功攻擊力 +177 ｜ 暴擊率 +52% ｜ 穿透護甲 +48"
+        "summary": "外功攻擊力 +101 ｜ 暴擊率 +48% ｜ 穿透護甲 +48"
       }
     ]
   },
@@ -1089,181 +1327,181 @@
         "level": 1,
         "title": "初窺門徑",
         "expNeeded": 50,
-        "atk": 18,
-        "critRate": 8,
+        "atk": 16,
+        "critRate": 6,
         "armorPierce": 0,
-        "summary": "外功攻擊力 +18 ｜ 暴擊率 +8% ｜ 穿透護甲 +0"
+        "summary": "外功攻擊力 +16 ｜ 暴擊率 +6% ｜ 穿透護甲 +0"
       },
       {
         "level": 2,
         "title": "初窺門徑",
         "expNeeded": 61,
-        "atk": 23,
-        "critRate": 10,
+        "atk": 20,
+        "critRate": 8,
         "armorPierce": 3,
-        "summary": "外功攻擊力 +23 ｜ 暴擊率 +10% ｜ 穿透護甲 +3"
+        "summary": "外功攻擊力 +20 ｜ 暴擊率 +8% ｜ 穿透護甲 +3"
       },
       {
         "level": 3,
         "title": "初窺門徑",
         "expNeeded": 74,
-        "atk": 28,
-        "critRate": 12,
+        "atk": 25,
+        "critRate": 10,
         "armorPierce": 5,
-        "summary": "外功攻擊力 +28 ｜ 暴擊率 +12% ｜ 穿透護甲 +5"
+        "summary": "外功攻擊力 +25 ｜ 暴擊率 +10% ｜ 穿透護甲 +5"
       },
       {
         "level": 4,
         "title": "略有小成",
         "expNeeded": 91,
-        "atk": 33,
-        "critRate": 15,
+        "atk": 29,
+        "critRate": 13,
         "armorPierce": 8,
-        "summary": "外功攻擊力 +33 ｜ 暴擊率 +15% ｜ 穿透護甲 +8"
+        "summary": "外功攻擊力 +29 ｜ 暴擊率 +13% ｜ 穿透護甲 +8"
       },
       {
         "level": 5,
         "title": "略有小成",
         "expNeeded": 111,
-        "atk": 38,
-        "critRate": 17,
+        "atk": 34,
+        "critRate": 15,
         "armorPierce": 10,
-        "summary": "外功攻擊力 +38 ｜ 暴擊率 +17% ｜ 穿透護甲 +10"
+        "summary": "外功攻擊力 +34 ｜ 暴擊率 +15% ｜ 穿透護甲 +10"
       },
       {
         "level": 6,
         "title": "略有小成",
         "expNeeded": 135,
-        "atk": 43,
-        "critRate": 19,
+        "atk": 38,
+        "critRate": 17,
         "armorPierce": 13,
-        "summary": "外功攻擊力 +43 ｜ 暴擊率 +19% ｜ 穿透護甲 +13"
+        "summary": "外功攻擊力 +38 ｜ 暴擊率 +17% ｜ 穿透護甲 +13"
       },
       {
         "level": 7,
         "title": "駕輕就熟",
         "expNeeded": 165,
-        "atk": 48,
-        "critRate": 21,
+        "atk": 43,
+        "critRate": 19,
         "armorPierce": 15,
-        "summary": "外功攻擊力 +48 ｜ 暴擊率 +21% ｜ 穿透護甲 +15"
+        "summary": "外功攻擊力 +43 ｜ 暴擊率 +19% ｜ 穿透護甲 +15"
       },
       {
         "level": 8,
         "title": "駕輕就熟",
         "expNeeded": 201,
-        "atk": 53,
-        "critRate": 23,
+        "atk": 47,
+        "critRate": 21,
         "armorPierce": 18,
-        "summary": "外功攻擊力 +53 ｜ 暴擊率 +23% ｜ 穿透護甲 +18"
+        "summary": "外功攻擊力 +47 ｜ 暴擊率 +21% ｜ 穿透護甲 +18"
       },
       {
         "level": 9,
         "title": "駕輕就熟",
         "expNeeded": 245,
-        "atk": 58,
-        "critRate": 26,
+        "atk": 52,
+        "critRate": 24,
         "armorPierce": 20,
-        "summary": "外功攻擊力 +58 ｜ 暴擊率 +26% ｜ 穿透護甲 +20"
+        "summary": "外功攻擊力 +52 ｜ 暴擊率 +24% ｜ 穿透護甲 +20"
       },
       {
         "level": 10,
         "title": "融會貫通",
         "expNeeded": 299,
-        "atk": 63,
-        "critRate": 28,
+        "atk": 56,
+        "critRate": 26,
         "armorPierce": 23,
-        "summary": "外功攻擊力 +63 ｜ 暴擊率 +28% ｜ 穿透護甲 +23"
+        "summary": "外功攻擊力 +56 ｜ 暴擊率 +26% ｜ 穿透護甲 +23"
       },
       {
         "level": 11,
         "title": "融會貫通",
         "expNeeded": 365,
-        "atk": 68,
-        "critRate": 30,
+        "atk": 61,
+        "critRate": 28,
         "armorPierce": 25,
-        "summary": "外功攻擊力 +68 ｜ 暴擊率 +30% ｜ 穿透護甲 +25"
+        "summary": "外功攻擊力 +61 ｜ 暴擊率 +28% ｜ 穿透護甲 +25"
       },
       {
         "level": 12,
         "title": "融會貫通",
         "expNeeded": 446,
-        "atk": 73,
-        "critRate": 32,
+        "atk": 65,
+        "critRate": 30,
         "armorPierce": 28,
-        "summary": "外功攻擊力 +73 ｜ 暴擊率 +32% ｜ 穿透護甲 +28"
+        "summary": "外功攻擊力 +65 ｜ 暴擊率 +30% ｜ 穿透護甲 +28"
       },
       {
         "level": 13,
         "title": "爐火純青",
         "expNeeded": 544,
-        "atk": 78,
-        "critRate": 34,
+        "atk": 70,
+        "critRate": 32,
         "armorPierce": 30,
-        "summary": "外功攻擊力 +78 ｜ 暴擊率 +34% ｜ 穿透護甲 +30"
+        "summary": "外功攻擊力 +70 ｜ 暴擊率 +32% ｜ 穿透護甲 +30"
       },
       {
         "level": 14,
         "title": "爐火純青",
         "expNeeded": 663,
-        "atk": 84,
-        "critRate": 37,
+        "atk": 74,
+        "critRate": 35,
         "armorPierce": 33,
-        "summary": "外功攻擊力 +84 ｜ 暴擊率 +37% ｜ 穿透護甲 +33"
+        "summary": "外功攻擊力 +74 ｜ 暴擊率 +35% ｜ 穿透護甲 +33"
       },
       {
         "level": 15,
         "title": "爐火純青",
         "expNeeded": 809,
-        "atk": 89,
-        "critRate": 39,
+        "atk": 79,
+        "critRate": 37,
         "armorPierce": 35,
-        "summary": "外功攻擊力 +89 ｜ 暴擊率 +39% ｜ 穿透護甲 +35"
+        "summary": "外功攻擊力 +79 ｜ 暴擊率 +37% ｜ 穿透護甲 +35"
       },
       {
         "level": 16,
         "title": "出神入化",
         "expNeeded": 987,
-        "atk": 94,
-        "critRate": 41,
+        "atk": 83,
+        "critRate": 39,
         "armorPierce": 38,
-        "summary": "外功攻擊力 +94 ｜ 暴擊率 +41% ｜ 穿透護甲 +38"
+        "summary": "外功攻擊力 +83 ｜ 暴擊率 +39% ｜ 穿透護甲 +38"
       },
       {
         "level": 17,
         "title": "出神入化",
         "expNeeded": 1204,
-        "atk": 99,
-        "critRate": 43,
+        "atk": 88,
+        "critRate": 41,
         "armorPierce": 40,
-        "summary": "外功攻擊力 +99 ｜ 暴擊率 +43% ｜ 穿透護甲 +40"
+        "summary": "外功攻擊力 +88 ｜ 暴擊率 +41% ｜ 穿透護甲 +40"
       },
       {
         "level": 18,
         "title": "出神入化",
         "expNeeded": 1469,
-        "atk": 104,
-        "critRate": 45,
+        "atk": 92,
+        "critRate": 43,
         "armorPierce": 43,
-        "summary": "外功攻擊力 +104 ｜ 暴擊率 +45% ｜ 穿透護甲 +43"
+        "summary": "外功攻擊力 +92 ｜ 暴擊率 +43% ｜ 穿透護甲 +43"
       },
       {
         "level": 19,
         "title": "傲視群雄",
         "expNeeded": 1792,
-        "atk": 109,
-        "critRate": 48,
+        "atk": 97,
+        "critRate": 46,
         "armorPierce": 45,
-        "summary": "外功攻擊力 +109 ｜ 暴擊率 +48% ｜ 穿透護甲 +45"
+        "summary": "外功攻擊力 +97 ｜ 暴擊率 +46% ｜ 穿透護甲 +45"
       },
       {
         "level": 20,
         "title": "登峰造極",
         "expNeeded": 0,
-        "atk": 114,
-        "critRate": 50,
+        "atk": 101,
+        "critRate": 48,
         "armorPierce": 48,
-        "summary": "外功攻擊力 +114 ｜ 暴擊率 +50% ｜ 穿透護甲 +48"
+        "summary": "外功攻擊力 +101 ｜ 暴擊率 +48% ｜ 穿透護甲 +48"
       }
     ]
   },
@@ -1763,181 +2001,181 @@
         "level": 1,
         "title": "初窺門徑",
         "expNeeded": 50,
-        "atk": 45,
-        "critRate": 20,
+        "atk": 16,
+        "critRate": 6,
         "armorPierce": 0,
-        "summary": "外功攻擊力 +45 ｜ 暴擊率 +20% ｜ 穿透護甲 +0"
+        "summary": "外功攻擊力 +16 ｜ 暴擊率 +6% ｜ 穿透護甲 +0"
       },
       {
         "level": 2,
         "title": "初窺門徑",
         "expNeeded": 61,
-        "atk": 58,
-        "critRate": 22,
+        "atk": 20,
+        "critRate": 8,
         "armorPierce": 3,
-        "summary": "外功攻擊力 +58 ｜ 暴擊率 +22% ｜ 穿透護甲 +3"
+        "summary": "外功攻擊力 +20 ｜ 暴擊率 +8% ｜ 穿透護甲 +3"
       },
       {
         "level": 3,
         "title": "初窺門徑",
         "expNeeded": 74,
-        "atk": 70,
-        "critRate": 24,
+        "atk": 25,
+        "critRate": 10,
         "armorPierce": 5,
-        "summary": "外功攻擊力 +70 ｜ 暴擊率 +24% ｜ 穿透護甲 +5"
+        "summary": "外功攻擊力 +25 ｜ 暴擊率 +10% ｜ 穿透護甲 +5"
       },
       {
         "level": 4,
         "title": "略有小成",
         "expNeeded": 91,
-        "atk": 83,
-        "critRate": 27,
+        "atk": 29,
+        "critRate": 13,
         "armorPierce": 8,
-        "summary": "外功攻擊力 +83 ｜ 暴擊率 +27% ｜ 穿透護甲 +8"
+        "summary": "外功攻擊力 +29 ｜ 暴擊率 +13% ｜ 穿透護甲 +8"
       },
       {
         "level": 5,
         "title": "略有小成",
         "expNeeded": 111,
-        "atk": 95,
-        "critRate": 29,
+        "atk": 34,
+        "critRate": 15,
         "armorPierce": 10,
-        "summary": "外功攻擊力 +95 ｜ 暴擊率 +29% ｜ 穿透護甲 +10"
+        "summary": "外功攻擊力 +34 ｜ 暴擊率 +15% ｜ 穿透護甲 +10"
       },
       {
         "level": 6,
         "title": "略有小成",
         "expNeeded": 135,
-        "atk": 108,
-        "critRate": 31,
+        "atk": 38,
+        "critRate": 17,
         "armorPierce": 13,
-        "summary": "外功攻擊力 +108 ｜ 暴擊率 +31% ｜ 穿透護甲 +13"
+        "summary": "外功攻擊力 +38 ｜ 暴擊率 +17% ｜ 穿透護甲 +13"
       },
       {
         "level": 7,
         "title": "駕輕就熟",
         "expNeeded": 165,
-        "atk": 121,
-        "critRate": 33,
+        "atk": 43,
+        "critRate": 19,
         "armorPierce": 15,
-        "summary": "外功攻擊力 +121 ｜ 暴擊率 +33% ｜ 穿透護甲 +15"
+        "summary": "外功攻擊力 +43 ｜ 暴擊率 +19% ｜ 穿透護甲 +15"
       },
       {
         "level": 8,
         "title": "駕輕就熟",
         "expNeeded": 201,
-        "atk": 133,
-        "critRate": 35,
+        "atk": 47,
+        "critRate": 21,
         "armorPierce": 18,
-        "summary": "外功攻擊力 +133 ｜ 暴擊率 +35% ｜ 穿透護甲 +18"
+        "summary": "外功攻擊力 +47 ｜ 暴擊率 +21% ｜ 穿透護甲 +18"
       },
       {
         "level": 9,
         "title": "駕輕就熟",
         "expNeeded": 245,
-        "atk": 146,
-        "critRate": 38,
+        "atk": 52,
+        "critRate": 24,
         "armorPierce": 20,
-        "summary": "外功攻擊力 +146 ｜ 暴擊率 +38% ｜ 穿透護甲 +20"
+        "summary": "外功攻擊力 +52 ｜ 暴擊率 +24% ｜ 穿透護甲 +20"
       },
       {
         "level": 10,
         "title": "融會貫通",
         "expNeeded": 299,
-        "atk": 158,
-        "critRate": 40,
+        "atk": 56,
+        "critRate": 26,
         "armorPierce": 23,
-        "summary": "外功攻擊力 +158 ｜ 暴擊率 +40% ｜ 穿透護甲 +23"
+        "summary": "外功攻擊力 +56 ｜ 暴擊率 +26% ｜ 穿透護甲 +23"
       },
       {
         "level": 11,
         "title": "融會貫通",
         "expNeeded": 365,
-        "atk": 171,
-        "critRate": 42,
+        "atk": 61,
+        "critRate": 28,
         "armorPierce": 25,
-        "summary": "外功攻擊力 +171 ｜ 暴擊率 +42% ｜ 穿透護甲 +25"
+        "summary": "外功攻擊力 +61 ｜ 暴擊率 +28% ｜ 穿透護甲 +25"
       },
       {
         "level": 12,
         "title": "融會貫通",
         "expNeeded": 446,
-        "atk": 184,
-        "critRate": 44,
+        "atk": 65,
+        "critRate": 30,
         "armorPierce": 28,
-        "summary": "外功攻擊力 +184 ｜ 暴擊率 +44% ｜ 穿透護甲 +28"
+        "summary": "外功攻擊力 +65 ｜ 暴擊率 +30% ｜ 穿透護甲 +28"
       },
       {
         "level": 13,
         "title": "爐火純青",
         "expNeeded": 544,
-        "atk": 196,
-        "critRate": 46,
+        "atk": 70,
+        "critRate": 32,
         "armorPierce": 30,
-        "summary": "外功攻擊力 +196 ｜ 暴擊率 +46% ｜ 穿透護甲 +30"
+        "summary": "外功攻擊力 +70 ｜ 暴擊率 +32% ｜ 穿透護甲 +30"
       },
       {
         "level": 14,
         "title": "爐火純青",
         "expNeeded": 663,
-        "atk": 209,
-        "critRate": 49,
+        "atk": 74,
+        "critRate": 35,
         "armorPierce": 33,
-        "summary": "外功攻擊力 +209 ｜ 暴擊率 +49% ｜ 穿透護甲 +33"
+        "summary": "外功攻擊力 +74 ｜ 暴擊率 +35% ｜ 穿透護甲 +33"
       },
       {
         "level": 15,
         "title": "爐火純青",
         "expNeeded": 809,
-        "atk": 221,
-        "critRate": 51,
+        "atk": 79,
+        "critRate": 37,
         "armorPierce": 35,
-        "summary": "外功攻擊力 +221 ｜ 暴擊率 +51% ｜ 穿透護甲 +35"
+        "summary": "外功攻擊力 +79 ｜ 暴擊率 +37% ｜ 穿透護甲 +35"
       },
       {
         "level": 16,
         "title": "出神入化",
         "expNeeded": 987,
-        "atk": 234,
-        "critRate": 53,
+        "atk": 83,
+        "critRate": 39,
         "armorPierce": 38,
-        "summary": "外功攻擊力 +234 ｜ 暴擊率 +53% ｜ 穿透護甲 +38"
+        "summary": "外功攻擊力 +83 ｜ 暴擊率 +39% ｜ 穿透護甲 +38"
       },
       {
         "level": 17,
         "title": "出神入化",
         "expNeeded": 1204,
-        "atk": 247,
-        "critRate": 55,
+        "atk": 88,
+        "critRate": 41,
         "armorPierce": 40,
-        "summary": "外功攻擊力 +247 ｜ 暴擊率 +55% ｜ 穿透護甲 +40"
+        "summary": "外功攻擊力 +88 ｜ 暴擊率 +41% ｜ 穿透護甲 +40"
       },
       {
         "level": 18,
         "title": "出神入化",
         "expNeeded": 1469,
-        "atk": 259,
-        "critRate": 57,
+        "atk": 92,
+        "critRate": 43,
         "armorPierce": 43,
-        "summary": "外功攻擊力 +259 ｜ 暴擊率 +57% ｜ 穿透護甲 +43"
+        "summary": "外功攻擊力 +92 ｜ 暴擊率 +43% ｜ 穿透護甲 +43"
       },
       {
         "level": 19,
         "title": "傲視群雄",
         "expNeeded": 1792,
-        "atk": 272,
-        "critRate": 60,
+        "atk": 97,
+        "critRate": 46,
         "armorPierce": 45,
-        "summary": "外功攻擊力 +272 ｜ 暴擊率 +60% ｜ 穿透護甲 +45"
+        "summary": "外功攻擊力 +97 ｜ 暴擊率 +46% ｜ 穿透護甲 +45"
       },
       {
         "level": 20,
         "title": "登峰造極",
         "expNeeded": 0,
-        "atk": 284,
-        "critRate": 60,
+        "atk": 101,
+        "critRate": 48,
         "armorPierce": 48,
-        "summary": "外功攻擊力 +284 ｜ 暴擊率 +60% ｜ 穿透護甲 +48"
+        "summary": "外功攻擊力 +101 ｜ 暴擊率 +48% ｜ 穿透護甲 +48"
       }
     ]
   },
@@ -2054,7 +2292,7 @@
         "qiMax": 227,
         "regen": 11,
         "damageReduction": 14,
-        "summary": "護體防禦 +52 ｜ 氣血上限 +146 ｜ 真氣上限 +227 ｜ 每時辰調息 +11 ｜ 減傷 +14%"
+        "summary": "護體��禦 +52 ｜ 氣血上限 +146 ｜ 真氣上限 +227 ｜ 每時辰調息 +11 ｜ 減傷 +14%"
       },
       {
         "level": 10,
@@ -2199,181 +2437,181 @@
         "level": 1,
         "title": "初窺門徑",
         "expNeeded": 50,
-        "atk": 48,
-        "critRate": 18,
+        "atk": 16,
+        "critRate": 6,
         "armorPierce": 0,
-        "summary": "外功攻擊力 +48 ｜ 暴擊率 +18% ｜ 穿透護甲 +0"
+        "summary": "外功攻擊力 +16 ｜ 暴擊率 +6% ｜ 穿透護甲 +0"
       },
       {
         "level": 2,
         "title": "初窺門徑",
         "expNeeded": 61,
-        "atk": 61,
-        "critRate": 20,
+        "atk": 20,
+        "critRate": 8,
         "armorPierce": 3,
-        "summary": "外功攻擊力 +61 ｜ 暴擊率 +20% ｜ 穿透護甲 +3"
+        "summary": "外功攻擊力 +20 ｜ 暴擊率 +8% ｜ 穿透護甲 +3"
       },
       {
         "level": 3,
         "title": "初窺門徑",
         "expNeeded": 74,
-        "atk": 75,
-        "critRate": 22,
+        "atk": 25,
+        "critRate": 10,
         "armorPierce": 5,
-        "summary": "外功攻擊力 +75 ｜ 暴擊率 +22% ｜ 穿透護甲 +5"
+        "summary": "外功攻擊力 +25 ｜ 暴擊率 +10% ｜ 穿透護甲 +5"
       },
       {
         "level": 4,
         "title": "略有小成",
         "expNeeded": 91,
-        "atk": 88,
-        "critRate": 25,
+        "atk": 29,
+        "critRate": 13,
         "armorPierce": 8,
-        "summary": "外功攻擊力 +88 ｜ 暴擊率 +25% ｜ 穿透護甲 +8"
+        "summary": "外功攻擊力 +29 ｜ 暴擊率 +13% ｜ 穿透護甲 +8"
       },
       {
         "level": 5,
         "title": "略有小成",
         "expNeeded": 111,
-        "atk": 102,
-        "critRate": 27,
+        "atk": 34,
+        "critRate": 15,
         "armorPierce": 10,
-        "summary": "外功攻擊力 +102 ｜ 暴擊率 +27% ｜ 穿透護甲 +10"
+        "summary": "外功攻擊力 +34 ｜ 暴擊率 +15% ｜ 穿透護甲 +10"
       },
       {
         "level": 6,
         "title": "略有小成",
         "expNeeded": 135,
-        "atk": 115,
-        "critRate": 29,
+        "atk": 38,
+        "critRate": 17,
         "armorPierce": 13,
-        "summary": "外功攻擊力 +115 ｜ 暴擊率 +29% ｜ 穿透護甲 +13"
+        "summary": "外功攻擊力 +38 ｜ 暴擊率 +17% ｜ 穿透護甲 +13"
       },
       {
         "level": 7,
         "title": "駕輕就熟",
         "expNeeded": 165,
-        "atk": 129,
-        "critRate": 31,
+        "atk": 43,
+        "critRate": 19,
         "armorPierce": 15,
-        "summary": "外功攻擊力 +129 ｜ 暴擊率 +31% ｜ 穿透護甲 +15"
+        "summary": "外功攻擊力 +43 ｜ 暴擊率 +19% ｜ 穿透護甲 +15"
       },
       {
         "level": 8,
         "title": "駕輕就熟",
         "expNeeded": 201,
-        "atk": 142,
-        "critRate": 33,
+        "atk": 47,
+        "critRate": 21,
         "armorPierce": 18,
-        "summary": "外功攻擊力 +142 ｜ 暴擊率 +33% ｜ 穿透護甲 +18"
+        "summary": "外功攻擊力 +47 ｜ 暴擊率 +21% ｜ 穿透護甲 +18"
       },
       {
         "level": 9,
         "title": "駕輕就熟",
         "expNeeded": 245,
-        "atk": 156,
-        "critRate": 36,
+        "atk": 52,
+        "critRate": 24,
         "armorPierce": 20,
-        "summary": "外功攻擊力 +156 ｜ 暴擊率 +36% ｜ 穿透護甲 +20"
+        "summary": "外功攻擊力 +52 ｜ 暴擊率 +24% ｜ 穿透護甲 +20"
       },
       {
         "level": 10,
         "title": "融會貫通",
         "expNeeded": 299,
-        "atk": 169,
-        "critRate": 38,
+        "atk": 56,
+        "critRate": 26,
         "armorPierce": 23,
-        "summary": "外功攻擊力 +169 ｜ 暴擊率 +38% ｜ 穿透護甲 +23"
+        "summary": "外功攻擊力 +56 ｜ 暴擊率 +26% ｜ 穿透護甲 +23"
       },
       {
         "level": 11,
         "title": "融會貫通",
         "expNeeded": 365,
-        "atk": 182,
-        "critRate": 40,
+        "atk": 61,
+        "critRate": 28,
         "armorPierce": 25,
-        "summary": "外功攻擊力 +182 ｜ 暴擊率 +40% ｜ 穿透護甲 +25"
+        "summary": "外功攻擊力 +61 ｜ 暴擊率 +28% ｜ 穿透護甲 +25"
       },
       {
         "level": 12,
         "title": "融會貫通",
         "expNeeded": 446,
-        "atk": 196,
-        "critRate": 42,
+        "atk": 65,
+        "critRate": 30,
         "armorPierce": 28,
-        "summary": "外功攻擊力 +196 ｜ 暴擊率 +42% ｜ 穿透護甲 +28"
+        "summary": "外功攻擊力 +65 ｜ 暴擊率 +30% ｜ 穿透護甲 +28"
       },
       {
         "level": 13,
         "title": "爐火純青",
         "expNeeded": 544,
-        "atk": 209,
-        "critRate": 44,
+        "atk": 70,
+        "critRate": 32,
         "armorPierce": 30,
-        "summary": "外功攻擊力 +209 ｜ 暴擊率 +44% ｜ 穿透護甲 +30"
+        "summary": "外功攻擊力 +70 ｜ 暴擊率 +32% ｜ 穿透護甲 +30"
       },
       {
         "level": 14,
         "title": "爐火純青",
         "expNeeded": 663,
-        "atk": 223,
-        "critRate": 47,
+        "atk": 74,
+        "critRate": 35,
         "armorPierce": 33,
-        "summary": "外功攻擊力 +223 ｜ 暴擊率 +47% ｜ 穿透護甲 +33"
+        "summary": "外功攻擊力 +74 ｜ 暴擊率 +35% ｜ 穿透護甲 +33"
       },
       {
         "level": 15,
         "title": "爐火純青",
         "expNeeded": 809,
-        "atk": 236,
-        "critRate": 49,
+        "atk": 79,
+        "critRate": 37,
         "armorPierce": 35,
-        "summary": "外功攻擊力 +236 ｜ 暴擊率 +49% ｜ 穿透護甲 +35"
+        "summary": "外功攻擊力 +79 ｜ 暴擊率 +37% ｜ 穿透護甲 +35"
       },
       {
         "level": 16,
         "title": "出神入化",
         "expNeeded": 987,
-        "atk": 250,
-        "critRate": 51,
+        "atk": 83,
+        "critRate": 39,
         "armorPierce": 38,
-        "summary": "外功攻擊力 +250 ｜ 暴擊率 +51% ｜ 穿透護甲 +38"
+        "summary": "外功攻擊力 +83 ｜ 暴擊率 +39% ｜ 穿透護甲 +38"
       },
       {
         "level": 17,
         "title": "出神入化",
         "expNeeded": 1204,
-        "atk": 263,
-        "critRate": 53,
+        "atk": 88,
+        "critRate": 41,
         "armorPierce": 40,
-        "summary": "外功攻擊力 +263 ｜ 暴擊率 +53% ｜ 穿透護甲 +40"
+        "summary": "外功攻擊力 +88 ｜ 暴擊率 +41% ｜ 穿透護甲 +40"
       },
       {
         "level": 18,
         "title": "出神入化",
         "expNeeded": 1469,
-        "atk": 276,
-        "critRate": 55,
+        "atk": 92,
+        "critRate": 43,
         "armorPierce": 43,
-        "summary": "外功攻擊力 +276 ｜ 暴擊率 +55% ｜ 穿透護甲 +43"
+        "summary": "外功攻擊力 +92 ｜ 暴擊率 +43% ｜ 穿透護甲 +43"
       },
       {
         "level": 19,
         "title": "傲視群雄",
         "expNeeded": 1792,
-        "atk": 290,
-        "critRate": 58,
+        "atk": 97,
+        "critRate": 46,
         "armorPierce": 45,
-        "summary": "外功攻擊力 +290 ｜ 暴擊率 +58% ｜ 穿透護甲 +45"
+        "summary": "外功攻擊力 +97 ｜ 暴擊率 +46% ｜ 穿透護甲 +45"
       },
       {
         "level": 20,
         "title": "登峰造極",
         "expNeeded": 0,
-        "atk": 303,
-        "critRate": 60,
+        "atk": 101,
+        "critRate": 48,
         "armorPierce": 48,
-        "summary": "外功攻擊力 +303 ｜ 暴擊率 +60% ｜ 穿透護甲 +48"
+        "summary": "外功攻擊力 +101 ｜ 暴擊率 +48% ｜ 穿透護甲 +48"
       }
     ]
   },

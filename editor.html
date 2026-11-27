@@ -472,7 +472,7 @@
       <div>
         <div class="sec-title">
           <span>地圖規格</span>
-          <span id="map-type-label" style="color:#38bdf8;">大地圖 (16x16)</span>
+          <span id="map-type-label" style="color:#38bdf8;">區域地圖 (16x16)</span>
         </div>
         <div style="font-size:0.75rem; color:#64748b; line-height:1.4;">
           當前編輯檔：<b id="active-filename-display" style="color:#f1f5f9;">overworld_default.tmj</b>
@@ -609,7 +609,7 @@
     <div class="form-group">
       <label class="form-label">地圖類型:</label>
       <select id="new-map-type" class="form-input" onchange="onNewMapTypeChange(this.value)">
-        <option value="OVERWORLD">大地圖漫遊 (Overworld - 16x16 / 時辰耗費)</option>
+        <option value="OVERWORLD">區域地圖漫遊 (Overworld - 16x16 / 時辰耗費)</option>
         <option value="BATTLE">戰術小地圖 (Battle Arena - 16x16 / 能量消耗與掩體)</option>
       </select>
     </div>
@@ -1017,7 +1017,7 @@
     }
 
     function updateMapModeUI() {
-      document.getElementById('map-type-label').innerText = currentMapType === 'OVERWORLD' ? '大地圖 (16x16 / 時辰)' : '戰術地圖 (16x16 / 能量)';
+      document.getElementById('map-type-label').innerText = currentMapType === 'OVERWORLD' ? '區域地圖 (16x16 / 時辰)' : '戰術地圖 (16x16 / 能量)';
       selectedTileGid = 1;
       buildPaletteUI();
     }

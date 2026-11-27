@@ -31,7 +31,7 @@ function runTests() {
     assert.ok(fs.existsSync(fullPath), `世界地圖引用的檔案不存在於磁碟：${cell.mapFile}`);
   }
 
-  // Test 3: 大地圖 Tiled 1.10 與 Properties 規範性檢測
+  // Test 3: 區域地圖 Tiled 1.10 與 Properties 規範性檢測
   const mapFiles = fs.readdirSync(MAPS_DIR).filter(f => f.endsWith('.tmj'));
   assert.ok(mapFiles.length > 0, 'maps/ 目錄必須包含 .tmj 地圖檔案');
 
@@ -49,7 +49,7 @@ function runTests() {
     assert.ok(tileLayer, `${file} 必須具備 tilelayer 地形層`);
     assert.strictEqual(tileLayer.data.length, 256, `${file} 地形層數據必須為 256 個 GID (16x16)`);
 
-    // 若為大地圖 (非戰術圖)，驗證 properties 結構
+    // 若為區域地圖 (非戰術圖)，驗證 properties 結構
     if (!file.includes('arena')) {
       assert.ok(Array.isArray(tmj.properties), `${file} 必須具備 properties 屬性陣列`);
       const propMap = {};
