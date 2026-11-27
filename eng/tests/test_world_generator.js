@@ -53,18 +53,19 @@ function runTests() {
   }
   console.log('  ✓ CENTER_OUTWARD 難度由低到高以中心向外展開單調性校驗通過');
 
-  // 3. CENTER_OUTWARD_CLUSTERED 生態板塊連片模式驗證
+  // 3. 預設全清空重建模式 (preserveCenterDefault 預設為 false) 與地形矩陣唯一性驗證
   const layoutClustered = WorldGenerator.generateWorldLayout({
     width: 8,
     height: 8,
     biomeRatios: { PLAINS: 40, MOUNTAIN: 30, SWAMP: 10, DESERT: 10, SNOW: 10 },
     difficultyRatios: { 1: 25, 2: 25, 3: 25, 4: 15, 5: 10 },
-    fillMode: 'CENTER_OUTWARD_CLUSTERED',
-    preserveCenterDefault: false
+    fillMode: 'CENTER_OUTWARD_CLUSTERED'
   });
-  assert.strictEqual(Object.keys(layoutClustered.cells).length, 64, '不保留中心時應生成全部 64 格');
-  assert.strictEqual(Object.keys(layoutClustered.maps).length, 64, '應產出 64 張區域地圖檔案');
-  console.log('  ✓ CENTER_OUTWARD_CLUSTERED 生態連片與全覆蓋生成校驗通過');
+  assert.strictEqual(Object.keys(layoutClustered.cells).length, 64, '預設全清空重建應生成全部 64 格');
+  assert.strictEqual(Object.keys(layoutClustered.maps).length, 64, '應產出 64 張全新區域地圖檔案');
+  const sigSet = new Set(Object.values(layoutClustered.maps).map(m => m.layers[0].data.join(',')));
+  assert.strictEqual(sigSet.size, 64, '每張隨機生成的區域地圖地形矩陣皆須嚴格唯一不重複');
+  console.log('  ✓ 預設全清空重建、生態連片與地形矩陣嚴格唯一性校驗通過');
 
   // 4. RANDOM 全隨機模式與 Tiled 地圖邊界通行性驗證
   const layoutRandom = WorldGenerator.generateWorldLayout({

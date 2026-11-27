@@ -3595,12 +3595,21 @@
           }
         } catch (e) { }
 
-        // 2. 抓取起始區域地圖 TMJ 快照
+        // 2. 動態決定起始區域與抓取起始區域地圖 TMJ 快照
+        const w = worldDataSnapshot.width || 16;
+        const h = worldDataSnapshot.height || 16;
+        const centerKey = `${Math.floor((w - 1) / 2)},${Math.floor((h - 1) / 2)}`;
+        const startKey = worldDataSnapshot.cells['7,7']
+          ? '7,7'
+          : (worldDataSnapshot.cells[centerKey] ? centerKey : Object.keys(worldDataSnapshot.cells)[0]);
+        const [startCx, startCy] = (startKey || '7,7').split(',').map(Number);
+        const startMapFile = (startKey && worldDataSnapshot.cells[startKey]?.mapFile) || 'overworld_default.tmj';
+
         const mapsSnapshot = {};
         try {
-          const res = await fetch('/api/maps/overworld_default.tmj');
+          const res = await fetch(`/api/maps/${startMapFile}`);
           if (res.ok) {
-            mapsSnapshot['overworld_default.tmj'] = await res.json();
+            mapsSnapshot[startMapFile] = await res.json();
           }
         } catch (e) { }
 
@@ -3768,10 +3777,10 @@
           version: '1.0.0',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          curChunkX: 7,
-          curChunkY: 7,
-          currentChunkName: '中原核心郡縣 (洛陽·龍門)',
-          currentMapFile: 'overworld_default.tmj',
+          curChunkX: isNaN(startCx) ? 7 : startCx,
+          curChunkY: isNaN(startCy) ? 7 : startCy,
+          currentChunkName: (startKey && worldDataSnapshot.cells[startKey]?.name) || '中原核心郡縣 (洛陽·龍門)',
+          currentMapFile: startMapFile,
           worldData: worldDataSnapshot,
           maps: mapsSnapshot,
           items: itemsSnapshot,

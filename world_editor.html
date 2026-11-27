@@ -794,12 +794,12 @@
       <!-- 4. 覆蓋選項 -->
       <div class="modal-section" style="gap:6px; font-size:0.8rem; color:#cbd5e1;">
         <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-          <input type="checkbox" id="batch-preserve-center" checked>
-          <span>保留世界中心格為預設起始區域地圖 (<code>overworld_default.tmj</code>)</span>
+          <input type="checkbox" id="batch-cleanup-old" checked>
+          <span><b>清空所有已存在的區域地圖</b>，全部依設定重新隨機生成（嚴格不重複）</span>
         </label>
         <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-          <input type="checkbox" id="batch-cleanup-old" checked>
-          <span>清理專案內舊的自動生成區域地圖檔 (<code>overworld_c*</code>)，保持 <code>maps/</code> 目錄整潔</span>
+          <input type="checkbox" id="batch-preserve-center">
+          <span>例外保留世界中心格原有區域地圖（不重新生成中心格）</span>
         </label>
       </div>
 
@@ -1728,9 +1728,11 @@
         existingCenterCell
       });
 
+      // 清空所有舊有指派，全面套用新生成的唯一區域地圖
       worldData.cells = result.cells;
       const mapEntries = Object.entries(result.maps);
       const totalMaps = mapEntries.length;
+      const preserveFiles = (preserveCenterDefault && existingCenterCell?.mapFile) ? [existingCenterCell.mapFile] : [];
 
       // 依連線模式分批寫入磁碟
       if (storageMode === 'API') {
@@ -1747,7 +1749,8 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              cleanupGenerated: isFirst && cleanupGenerated,
+              clearAllRegionalMaps: isFirst && cleanupGenerated,
+              preserveFiles: isFirst ? preserveFiles : undefined,
               maps: batchMapsObj,
               worldData: isLast ? worldData : undefined
             })
@@ -1755,6 +1758,12 @@
 
           if (!res.ok) {
             alert('批次儲存區域地圖失敗');
+            btn.disabled = false;
+            return;
+          }
+          const resData = await res.json();
+          if (typeof resData.writtenCount !== 'number') {
+            alert('⚠️ 偵測到後端伺服器尚未重啟（請重新執行 node server.js 以啟用批次寫入 API /api/maps/batch），本次操作已中止。');
             btn.disabled = false;
             return;
           }

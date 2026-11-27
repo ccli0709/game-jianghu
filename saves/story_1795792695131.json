@@ -4,11 +4,11 @@
   "heroName": "李暮雲",
   "version": "1.0.0",
   "createdAt": "2026-11-27T15:18:15.255Z",
-  "updatedAt": "2026-11-27T15:18:15.265Z",
+  "updatedAt": "2026-11-27T15:21:56.511Z",
   "curChunkX": 7,
-  "curChunkY": 7,
-  "currentChunkName": "中原核心郡縣 (洛陽·龍門)",
-  "currentMapFile": "overworld_default.tmj",
+  "curChunkY": 3,
+  "currentChunkName": "中原平原分境 (7, 3)",
+  "currentMapFile": "overworld_c7_3_plains_5ybaf.tmj",
   "worldData": {
     "id": "world_jianghu_main",
     "name": "神州浩土全圖",
@@ -2485,7 +2485,7 @@
       "stackMax": 1,
       "weight": 6,
       "requiredRealm": "二流高手",
-      "desc": "極地寒鐵慢火鍛打九九八十一日而成，刃口寒光凝霜，出鞘帶嘯鳴之���。",
+      "desc": "極地寒鐵慢火鍛打九九八十一日而成，刃口寒光凝霜，出鞘帶嘯鳴之聲。",
       "attributes": {
         "atk": 34,
         "speedMod": 8,
@@ -9601,9 +9601,9 @@
     "statuses": [],
     "sect": "尚未加入 (江湖散人)",
     "hp": 100,
-    "maxHp": 100,
+    "maxHp": 210,
     "qi": 50,
-    "maxQi": 50,
+    "maxQi": 150,
     "gold": 50,
     "speed": 85,
     "energy": 100,
@@ -9611,12 +9611,12 @@
     "hitShake": 0,
     "hitFlash": 0,
     "owX": 7,
-    "owY": 4,
+    "owY": 13,
     "bx": 3,
     "by": 8,
     "currentMoveCost": 1,
     "visualX": 280,
-    "visualY": 160,
+    "visualY": 520,
     "attributes": {
       "str": 20,
       "agi": 20,
@@ -10131,8 +10131,32 @@
     "learnedMartials": []
   },
   "clock": {
-    "day": 1,
-    "hour": 8
+    "day": 4,
+    "hour": 0
   },
-  "roamingEnemies": []
+  "roamingEnemies": [
+    {
+      "id": "char_bst_wolf_01",
+      "name": "荒野灰狼",
+      "race": "BEAST",
+      "form": "WILD_BEAST",
+      "formName": "荒原群獸",
+      "level": 3,
+      "attackPattern": "BEAST_POUNCE",
+      "skillName": "群狼飛撲",
+      "x": 4,
+      "y": 4,
+      "isBoss": false,
+      "isEvolutionBoss": false,
+      "color": 9741240,
+      "visualX": 160,
+      "visualY": 160,
+      "hp": 60,
+      "maxHp": 60,
+      "speed": 110,
+      "def": 8,
+      "atk": 21,
+      "icon": "🐺"
+    }
+  ]
 }

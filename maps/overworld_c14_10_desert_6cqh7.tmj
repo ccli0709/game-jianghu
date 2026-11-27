@@ -1,0 +1,450 @@
+{
+  "compressionlevel": -1,
+  "width": 16,
+  "height": 16,
+  "tilewidth": 40,
+  "tileheight": 40,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.2",
+  "version": "1.10",
+  "type": "map",
+  "properties": [
+    {
+      "name": "mapName",
+      "type": "string",
+      "value": "戈壁沙海分境 (14, 10)"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "value": "戈壁沙海分境（★★★☆☆ 風雲變幻），天地遼闊，常有各路江湖散客與猛獸遊歷。"
+    },
+    {
+      "name": "difficulty",
+      "type": "int",
+      "value": 3
+    },
+    {
+      "name": "specialType",
+      "type": "string",
+      "value": "NORMAL"
+    },
+    {
+      "name": "faction",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "possibleQuests",
+      "type": "string",
+      "value": "【懸賞】擊斃遊蕩悍匪 (賞金 105 兩)\n【探尋】探查此地未名奇遇"
+    },
+    {
+      "name": "possibleLoot",
+      "type": "string",
+      "value": "青鋼短劍\n行軍乾糧"
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "Jianghu_Overworld_Tiles",
+      "tilewidth": 40,
+      "tileheight": 40,
+      "tilecount": 6,
+      "columns": 6,
+      "tiles": [
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "PLAINS"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "MOUNTAIN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 999
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "FOREST"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "TOWN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "INN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "HILLS"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Terrain_Layer",
+      "type": "tilelayer",
+      "width": 16,
+      "height": 16,
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        2,
+        2,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        2,
+        6,
+        6,
+        5,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        2,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        2,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "id": 2,
+      "name": "POIs_and_Entities",
+      "type": "objectgroup",
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "objects": [
+        {
+          "id": 1,
+          "name": "荒野險地茶棚",
+          "type": "INN",
+          "x": 320,
+          "y": 320,
+          "width": 40,
+          "height": 40,
+          "properties": [
+            {
+              "name": "services",
+              "type": "string",
+              "value": "REST,RUMOR"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

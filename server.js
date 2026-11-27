@@ -166,7 +166,18 @@ const server = http.createServer((req, res) => {
         const payload = JSON.parse(body);
         let deletedCount = 0;
 
-        if (payload.cleanupGenerated) {
+        if (payload.clearAllRegionalMaps) {
+          const preserveSet = new Set(Array.isArray(payload.preserveFiles) ? payload.preserveFiles : []);
+          const existingFiles = fs.readdirSync(MAPS_DIR);
+          for (const f of existingFiles) {
+            const isWorldOrArena = f.startsWith('world_') || f.includes('arena');
+            const isMapFile = f.endsWith('.tmj') || f.endsWith('.json');
+            if (isMapFile && !isWorldOrArena && !preserveSet.has(f)) {
+              fs.unlinkSync(path.join(MAPS_DIR, f));
+              deletedCount++;
+            }
+          }
+        } else if (payload.cleanupGenerated) {
           const existingFiles = fs.readdirSync(MAPS_DIR);
           for (const f of existingFiles) {
             if (/^overworld_c\d+_\d+_/.test(f) && f.endsWith('.tmj')) {

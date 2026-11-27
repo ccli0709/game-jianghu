@@ -115,32 +115,40 @@
 
     // GID 定義: 1=平原, 2=高山(不可通行), 3=密林, 4=城鎮, 5=客棧, 6=荒丘
     const obstacleCountBase = 15 + diff * 8;
+    const innX = 3 + Math.floor(rng() * 10);
+    const innY = 3 + Math.floor(rng() * 10);
 
     if (biome === 'PLAINS') {
       grid.fill(1);
       for (let i = 0; i < 20 + diff * 3; i++) grid[Math.floor(rng() * 256)] = 3;
       for (let i = 0; i < Math.floor(diff * 3); i++) grid[Math.floor(rng() * 256)] = 2;
-      if (diff <= 2) grid[4 * 16 + 4] = 4; // 低難度多城鎮
-      grid[8 * 16 + 8] = 5; // 客棧
+      if (diff <= 2) {
+        const tx = 2 + Math.floor(rng() * 12);
+        const ty = 2 + Math.floor(rng() * 12);
+        grid[ty * 16 + tx] = 4; // 低難度隨機城鎮
+      }
+      grid[innY * 16 + innX] = 5; // 客棧
     } else if (biome === 'MOUNTAIN') {
       grid.fill(6);
       for (let i = 0; i < obstacleCountBase + 15; i++) grid[Math.floor(rng() * 256)] = 2;
-      for (let cx = 0; cx < 16; cx++) grid[8 * 16 + cx] = 1; // 橫貫官道
-      for (let cy = 0; cy < 16; cy++) grid[cy * 16 + 8] = 1; // 縱貫山徑
-      grid[7 * 16 + 7] = 5;
+      const roadRow = 6 + Math.floor(rng() * 4);
+      const roadCol = 6 + Math.floor(rng() * 4);
+      for (let cx = 0; cx < 16; cx++) grid[roadRow * 16 + cx] = 1; // 橫貫官道
+      for (let cy = 0; cy < 16; cy++) grid[cy * 16 + roadCol] = 1; // 縱貫山徑
+      grid[innY * 16 + innX] = 5;
     } else if (biome === 'SWAMP') {
       grid.fill(1);
       for (let i = 0; i < 40 + diff * 5; i++) grid[Math.floor(rng() * 256)] = 3;
       for (let i = 0; i < diff * 4; i++) grid[Math.floor(rng() * 256)] = 2;
-      grid[8 * 16 + 8] = 5;
+      grid[innY * 16 + innX] = 5;
     } else if (biome === 'DESERT') {
       grid.fill(6);
       for (let i = 0; i < obstacleCountBase; i++) grid[Math.floor(rng() * 256)] = 2;
-      grid[7 * 16 + 7] = 5;
+      grid[innY * 16 + innX] = 5;
     } else if (biome === 'SNOW') {
       grid.fill(6);
       for (let i = 0; i < obstacleCountBase + 10; i++) grid[Math.floor(rng() * 256)] = 2;
-      grid[8 * 16 + 8] = 5;
+      grid[innY * 16 + innX] = 5;
     } else {
       grid.fill(1);
     }
@@ -159,7 +167,7 @@
       }
     }
     // 確保客棧至少存在一處
-    if (grid[8 * 16 + 8] === 2) grid[8 * 16 + 8] = 5;
+    if (grid[innY * 16 + innX] === 2) grid[innY * 16 + innX] = 5;
 
     const meta = BIOME_META[biome] || { name: '未知分境' };
     const diffLabel = (DIFFICULTY_META[diff] && DIFFICULTY_META[diff].label) || '';
@@ -306,7 +314,7 @@
     const width = Math.min(128, Math.max(1, parseInt(options.width, 10) || 16));
     const height = Math.min(128, Math.max(1, parseInt(options.height, 10) || 16));
     const fillMode = options.fillMode || 'CENTER_OUTWARD';
-    const preserveCenterDefault = options.preserveCenterDefault !== false;
+    const preserveCenterDefault = options.preserveCenterDefault === true;
     const rng = typeof options.rng === 'function' ? options.rng : Math.random;
 
     const centerX = Math.floor((width - 1) / 2);
@@ -373,6 +381,9 @@
     const maps = {};
     const nowIso = new Date().toISOString();
 
+    const usedFilenames = new Set();
+    const usedSignatures = new Set();
+
     if (preserveCenterDefault) {
       cells[centerKey] = options.existingCenterCell ? { ...options.existingCenterCell } : {
         mapFile: 'overworld_default.tmj',
@@ -382,13 +393,34 @@
         assignedAt: nowIso
       };
       if (!cells[centerKey].difficulty) cells[centerKey].difficulty = 1;
+      usedFilenames.add(cells[centerKey].mapFile);
     }
 
-    const batchTag = Math.floor(rng() * 0xffffff).toString(36).padStart(4, '0');
     for (const c of coords) {
       const biome = coordBiomes[c.key] || 'PLAINS';
       const difficulty = coordDifficulties[c.key] || 2;
-      const filename = `overworld_c${c.x}_${c.y}_${biome.toLowerCase()}_${batchTag}.tmj`;
+
+      // 確保檔名嚴格唯一
+      let filename = '';
+      do {
+        const randTag = Math.floor(rng() * 0xffffff).toString(36).padStart(4, '0');
+        filename = `overworld_c${c.x}_${c.y}_${biome.toLowerCase()}_${randTag}.tmj`;
+      } while (usedFilenames.has(filename));
+      usedFilenames.add(filename);
+
+      // 確保每張區域地圖地形矩陣也嚴格不重複
+      let mapObj = null;
+      let attempts = 0;
+      do {
+        mapObj = createProceduralRegionalMap(biome, difficulty, c.x, c.y, filename, rng);
+        const sig = `${biome}:${mapObj.layers[0].data.join(',')}`;
+        if (!usedSignatures.has(sig) || attempts >= 8) {
+          usedSignatures.add(sig);
+          break;
+        }
+        attempts++;
+      } while (true);
+
       const meta = BIOME_META[biome] || { name: '未知分境' };
 
       cells[c.key] = {
@@ -399,7 +431,7 @@
         assignedAt: nowIso
       };
 
-      maps[filename] = createProceduralRegionalMap(biome, difficulty, c.x, c.y, filename, rng);
+      maps[filename] = mapObj;
     }
 
     return {
