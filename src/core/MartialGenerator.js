@@ -31,6 +31,88 @@ const MAX_LEVEL = 20;
 const MAX_EQUIPPED_MARTIALS = 3;
 const MAX_EQUIPPED_CULTIVATIONS = 3;
 
+const MARTIAL_TIERS = [
+  { name: '凡品', class: 'tier-white', mult: 1.0 },
+  { name: '良品', class: 'tier-green', mult: 1.35 },
+  { name: '上品', class: 'tier-purple', mult: 1.8 },
+  { name: '極品', class: 'tier-gold', mult: 2.4 },
+  { name: '寶器', class: 'tier-orange', mult: 3.1 },
+  { name: '神兵絕品', class: 'tier-red', mult: 4.0 }
+];
+
+const SECT_PROFILES = {
+  SHAOLIN: {
+    prefixes: ['少林', '達摩', '金剛', '羅漢', '伏魔', '般若', '韋陀', '菩提'],
+    martialSuffixes: ['神拳', '禪杖法', '伏虎掌', '金剛指', '破戒刀', '袈裟伏魔功'],
+    cultivationSuffixes: ['洗髓經', '金鐘罩', '不動明王訣', '易筋心法', '禪定真經'],
+    martialIcons: ['🥊', '🔱', '🖐️'],
+    cultivationIcons: ['🧘', '🛡️', '📿'],
+    martialSynergy: { targetCategory: 'MELEE_WEAPON', targetCategoryName: '近戰兵刃 (拳套/棍杖)', bonusStat: 'atkPct', bonusLabel: '外功傷害', baseVal: 10 },
+    cultivationSynergy: { targetCategory: 'ARMOR', targetCategoryName: '各式防具 (重鎧/護心鏡)', bonusStat: 'defPct', bonusLabel: '護體防禦', baseVal: 12 },
+    trait: '佛門禪武，至剛至陽，擅以重手硬功與金剛護體鎮壓群雄'
+  },
+  WUDANG: {
+    prefixes: ['太極', '純陽', '真武', '玄虛', '兩儀', '繞指', '松鶴', '雲手'],
+    martialSuffixes: ['神劍', '綿掌', '柔劍訣', '八卦掌', '連環劍', '玄門刺'],
+    cultivationSuffixes: ['無極功', '太極心經', '純陽吐納訣', '清靜真經', '兩儀歸元訣'],
+    martialIcons: ['⚔️', '🗡️', '☯️'],
+    cultivationIcons: ['☯️', '🌀', '🪷'],
+    martialSynergy: { targetCategory: 'MELEE_WEAPON', targetCategoryName: '近戰兵刃 (長劍)', bonusStat: 'critRate', bonusLabel: '暴擊率', baseVal: 6 },
+    cultivationSynergy: { targetCategory: 'SPECIAL', targetCategoryName: '秘寶奇物 (道門靈寶)', bonusStat: 'regen', bonusLabel: '每時辰調息', baseVal: 3 },
+    trait: '道法自然，以柔克剛，劍勢連綿如長江大河，真氣綿長'
+  },
+  HUASHAN: {
+    prefixes: ['華山', '紫霞', '落雁', '朝陽', '玉女', '孤峰', '狂風', '獨孤'],
+    martialSuffixes: ['劍法', '破氣劍', '奪命十三劍', '快劍式', '混元掌', '劈石拳'],
+    cultivationSuffixes: ['紫霞神功', '混元功', '抱元勁', '氣宗心法', '太華吐納篇'],
+    martialIcons: ['🗡️', '⚔️', '⚡'],
+    cultivationIcons: ['🪻', '🌬️', '✨'],
+    martialSynergy: { targetCategory: 'MELEE_WEAPON', targetCategoryName: '近戰兵刃 (輕劍/長劍)', bonusStat: 'armorPierce', bonusLabel: '穿透護甲', baseVal: 8 },
+    cultivationSynergy: { targetCategory: 'ARMOR', targetCategoryName: '各式防具 (貼身輕袍)', bonusStat: 'dodge', bonusLabel: '身法閃避', baseVal: 5 },
+    trait: '劍氣雙修，招法奇拔險峻，出劍如孤峰峭壁凌厲絕倫'
+  },
+  GAIBANG: {
+    prefixes: ['降龍', '打狗', '逍遙遊', '亢龍', '見龍', '鐵帚', '銅錘', '蓮花'],
+    martialSuffixes: ['神掌', '棒法', '鐵拳', '擒龍手', '霸王掌', '狂風棍'],
+    cultivationSuffixes: ['控鶴訣', '混天功', '鐵布衫心法', '烈陽內功', '行乞歸元訣'],
+    martialIcons: ['🐉', '🥢', '👊'],
+    cultivationIcons: ['🦅', '🔥', '🛡️'],
+    martialSynergy: { targetCategory: 'MELEE_WEAPON', targetCategoryName: '近戰兵刃 (長棍/拳掌)', bonusStat: 'atkPct', bonusLabel: '剛猛破敵', baseVal: 12 },
+    cultivationSynergy: { targetCategory: 'ARMOR', targetCategoryName: '各式防具 (護腕/輕甲)', bonusStat: 'hpMax', bonusLabel: '氣血上限', baseVal: 45 },
+    trait: '天下第一大幫絕藝，剛猛無儔，越戰越勇，氣血充沛'
+  },
+  EMEI: {
+    prefixes: ['峨嵋', '金頂', '佛光', '九陽', '清風', '凌霜', '截手', '金針'],
+    martialSuffixes: ['綿掌', '劍訣', '九式', '渡劫指', '飛針術', '玉女拳'],
+    cultivationSuffixes: ['九陽功', '臨濟十二莊', '冰心訣', '佛光普照篇', '回氣心經'],
+    martialIcons: ['🪷', '🗡️', '🎯'],
+    cultivationIcons: ['☀️', '❄️', '🪷'],
+    martialSynergy: { targetCategory: 'RANGED_WEAPON', targetCategoryName: '遠程暗器 (飛針/短劍)', bonusStat: 'critRate', bonusLabel: '會心一擊', baseVal: 7 },
+    cultivationSynergy: { targetCategory: 'SPECIAL', targetCategoryName: '秘寶奇物 (佛門奇寶)', bonusStat: 'qiMax', bonusLabel: '真氣上限', baseVal: 35 },
+    trait: '外柔內剛，出招飄逸如仙，兼擅凌霜劍意與靈動暗器'
+  },
+  XIAOYAO: {
+    prefixes: ['北冥', '天山', '凌波', '白虹', '折梅', '生死', '小無相', '龜息'],
+    martialSuffixes: ['六陽掌', '折梅手', '飛仙術', '無相指', '暗器訣', '御風步'],
+    cultivationSuffixes: ['北冥神功', '小無相功', '八荒六合功', '長春心法', '逍遙御風篇'],
+    martialIcons: ['❄️', '🎯', '🌀'],
+    cultivationIcons: ['🌊', '🌌', '✨'],
+    martialSynergy: { targetCategory: 'RANGED_WEAPON', targetCategoryName: '遠程暗器 (機關暗器)', bonusStat: 'rangedAtkPct', bonusLabel: '暗器殺傷', baseVal: 12 },
+    cultivationSynergy: { targetCategory: 'SPECIAL', targetCategoryName: '秘寶奇物 (秘笈寶品)', bonusStat: 'qiMax', bonusLabel: '真氣容量', baseVal: 50 },
+    trait: '仙風道骨，神妙莫測，能以無相真氣催動各路奇門暗器與寶物'
+  },
+  NEUTRAL: {
+    prefixes: ['天目', '巫山', '神龍', '太湖', '開禧', '浙西', '黑水', '太祖'],
+    martialSuffixes: ['長拳', '快刀法', '追魂刺', '裂石掌', '流雲劍', '穿心鏢'],
+    cultivationSuffixes: ['吐納心法', '導引術', '鐵骨訣', '太湖行氣篇', '巫山養氣錄'],
+    martialIcons: ['👊', '🪓', '🏹'],
+    cultivationIcons: ['🫁', '🪨', '🌿'],
+    martialSynergy: { targetCategory: 'MELEE_WEAPON', targetCategoryName: '近戰兵刃 (刀劍短匕)', bonusStat: 'atkPct', bonusLabel: '實戰傷害', baseVal: 9 },
+    cultivationSynergy: { targetCategory: 'ARMOR', targetCategoryName: '各式防具 (輕袍/軟靴)', bonusStat: 'damageReduction', bonusLabel: '傷害減免', baseVal: 5 },
+    trait: '兼收百家之長，貼近實戰殺伐，江湖散客與隱世奇人賴以立身之本'
+  }
+};
+
 /**
  * 境界名稱階梯 (1~20 級)
  */
@@ -441,16 +523,124 @@ function generateDefaultMartials() {
   return catalog;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    SECTS,
-    MARTIAL_TYPES,
-    MAX_LEVEL,
-    MAX_EQUIPPED_MARTIALS,
-    MAX_EQUIPPED_CULTIVATIONS,
-    getRealmTitle,
-    getExpRequiredForLevel,
-    generateLevelBonuses,
-    generateDefaultMartials
+/**
+ * 依指定門派、武學分類與品質品階生成單一特色武學/心法（含專屬裝備/寶品加成）
+ */
+function generateRandomMartialBySpec(sectId, type, tierObj, index = 1, usedNames = null, rng = Math.random) {
+  const sect = SECTS[sectId] || SECTS.NEUTRAL;
+  const profile = SECT_PROFILES[sectId] || SECT_PROFILES.NEUTRAL;
+  const tier = typeof tierObj === 'string'
+    ? (MARTIAL_TIERS.find(t => t.name === tierObj) || MARTIAL_TIERS[0])
+    : (tierObj || MARTIAL_TIERS[0]);
+
+  const isMartial = type === 'MARTIAL';
+  const suffixes = isMartial ? profile.martialSuffixes : profile.cultivationSuffixes;
+  const icons = isMartial ? profile.martialIcons : profile.cultivationIcons;
+
+  let name = '';
+  let attempts = 0;
+  do {
+    const pfx = profile.prefixes[Math.floor(rng() * profile.prefixes.length)];
+    const sfx = suffixes[Math.floor(rng() * suffixes.length)];
+    name = `${pfx}${sfx}`;
+    if (attempts >= 6) name = `${name}·${['初式', '真傳', '秘本', '殘篇', '奧義'][attempts % 5]}`;
+    attempts++;
+  } while (usedNames && usedNames.has(name) && attempts < 20);
+  if (usedNames) usedNames.add(name);
+
+  const icon = icons[Math.floor(rng() * icons.length)];
+  const mult = tier.mult;
+
+  const baseParams = isMartial
+    ? {
+      atk: Math.round((12 + rng() * 5) * mult),
+      critRate: Math.round((4 + rng() * 3) * Math.sqrt(mult))
+    }
+    : {
+      def: Math.round((8 + rng() * 4) * mult),
+      hpMax: Math.round((25 + rng() * 10) * mult),
+      qiMax: Math.round((20 + rng() * 10) * mult),
+      regen: Math.max(2, Math.round((2 + rng() * 1.5) * Math.sqrt(mult)))
+    };
+
+  const synCfg = isMartial ? profile.martialSynergy : profile.cultivationSynergy;
+  const synBonusVal = Math.round(synCfg.baseVal * Math.sqrt(mult));
+  const unitSuffix = synCfg.bonusStat.endsWith('Pct') || synCfg.bonusStat === 'critRate' || synCfg.bonusStat === 'dodge' || synCfg.bonusStat === 'damageReduction' ? '%' : '';
+  const gearSynergy = {
+    targetCategory: synCfg.targetCategory,
+    targetCategoryName: synCfg.targetCategoryName,
+    bonusStat: synCfg.bonusStat,
+    bonusLabel: synCfg.bonusLabel,
+    bonusValue: synBonusVal,
+    summary: `搭配【${synCfg.targetCategoryName}】時，${synCfg.bonusLabel}額外 +${synBonusVal}${unitSuffix}`
   };
+
+  const hash = Math.floor(rng() * 0xffff).toString(36);
+  const id = `${isMartial ? 'mar' : 'cul'}_${sect.id.toLowerCase()}_${index}_${hash}`;
+
+  return {
+    id,
+    name,
+    type,
+    sect: sect.id,
+    sectName: sect.name,
+    icon,
+    cost: isMartial ? Math.round((8 + rng() * 6) * Math.sqrt(mult)) : 0,
+    range: isMartial ? (sect.id === 'EMEI' || sect.id === 'XIAOYAO' ? 2 : 1) : 0,
+    tier: tier.name,
+    tierClass: tier.class,
+    maxLevel: MAX_LEVEL,
+    currentLevel: 1,
+    exp: 0,
+    gearSynergy,
+    desc: `【${sect.name}·${tier.name}】${profile.trait}。${gearSynergy.summary}。`,
+    levelBonuses: generateLevelBonuses(type, baseParams)
+  };
+}
+
+/**
+ * 一鍵生成隨機武學心法庫：
+ * 各門派 (7) × 各武學分類 (2) × 各品質品階 (6) 分別隨機生成 countPerCombo (預設 1) 項
+ * 預設總計 = 7 * 2 * 6 * 1 = 84 部武學心法
+ */
+function generateBalancedMartialsCatalog(countPerCombo = 1, rng = Math.random) {
+  const count = Math.max(1, Math.min(5, parseInt(countPerCombo, 10) || 1));
+  const catalog = [];
+  const usedNames = new Set();
+
+  Object.keys(SECTS).forEach(sectId => {
+    Object.keys(MARTIAL_TYPES).forEach(type => {
+      MARTIAL_TIERS.forEach(tierObj => {
+        for (let i = 1; i <= count; i++) {
+          catalog.push(generateRandomMartialBySpec(sectId, type, tierObj, i, usedNames, rng));
+        }
+      });
+    });
+  });
+
+  return catalog;
+}
+
+const exportedMartials = {
+  SECTS,
+  MARTIAL_TYPES,
+  MARTIAL_TIERS,
+  SECT_PROFILES,
+  MAX_LEVEL,
+  MAX_EQUIPPED_MARTIALS,
+  MAX_EQUIPPED_CULTIVATIONS,
+  getRealmTitle,
+  getExpRequiredForLevel,
+  generateLevelBonuses,
+  generateDefaultMartials,
+  generateRandomMartialBySpec,
+  generateBalancedMartialsCatalog
+};
+
+if (typeof window !== 'undefined') {
+  Object.assign(window, exportedMartials);
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = exportedMartials;
 }

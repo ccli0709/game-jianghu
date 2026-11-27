@@ -119,6 +119,11 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
 * **雙向無縫跳轉編輯**：
   * 點選任意已指派區塊，右側檢測器即時渲染 16x16 迷你地貌縮圖。
   * 點擊「進入此區域地圖編輯」一鍵跳轉至 [editor.html](file:///d:/Repositories/game-jianghu/editor.html)，帶入該地圖檔名並直接進行細節微雕。
+* **一鍵自動重新生成舖滿世界區域地圖 ([src/core/WorldGenerator.js](file:///d:/Repositories/game-jianghu/src/core/WorldGenerator.js))**：
+  * 支援在生成前自訂 **5 類地貌類型比例**（中原草莽、蜀道崇山、苗疆毒沼、戈壁荒原、長白雪域）與 **★1~★5 難度比例**，透過最大餘額法精準配比。
+  * 提供四種世界舖滿演算法：**難度由低到高以中心向外展開 (`CENTER_OUTWARD`)**、**中心向外 + 生態板塊自然連片 (`CENTER_OUTWARD_CLUSTERED`)**、**全隨機 (`RANDOM`)**、**外圍安全向中心遞增 (`EDGE_INWARD`)**。
+  * 執行時預設清空全部既有區域地圖並嚴格保證檔名與地形矩陣皆不重複，且強制保留四方邊界中央跨區通道暢通。
+  * 畫布支援「🎨 地貌視圖」與「🔥 難度熱力圖」雙模式即時切換檢視。
 * **直存直取世界設定檔**：
   * 快捷鍵 <kbd>Ctrl+S</kbd> 或點擊保存，直接將世界架構持久化至專案 [maps/world_default.json](file:///d:/Repositories/game-jianghu/maps/world_default.json)。
 
@@ -130,11 +135,37 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
   * 遊戲本體：`http://localhost:3000/index.html`
   * 單地圖視覺化編輯器：`http://localhost:3000/editor.html`
   * 宏觀世界地圖編輯器：`http://localhost:3000/world_editor.html`
-  * 專案地圖 API：提供 `GET /api/maps`、`GET /api/maps/:file` 與 `POST /api/maps/:file` 雙向讀寫支援。
+  * 全域物品 / 武學心法 / 角色總管：`item_manager.html` / `martial_manager.html` / `character_manager.html`
+  * 專案 REST API：`GET/POST /api/maps/*`、`POST /api/maps/batch`（批次寫入與舊生成圖清理）、`/api/items/*`、`/api/martials/*`、`/api/characters/*` 與 `/api/saves/*`。
 
 ### 3.6 官方 Tiled 桌面版編輯器相容
 
 * 開發者若偏好 C++/Qt 桌面版大型工具，亦可直接使用官方開源 [Tiled Map Editor](https://www.mapeditor.org/) 開啟並編輯 `maps/` 目錄下的所有 `.tmj` 地圖。
+
+### 3.7 全域物品與三族裝備總管 (`item_manager.html`)
+
+* **固定六大類 × 六大品階**：涵蓋 `MELEE_WEAPON`、`RANGED_WEAPON`、`ARMOR`、`MEDICINE`、`ENHANCEMENT`、`SPECIAL` 與 凡品～神兵絕品 6 階品質。
+* **種族專用武器防具 (`equipRace`)**：區分 `HUMAN`（人類專用）、`BEAST`（野獸敵人裝備）、`MONSTER`（魔物敵人裝備）與 `ALL`（通用消耗品與奇寶）。
+* **一鍵生成隨機物品 ([src/core/ItemGenerator.js](file:///d:/Repositories/game-jianghu/src/core/ItemGenerator.js))**：可針對 6 種品質品階個別設定隨機生成數量，預設**人類可用每品質 5 種**、**野獸與魔物專用武器防具每品質各 2 種**，支援種族篩選與直接寫入專案。
+
+### 3.8 武學與心法全域總管 (`martial_manager.html`)
+
+* **門派與雙修架構 ([src/core/MartialGenerator.js](file:///d:/Repositories/game-jianghu/src/core/MartialGenerator.js))**：涵蓋少林、武當、華山、丐幫、峨嵋、逍遙、江湖散人 **7 大門派**，分為**外功武學 (`MARTIAL`)** 與**內功心法 (`CULTIVATION`)**，最高皆為 20 級，各附 1~20 級成長矩陣。
+* **修練與裝備上限**：外功於戰鬥出招累積經驗、內功於戰勝結算累積經驗，各最多同時裝備 3 部。
+* **一鍵生成隨機武學心法**：為各門派 × 各武學分類 × 各品質品階預設隨機生成 1 項（共 84 部），皆具門派特色與專屬搭配裝備／寶品類型加成（`gearSynergy`）。
+
+### 3.9 角色實體、種族形態與進化總管 (`character_manager.html`)
+
+* **世界觀與命名參考**：整體角色、勢力、地名與任務設定參考 [story/神龙大侠传.txt](file:///d:/Repositories/game-jianghu/story/%E7%A5%9E%E9%BE%99%E5%A4%A7%E4%BE%A0%E4%BC%A0.txt) 與 [story/巫山传.txt](file:///d:/Repositories/game-jianghu/story/%E5%B7%AB%E5%B1%B1%E4%BC%A0.txt) 之南宋江湖體系（繁體中文）。
+* **三大種族與相異攻擊模式 ([src/core/CharacterGenerator.js](file:///d:/Repositories/game-jianghu/src/core/CharacterGenerator.js))**：固定 `HUMAN`（人類）、`BEAST`（野獸）、`MONSTER`（魔物），各具專屬戰術行為模式（連招、風箏、反制、撲擊、撕裂、咆哮、腐蝕、吸血、魔煞爆震）。
+* **一鍵生成隨機角色**：清空既有角色後，可自訂三種族各自的形態層級數（預設 5 階），每階具備連續且**嚴格不重疊**的等級區間，並依統一戰力預算確保同等級三族屬性平衡。
+* **主角形態進化瓶頸**：主角從人類最低形態（Lv.1）起步，達當前形態等級上限時觸發瓶頸並於當前區域地圖出現特殊突破魔物，擊敗後方可破繭進化至下一形態。
+
+### 3.10 遊戲啟動首頁與獨立存檔沙盒 (`index.html`)
+
+* **啟動首頁 (`#home-screen`)**：提供「踏入江湖（新篇章）」、「故劍重溫（讀取存檔）」與「乾坤推演（世界編輯器入口）」三大入口。
+* **開局設定打包固化**：啟動新江湖故事時，深拷貝當前的世界地圖、起始及探索區域地圖、物品庫、武學心法庫與角色庫打包為獨立存檔（`saves/story_<timestamp>.json` 與 LocalStorage）。
+* **遊戲中編輯器隔離**：進入故事後頂部移除所有編輯器開啟按鈕，改為故事篇名、保存進度與返回首頁控制，確保單局存檔設定不受外部編輯器變動影響。
 
 ### 2.2 核心排程器實作 (TypeScript)
 
@@ -208,12 +239,14 @@ export class TimeScheduler {
 * **江湖聲望 (Reputation)**：影響城鎮 NPC 態度、懸賞報酬與黑市門檻。
 * **經脈負荷 (Strain)**：經脈透支（Overdraw）將累積負荷，超過閾值造成永久殘疾或內傷。
 
-### 4.2 身上穿戴行頭 (Equipment Slots)
+### 4.2 身上穿戴行頭與分窗儀表板 (Equipment Slots & Inventory)
 
+* **人物屬性與裝備分離視窗**：人物屬性視窗顯示門派歸屬、形態階梯、經驗值與自由潛能點分配，以及當前修練裝備之武功／心法；裝備視窗左側為裝備欄、右側為背包內容，支援即時裝卸裝備與使用丹藥。
 * **主手兵刃 (Weapon)**：如【寒鐵青鋒劍】（上品），提供攻擊力、招式速度與特殊元素詞條（15% 觸發霜凍）。
 * **貼身防具 (Armor)**：如【流雲夜行袍】（良品），提供防禦力與區域地圖夜行隱匿加成。
-* **腰佩靈寶 (Accessory)**：如【白玉長生珮】（寶器），提供生命上限與大圖行進真氣自回。
-* **快捷檢視操作**：任何時刻按下快捷鍵 <kbd>C</kbd> 或點擊頂部狀態欄「人物屬性與裝備」按鈕，即可瞬間喚出雙欄式人物儀表板。
+* **腰佩靈寶 (Accessory)**：如【白玉長生珮】（寶器），提供生命上限與區域地圖行進真氣自回。
+* **綜合戰鬥數值引擎**：人物實戰攻擊、防禦與閃避率由「自身屬性 + 武器 + 防具 + 裝備武學 + 裝備心法 + 異常狀態（暈眩、中毒、奮起、受傷）」即時綜合計算。
+* **快捷檢視操作**：任何時刻按下快捷鍵 <kbd>C</kbd> 或點擊頂部狀態欄按鈕，即可瞬間喚出人物屬性／裝備背包儀表板。
 
 ---
 
@@ -310,10 +343,11 @@ NPC 具備獨立認知資料庫，非單純好感度數值。
 * 當回合可透支下回合 Energy 連動 2~3 次（用以絕殺或突圍）。
 * 代價：下回合陷入「脫力」狀態，無法行動且被爆擊率 100%。
 
-### 7.4 確定性預判虛影與擊退碰撞 (Telegraphing & Knockback)
+### 7.4 確定性預判虛影、擊退碰撞與戰術表現 (Telegraphing & Combat Feedback)
 
 * 烈陽掌擊退敵人撞擊岩壁：額外受到 15 點撞擊震傷並**暈眩 1 回合**。
 * 撞擊其他實體：雙方平分衝擊傷害。
+* **外功招式與受擊視覺回饋**：戰術小地圖施展已裝備之外功武學時，於目標處顯示該武學圖示並漸進淡出；敵我受擊時均顯示上飄淡出的傷害數字，並觸發受擊方圖案震動／閃紅打擊感。
 
 ---
 
@@ -352,3 +386,22 @@ NPC 具備獨立認知資料庫，非單純好感度數值。
   - 招式資料結構建立與網格範圍判定演算法。
 - [ ] **Phase 4: NPC AI 與 SQLite 存檔**
   - 建立基於 SQLite-WASM 的關聯資料表與 Utility AI 決策樹。
+
+---
+
+## 11. 自動化測試與品質保證 (`eng/tests/run_all_tests.js`)
+
+執行 `node eng/tests/run_all_tests.js` 可一次驗證以下 **12 套自動化測試**：
+
+1. **WorldClock 時鐘與時辰系統** (`test_world_clock.js`)
+2. **A* 智能尋路演算法** (`test_pathfinder.js`)
+3. **跨區漫遊與世界邊界狀態機** (`test_chunk_transition.js`)
+4. **地圖 Schema 與 Tiled 規範校驗** (`test_map_schema.js`)
+5. **移動速度動態補間與防抖鎖定** (`test_movement_dynamics.js`)
+6. **全域物品資料 Schema 與三族專屬裝備校驗** (`test_item_schema.js`)
+7. **全域武學與心法 20 級成長矩陣與門派加成校驗** (`test_martial_schema.js`)
+8. **人物經驗升級、自由潛能點與綜合戰鬥數值引擎** (`test_combat_stats_system.js`)
+9. **角色實體、三大種族、非重疊形態與三族平衡** (`test_character_schema.js`)
+10. **主角形態進化、等級瓶頸與突破魔物系統** (`test_character_evolution.js`)
+11. **故事首頁、獨立存檔打包封裝與設定資料隔離** (`test_story_save_system.js`)
+12. **世界地圖一鍵舖滿隨機區域地圖、比例與難度展開引擎** (`test_world_generator.js`)

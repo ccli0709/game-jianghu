@@ -563,6 +563,7 @@
 
     <!-- 操作動作列 -->
     <div class="header-actions">
+      <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#f3e8ff;" onclick="openBatchMartialsModal()">✨ 一鍵生成隨機武學心法</button>
       <button class="btn" style="border-color:#d97706; color:#fde047;" onclick="confirmResetToDefault()">🔄 重設為 Default</button>
       <button class="btn btn-random" onclick="openRandomModal()">🎲 隨機武學建議</button>
       <button class="btn btn-primary" onclick="createNewMartial()">➕ 新增武學/心法</button>
@@ -685,6 +686,22 @@
         </div>
       </div>
 
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">專屬搭配裝備 / 寶品類型 (Synergy)</label>
+          <select id="inp-synergy-cat" class="form-select">
+            <option value="MELEE_WEAPON">🗡️ 近戰兵刃 (拳套/刀劍/棍棒)</option>
+            <option value="RANGED_WEAPON">🏹 遠程暗器 (飛針/機關匣)</option>
+            <option value="ARMOR">🛡️ 各式防具 (重鎧/輕袍/護腕)</option>
+            <option value="SPECIAL">📿 秘寶奇物 (靈寶/道門信物)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">專屬類型加成說明</label>
+          <input type="text" id="inp-synergy-summary" class="form-input" placeholder="例如: 搭配【近戰兵刃】時，外功傷害額外 +15%">
+        </div>
+      </div>
+
       <div class="form-group" style="margin-bottom:14px;">
         <label class="form-label">武學心法由來與奧義描述</label>
         <textarea id="inp-desc" class="form-textarea" placeholder="詳細描述本門武學之出處、口訣心印或招法特點..."></textarea>
@@ -778,6 +795,32 @@
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
         <button class="btn" onclick="closeRandomModal()">關閉</button>
         <button class="btn btn-random" onclick="executeRandomSuggestion()">🎲 生成建議並加入</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 一鍵生成隨機武學心法 Modal -->
+  <div class="modal-overlay" id="batch-martials-modal">
+    <div class="modal-content" style="width: 560px;">
+      <div class="modal-title" style="justify-content: space-between;">
+        <span>✨ 一鍵生成隨機武學心法（各門派 × 分類 × 品階）</span>
+        <button class="btn" style="padding:3px 9px;" onclick="closeBatchMartialsModal()">✕ 關閉</button>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.5;">
+        涵蓋 <b>7 大門派</b>（少林、武當、華山、丐幫、峨嵋、逍遙、江湖散人）× <b>2 大分類</b>（外功武學 / 內功心法）× <b>6 大品質品階</b>（凡品～神兵絕品），各帶門派特色與專屬武器/防具/寶品加成。
+      </p>
+      <div class="form-group">
+        <label class="form-label">每個「門派 × 分類 × 品質」組合生成數量（預設 1 項）</label>
+        <input type="number" id="batch-martial-count" class="form-input" value="1" min="1" max="5" oninput="updateBatchMartialsSummary()">
+      </div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:#fde68a; cursor:pointer;">
+        <input type="checkbox" id="batch-martial-clear" checked>
+        <span>生成前清空目前武學庫中的舊有武學心法（推薦）</span>
+      </label>
+      <div id="batch-martial-summary" style="font-size:0.78rem; color:#38bdf8; background:#0b0e17; border:1px solid #1e293b; padding:8px 10px; border-radius:6px;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
+        <button class="btn" onclick="closeBatchMartialsModal()">取消</button>
+        <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#fff;" onclick="executeBatchMartialsGeneration()">🚀 清空並一鍵生成</button>
       </div>
     </div>
   </div>
@@ -959,6 +1002,7 @@
           : `<span class="badge badge-cultivation">心法</span>`;
 
         const maxLvBonus = m.levelBonuses && m.levelBonuses[19] ? m.levelBonuses[19].summary : '20 級成長矩陣已配備';
+        const synergyLine = m.gearSynergy ? `<div style="font-size:0.68rem; color:#fbbf24; margin-top:3px;">✨ ${m.gearSynergy.summary}</div>` : '';
 
         card.innerHTML = `
           <div class="card-top">
@@ -973,6 +1017,7 @@
             <span>最高 20 級 · ${m.tier || '凡品'}</span>
           </div>
           <div class="card-summary">${maxLvBonus}</div>
+          ${synergyLine}
         `;
         listContainer.appendChild(card);
       });
@@ -1009,6 +1054,8 @@
       document.getElementById('inp-tier').value = m.tier || '凡品';
       document.getElementById('inp-cost').value = m.cost !== undefined ? m.cost : 15;
       document.getElementById('inp-range').value = m.range !== undefined ? m.range : 1;
+      document.getElementById('inp-synergy-cat').value = m.gearSynergy?.targetCategory || (m.type === 'MARTIAL' ? 'MELEE_WEAPON' : 'ARMOR');
+      document.getElementById('inp-synergy-summary').value = m.gearSynergy?.summary || '';
       document.getElementById('inp-desc').value = m.desc || '';
 
       updateExpDescText(m.type);
@@ -1118,6 +1165,15 @@
       m.id = document.getElementById('inp-id').value.trim();
       m.name = document.getElementById('inp-name').value.trim();
       m.type = document.getElementById('inp-type').value;
+      const synCat = document.getElementById('inp-synergy-cat').value;
+      const synSum = document.getElementById('inp-synergy-summary').value.trim();
+      if (synSum || m.gearSynergy) {
+        m.gearSynergy = {
+          ...(m.gearSynergy || {}),
+          targetCategory: synCat,
+          summary: synSum
+        };
+      }
       m.sect = document.getElementById('inp-sect').value;
       m.sectName = document.getElementById('inp-sect').options[document.getElementById('inp-sect').selectedIndex].text.split(' ')[0];
       m.icon = document.getElementById('inp-icon').value.trim() || '⚔️';
@@ -1339,6 +1395,49 @@
 
     function onFilterChange() {
       renderSidebar();
+    }
+
+    // ==========================================
+    // 一鍵生成隨機武學心法 Modal 控制邏輯
+    // ==========================================
+    function openBatchMartialsModal() {
+      updateBatchMartialsSummary();
+      document.getElementById('batch-martials-modal').classList.add('show');
+    }
+
+    function closeBatchMartialsModal() {
+      document.getElementById('batch-martials-modal').classList.remove('show');
+    }
+
+    function updateBatchMartialsSummary() {
+      const cnt = Math.max(1, Math.min(5, parseInt(document.getElementById('batch-martial-count').value, 10) || 1));
+      const sectsCount = Object.keys(SECTS).length;
+      const typesCount = Object.keys(MARTIAL_TYPES).length;
+      const tiersCount = (typeof MARTIAL_TIERS !== 'undefined' ? MARTIAL_TIERS.length : 6);
+      const total = sectsCount * typesCount * tiersCount * cnt;
+      document.getElementById('batch-martial-summary').innerText =
+        `預計生成共 ${total} 部武學心法（${sectsCount} 門派 × ${typesCount} 分類 × ${tiersCount} 品階 × ${cnt} 項）`;
+    }
+
+    async function executeBatchMartialsGeneration() {
+      const cnt = Math.max(1, Math.min(5, parseInt(document.getElementById('batch-martial-count').value, 10) || 1));
+      const clearOld = document.getElementById('batch-martial-clear').checked;
+
+      const generated = generateBalancedMartialsCatalog(cnt);
+      if (clearOld) {
+        martialsCatalog = generated;
+      } else {
+        martialsCatalog = martialsCatalog.concat(generated);
+      }
+
+      currentSelectedId = null;
+      renderSidebar();
+      if (martialsCatalog.length > 0) {
+        selectMartial(martialsCatalog[0].id);
+      }
+      await saveMartialsToProject();
+      closeBatchMartialsModal();
+      showToast(`✨ 已生成 ${generated.length} 部各門派特色武學心法並保存！`);
     }
   </script>
 </body>

@@ -14,7 +14,9 @@ const {
   getRealmTitle,
   getExpRequiredForLevel,
   generateLevelBonuses,
-  generateDefaultMartials
+  generateDefaultMartials,
+  MARTIAL_TIERS,
+  generateBalancedMartialsCatalog
 } = require('../../src/core/MartialGenerator');
 
 const MARTIALS_FILE = path.join(__dirname, '../../data/martials.json');
@@ -108,6 +110,23 @@ function runTests() {
   assert.ok(cultivationCount > 0, '資料庫中必須包含內功心法 (CULTIVATION)');
 
   console.log(`✅ 通過 ${martials.length} 部武功心法（外功: ${martialCount}，內功: ${cultivationCount}）Schema 與 20 級成長數值驗證！`);
+
+  // 5. 一鍵生成隨機武學心法：7 門派 × 2 分類 × 6 品階 × 1 項 = 84 部驗證
+  const batchMartials = generateBalancedMartialsCatalog(1);
+  assert.strictEqual(batchMartials.length, 7 * 2 * 6, `應剛好生成 84 部 (7門派*2分類*6品階*1項)，實際為 ${batchMartials.length}`);
+
+  VALID_SECT_IDS.forEach(sectId => {
+    VALID_TYPES.forEach(type => {
+      MARTIAL_TIERS.forEach(tierObj => {
+        const matched = batchMartials.filter(m => m.sect === sectId && m.type === type && m.tier === tierObj.name);
+        assert.strictEqual(matched.length, 1, `${sectId} - ${type} - ${tierObj.name} 應各有 1 項`);
+        const m = matched[0];
+        assert.ok(m.gearSynergy && m.gearSynergy.targetCategory && m.gearSynergy.bonusValue > 0, `${m.name} 必須具備專屬武器/防具/寶品類型加成`);
+        assert.strictEqual(m.levelBonuses.length, 20, `${m.name} 必須具備 20 級成長矩陣`);
+      });
+    });
+  });
+  console.log(`✅ 通過一鍵生成 84 部各門派×分類×品階特色武學心法與專屬裝備加成校驗！`);
 }
 
 if (require.main === module) {
