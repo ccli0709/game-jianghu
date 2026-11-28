@@ -92,6 +92,19 @@ function runTests() {
   }
   console.log('  ✓ RANDOM 全隨機生成與四方邊界跨區通行保證校驗通過');
 
+  // 5. 據點與門派圖塊出現總比例校驗 (各門派總舵 1 次不可變、分舵 5%、城鎮市集 20%、龍門客棧 50%)
+  const poiLayout = WorldGenerator.generateWorldLayout({
+    width: 10,
+    height: 10,
+    poiRatios: { sectBranchPct: 5, townPct: 20, innPct: 50 },
+    fillMode: 'RANDOM'
+  });
+  assert.strictEqual(poiLayout.summary.poiStats.sectHqCount, WorldGenerator.ORTHODOX_SECTS.length, '各門派總舵在全世界應剛好各出現 1 次');
+  assert.strictEqual(poiLayout.summary.poiStats.sectBranchCount, 5, '100 格中 5% 門派分舵應為 5 格');
+  assert.strictEqual(poiLayout.summary.poiStats.townCount, 20, '100 格中 20% 城鎮市集應為 20 格');
+  assert.strictEqual(poiLayout.summary.poiStats.innCount, 50, '100 格中 50% 龍門客棧應為 50 格');
+  console.log('  ✓ 門派總舵(各1次)、分舵(5%)、城鎮市集(20%)、龍門客棧(50%) 出現比例校驗通過');
+
   console.log('✅ 世界地圖一鍵批次生成、比例精準度與難度展開演算法全數通過校驗！');
 }
 

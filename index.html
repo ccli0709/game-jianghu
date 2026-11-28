@@ -1645,6 +1645,28 @@
           <button class="btn" onclick="closeTownDialog()">離開此地 (ESC)</button>
         </div>
       </div>
+
+      <!-- 門派分舵/總舵互動視窗 -->
+      <div id="sect-dialog"
+        style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:560px; max-width:94vw; max-height:84vh; overflow-y:auto; background:rgba(15,17,26,0.97); border:1px solid #7c3aed; border-radius:10px; padding:20px 24px; box-shadow:0 20px 50px rgba(0,0,0,0.9); z-index:90;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #282e42; padding-bottom:10px; margin-bottom:12px;">
+          <h2 id="sect-dialog-title" style="font-size:1.15rem; color:#f8fafc; margin:0;">⛩️ 門派分舵</h2>
+          <span id="sect-dialog-badge"
+            style="font-size:0.75rem; padding:3px 8px; border-radius:4px; background:#2e1065; color:#d8b4fe; border:1px solid #7c3aed;">尚未入門</span>
+        </div>
+        <div id="sect-hq-join-box"
+          style="display:none; background:#1e1b2e; border:1px solid #6d28d9; border-radius:6px; padding:12px; margin-bottom:12px; justify-content:space-between; align-items:center; gap:10px;">
+          <div style="font-size:0.8rem; color:#e2e8f0;" id="sect-hq-join-desc">此乃本門總壇所在，可在此拜師入門成為正式弟子，解鎖高階武學心法！</div>
+          <button class="btn" id="btn-join-sect" style="border-color:#f59e0b; color:#fde047; flex-shrink:0;"
+            onclick="joinSectFromHQ()">🙏 拜入本門</button>
+        </div>
+        <div style="font-size:0.82rem; color:#cbd5e1; margin-bottom:8px;" id="sect-learn-hint">本舵可傳授本門武學與心法：</div>
+        <div id="sect-martials-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+        <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+          <button class="btn" onclick="closeSectDialog()">告辭離去 (ESC)</button>
+        </div>
+      </div>
     </div>
 
     <aside id="sidebar">
@@ -1769,8 +1791,10 @@
         MOUNTAIN: { id: 1, name: '高聳崇山', hourCost: 999, color: 0x313845, icon: '⛰️' },
         FOREST: { id: 2, name: '黑風密林', hourCost: 3, color: 0x0e2015, icon: '🌲' },
         HILLS: { id: 5, name: '崎嶇荒丘', hourCost: 2, color: 0x27291e, icon: '▲' },
-        TOWN: { id: 3, name: '洛陽古城', hourCost: 1, color: 0x632b17, icon: '🏯' },
-        INN: { id: 4, name: '龍門客棧', hourCost: 1, color: 0x8d3f0d, icon: '🍶' }
+        TOWN: { id: 3, name: '城鎮市集', hourCost: 1, color: 0x632b17, icon: '🏯' },
+        INN: { id: 4, name: '龍門客棧', hourCost: 1, color: 0x8d3f0d, icon: '🍶' },
+        SECT_BRANCH: { id: 6, name: '門派分舵', hourCost: 1, color: 0x3b1d5a, icon: '⛩️' },
+        SECT_HQ: { id: 7, name: '門派總舵', hourCost: 1, color: 0x7c2d12, icon: '🏛️' }
       }
     };
 
@@ -2055,7 +2079,7 @@
 
         const layer = tiledJson.layers.find(l => l.type === 'tilelayer');
         if (layer && layer.data) {
-          const gidMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5 };
+          const gidMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7 };
           for (let i = 0; i < Math.min(layer.data.length, this.tiles.length); i++) {
             const gid = layer.data[i];
             this.tiles[i] = gidMap[gid] !== undefined ? gidMap[gid] : 0;
@@ -3590,6 +3614,8 @@
 
         if (destTile.id === 4 || destTile.id === 3) {
           this.addLog(`<span class="log-world">【抵達】</span>抵達了 ${destTile.name}，可按 <kbd>E</kbd> 投宿歇息或打聽消息。`);
+        } else if (destTile.id === 6 || destTile.id === 7) {
+          this.addLog(`<span class="log-world">【抵達】</span>抵達了 ${destTile.name}，可按 <kbd>E</kbd> 拜訪門派學藝或拜師入門。`);
         } else {
           this.triggerRandomOverworldEvent(destTile);
         }
@@ -4967,6 +4993,7 @@
         window.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') {
             closeTownDialog();
+            closeSectDialog();
             closeCharacterDialog();
             closeEquipmentDialog();
             closeMartialPicker();
@@ -5939,8 +5966,12 @@
     function openCurrentTownDialog() {
       if (!game || game.mode !== MODE.OVERWORLD) return;
       const tile = game.overworld.getTileData(game.player.owX, game.player.owY);
+      if (tile.id === 6 || tile.id === 7) {
+        openSectDialog(tile);
+        return;
+      }
       if (tile.id === 4 || tile.id === 3) {
-        document.getElementById('town-title').innerText = tile.id === 4 ? '🍶 龍門客棧' : '🏯 洛陽大城官府';
+        document.getElementById('town-title').innerText = tile.id === 4 ? '🍶 龍門客棧' : '🏯 城鎮市集';
 
         // 1. 江湖說書打聽情報：直接取自區域地圖的簡介與勢力設定
         const props = game.overworld.properties || {};
@@ -5993,20 +6024,178 @@
           targetY: 3
         };
 
-        // 4. 客棧/城鎮行商貨架：依區域地圖難度高低販售 6 項物品（必含 1 種回血藥）
-        renderTownShopByDifficulty(parseInt(props.difficulty, 10) || 1);
+        // 4. 客棧/城鎮行商貨架：客棧僅售 3 項藥品道具；城鎮依區域難度販售 6 項物品（必含 1 種回血藥）
+        renderTownShopByDifficulty(parseInt(props.difficulty, 10) || 1, tile.id === 4);
 
         document.getElementById('town-dialog').style.display = 'block';
       } else {
-        game.addLog('<span class="log-warn">【提示】</span>此處非客棧或官府，無法入內打聽。');
+        game.addLog('<span class="log-warn">【提示】</span>此處非客棧、城鎮或門派據點，無法入內互動。');
       }
+    }
+
+    let currentSectName = '';
+
+    function openSectDialog(tile) {
+      const props = game.overworld.properties || {};
+      const orthodoxSects = ['少林寺', '武當派', '華山派', '丐幫', '峨嵋派', '逍遙派'];
+      let sectName = (props.faction || '').trim();
+      if (!orthodoxSects.includes(sectName)) {
+        // 若該地圖未設定正統門派，依座標雜湊對應一個門派
+        const idx = Math.abs((game.curChunkX || 0) * 3 + (game.curChunkY || 0) * 5) % orthodoxSects.length;
+        sectName = orthodoxSects[idx];
+      }
+      currentSectName = sectName;
+
+      const isHQ = tile.id === 7;
+      document.getElementById('sect-dialog-title').innerText = isHQ ? `🏛️ ${sectName} · 門派總舵` : `⛩️ ${sectName} · 門派分舵`;
+
+      const p = game.player;
+      const isMember = p.sect === sectName;
+      const badgeEl = document.getElementById('sect-dialog-badge');
+      badgeEl.innerText = isMember ? `✅ 本門弟子 (${sectName})` : `江湖身份：${p.sect || '尚未入門'}`;
+
+      const hqBox = document.getElementById('sect-hq-join-box');
+      if (isHQ) {
+        hqBox.style.display = 'flex';
+        const joinBtn = document.getElementById('btn-join-sect');
+        if (isMember) {
+          document.getElementById('sect-hq-join-desc').innerText = `你已是【${sectName}】正式弟子，可在此修習本門全品階武學與心法。`;
+          joinBtn.disabled = true;
+          joinBtn.innerText = '✅ 已拜入本門';
+        } else {
+          document.getElementById('sect-hq-join-desc').innerText = `此乃【${sectName}】總舵！拜入本門成為弟子後，方可學習高階絕學與鎮宗心法。`;
+          joinBtn.disabled = false;
+          joinBtn.innerText = '🙏 拜入本門成為弟子';
+        }
+      } else {
+        hqBox.style.display = 'none';
+      }
+
+      document.getElementById('sect-learn-hint').innerText = isMember
+        ? `【本門弟子權限】可修習${sectName}所有品階武功與心法：`
+        : `【未入本門限制】於分舵僅可學習${sectName}最初階武功與心法（需至總舵拜師方可修習高階）：`;
+
+      const martialsPool = (game.currentStory?.martials && game.currentStory.martials.length > 0)
+        ? game.currentStory.martials
+        : (game.martialsCatalog || []);
+      const sectMartials = martialsPool.filter(m => m.sectName === sectName || m.sect === sectName);
+
+      const tierOrder = ['凡品', '良品', '上品', '極品', '寶器', '神兵絕品'];
+      const sorted = [...sectMartials].sort((a, b) => tierOrder.indexOf(a.tier || '凡品') - tierOrder.indexOf(b.tier || '凡品'));
+      const lowestTier = sorted.length > 0 ? (sorted[0].tier || '凡品') : '凡品';
+
+      const listEl = document.getElementById('sect-martials-list');
+      listEl.innerHTML = '';
+
+      if (sorted.length === 0) {
+        listEl.innerHTML = '<div style="color:#64748b; font-size:0.8rem; padding:12px;">本舵暫無典籍收錄。</div>';
+      } else {
+        const learnedIds = new Set([
+          ...(p.equippedMartials || []).map(x => x.id),
+          ...(p.equippedCultivations || []).map(x => x.id),
+          ...(p.learnedMartials || []).map(x => x.id),
+          ...(p.learnedCultivations || []).map(x => x.id)
+        ]);
+
+        sorted.forEach(m => {
+          const isLowest = (m.tier || '凡品') === lowestTier || m.tier === '凡品';
+          const canLearn = isMember || isLowest;
+          const alreadyLearned = learnedIds.has(m.id);
+          const costGold = (tierOrder.indexOf(m.tier || '凡品') + 1) * 25;
+
+          const card = document.createElement('div');
+          card.style.cssText = 'background:#161925; border:1px solid #2b3145; border-radius:6px; padding:9px 12px; display:flex; justify-content:space-between; align-items:center; gap:10px;';
+
+          let btnHtml = '';
+          if (alreadyLearned) {
+            btnHtml = `<span style="font-size:0.74rem; color:#6ee7b7; font-weight:bold;">✅ 已習得</span>`;
+          } else if (!canLearn) {
+            btnHtml = `<span style="font-size:0.72rem; color:#94a3b8;">🔒 需入門</span>`;
+          } else {
+            btnHtml = `<button class="btn" style="padding:4px 10px; font-size:0.75rem; border-color:#8b5cf6; color:#e9d5ff;" onclick="learnSectMartial('${m.id}')">📖 學藝 (${costGold}兩)</button>`;
+          }
+
+          card.innerHTML = `
+            <div style="min-width:0;">
+              <div style="font-size:0.84rem; font-weight:bold; color:#f1f5f9;">
+                ${m.icon || '📜'} ${m.name}
+                <span style="font-size:0.72rem; color:#fbbf24; margin-left:4px;">[${m.tier || '凡品'} · ${m.type === 'MARTIAL' ? '外功' : '心法'}]</span>
+              </div>
+              <div style="font-size:0.72rem; color:#94a3b8; margin-top:2px;">${m.desc || ''}</div>
+            </div>
+            <div style="flex-shrink:0;">${btnHtml}</div>
+          `;
+          listEl.appendChild(card);
+        });
+      }
+
+      document.getElementById('sect-dialog').style.display = 'block';
+    }
+
+    function closeSectDialog() {
+      const el = document.getElementById('sect-dialog');
+      if (el) el.style.display = 'none';
+    }
+
+    function joinSectFromHQ() {
+      if (!game || !game.player || !currentSectName) return;
+      game.player.sect = currentSectName;
+      game.addLog(`<span class="log-world">🏛️【拜師入門】</span>你於總舵行三跪九叩拜師大禮，正式成為【${currentSectName}】門下弟子！`);
+      game.updateUI();
+      if (typeof updateCharacterUI === 'function') updateCharacterUI();
+      openSectDialog({ id: 7 });
+    }
+
+    function learnSectMartial(martialId) {
+      if (!game || !game.player) return;
+      const martialsPool = (game.currentStory?.martials && game.currentStory.martials.length > 0)
+        ? game.currentStory.martials
+        : (game.martialsCatalog || []);
+      const m = martialsPool.find(x => x.id === martialId);
+      if (!m) return;
+
+      const tierOrder = ['凡品', '良品', '上品', '極品', '寶器', '神兵絕品'];
+      const costGold = (tierOrder.indexOf(m.tier || '凡品') + 1) * 25;
+      if ((game.player.gold || 0) < costGold) {
+        game.addLog(`<span class="log-warn">【盤纏不足】</span>修習《${m.name}》需束脩 ${costGold} 兩碎銀！`);
+        return;
+      }
+
+      game.player.gold -= costGold;
+      const copy = JSON.parse(JSON.stringify(m));
+      copy.currentLevel = 1;
+      copy.exp = 0;
+
+      if (copy.type === 'MARTIAL') {
+        game.player.learnedMartials = game.player.learnedMartials || [];
+        game.player.learnedMartials.push(copy);
+        game.player.equippedMartials = game.player.equippedMartials || [];
+        if (game.player.equippedMartials.length < 3) {
+          game.player.equippedMartials.push(copy);
+        }
+      } else {
+        game.player.learnedCultivations = game.player.learnedCultivations || [];
+        game.player.learnedCultivations.push(copy);
+        game.player.equippedCultivations = game.player.equippedCultivations || [];
+        if (game.player.equippedCultivations.length < 3) {
+          game.player.equippedCultivations.push(copy);
+        }
+      }
+
+      game.addLog(`<span class="log-world">📖【習得絕藝】</span>花費 ${costGold} 兩束脩，成功領悟【${currentSectName}】${copy.type === 'MARTIAL' ? '外功' : '心法'}《${copy.name}》！`);
+      game.updateUI();
+      if (typeof game.updateBattleSkillsUI === 'function') game.updateBattleSkillsUI();
+      if (typeof updateCharacterUI === 'function') updateCharacterUI();
+      const tile = game.overworld.getTileData(game.player.owX, game.player.owY);
+      openSectDialog(tile);
     }
 
     let currentTownShopItems = [];
     const townShopCache = {};
 
-    function renderTownShopByDifficulty(mapDifficulty) {
+    function renderTownShopByDifficulty(mapDifficulty, isInn = false) {
       const diff = Math.min(5, Math.max(1, mapDifficulty || 1));
+      const maxItems = isInn ? 3 : 6;
       const tierByDiff = {
         1: ['COMMON', 'UNCOMMON'],
         2: ['COMMON', 'UNCOMMON', 'RARE'],
@@ -6015,13 +6204,15 @@
         5: ['EPIC', 'LEGENDARY', 'MYTHIC']
       }[diff] || ['COMMON', 'UNCOMMON'];
 
-      const cacheKey = (game.currentMapFile || 'default') + '_d' + diff;
+      const cacheKey = (game.currentMapFile || 'default') + '_d' + diff + (isInn ? '_inn' : '_town');
       if (!townShopCache[cacheKey]) {
         const catalog = (game.currentStory?.items && game.currentStory.items.length > 0)
           ? game.currentStory.items
           : (game.itemsCatalog || []);
         const usableCatalog = catalog.filter(i => !i.equipRace || i.equipRace === 'HUMAN' || i.equipRace === 'ALL');
-        const pool = usableCatalog.length > 0 ? usableCatalog : catalog;
+        const basePool = usableCatalog.length > 0 ? usableCatalog : catalog;
+        // 客棧僅限藥品道具 (MEDICINE)
+        const pool = isInn ? basePool.filter(i => i.category === 'MEDICINE') : basePool;
 
         const chosen = [];
         const usedIds = new Set();
@@ -6036,17 +6227,17 @@
           usedIds.add(med.id);
         }
 
-        // 2. 補齊其餘 5 項符合該地圖難度品質的物品
+        // 2. 補齊其餘符合該地圖難度品質的物品（客棧至多 3 項藥品、城鎮至多 6 項）
         const tierPool = pool.filter(i => tierByDiff.includes(i.tier) && !usedIds.has(i.id));
         const restSource = tierPool.length > 0 ? tierPool : pool.filter(i => !usedIds.has(i.id));
         const shuffled = [...restSource].sort(() => Math.random() - 0.5);
         for (const item of shuffled) {
-          if (chosen.length >= 6) break;
+          if (chosen.length >= maxItems) break;
           chosen.push(JSON.parse(JSON.stringify(item)));
           usedIds.add(item.id);
         }
-        // 若物品總管品項極少不足 6 件時允許重複補滿 6 項
-        while (chosen.length < 6 && pool.length > 0) {
+        // 若物品總管品項極少不足目標數時允許重複補滿
+        while (chosen.length < maxItems && pool.length > 0) {
           chosen.push(JSON.parse(JSON.stringify(pool[chosen.length % pool.length])));
         }
         townShopCache[cacheKey] = chosen;
@@ -6054,7 +6245,11 @@
 
       currentTownShopItems = townShopCache[cacheKey];
       const hintEl = document.getElementById('town-shop-tier-hint');
-      if (hintEl) hintEl.innerText = `(區域難度 ★${diff} ｜ 共 ${currentTownShopItems.length} 項，含回血靈藥)`;
+      if (hintEl) {
+        hintEl.innerText = isInn
+          ? `(客棧貨架 · 區域難度 ★${diff} ｜ 僅售 ${currentTownShopItems.length} 項藥品道具)`
+          : `(城鎮市集 · 區域難度 ★${diff} ｜ 共 ${currentTownShopItems.length} 項，含回血靈藥)`;
+      }
 
       const listEl = document.getElementById('town-shop-list');
       if (!listEl) return;

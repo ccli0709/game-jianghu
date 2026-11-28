@@ -15,1796 +15,3588 @@
   "chunkTileSize": 16,
   "cells": {
     "0,0": {
-      "mapFile": "overworld_c0_0_mountain_5upd0.tmj",
-      "name": "蜀道重巒分境 (0, 0)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c0_0_swamp_991d3.tmj",
+      "name": "苗疆迷沼分境 (0, 0)",
+      "biome": "SWAMP",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,0": {
-      "mapFile": "overworld_c1_0_swamp_1cd05.tmj",
+      "mapFile": "overworld_c1_0_swamp_30d0x.tmj",
       "name": "苗疆迷沼分境 (1, 0)",
       "biome": "SWAMP",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,0": {
-      "mapFile": "overworld_c2_0_plains_28e7t.tmj",
+      "mapFile": "overworld_c2_0_plains_2aryj.tmj",
       "name": "中原平原分境 (2, 0)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,0": {
-      "mapFile": "overworld_c3_0_swamp_80hli.tmj",
+      "mapFile": "overworld_c3_0_swamp_17qtt.tmj",
       "name": "苗疆迷沼分境 (3, 0)",
       "biome": "SWAMP",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,0": {
-      "mapFile": "overworld_c4_0_plains_2yewu.tmj",
-      "name": "中原平原分境 (4, 0)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c4_0_desert_3cv2h.tmj",
+      "name": "戈壁沙海分境 (4, 0)",
+      "biome": "DESERT",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,0": {
-      "mapFile": "overworld_c5_0_swamp_5abek.tmj",
-      "name": "苗疆迷沼分境 (5, 0)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c5_0_desert_1vxjl.tmj",
+      "name": "戈壁沙海分境 (5, 0)",
+      "biome": "DESERT",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,0": {
-      "mapFile": "overworld_c6_0_plains_25u22.tmj",
-      "name": "中原平原分境 (6, 0)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c6_0_desert_816p8.tmj",
+      "name": "戈壁沙海分境 (6, 0)",
+      "biome": "DESERT",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,0": {
-      "mapFile": "overworld_c7_0_plains_1u3vi.tmj",
-      "name": "中原平原分境 (7, 0)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c7_0_snow_c2d5.tmj",
+      "name": "長白雪域分境 (7, 0)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,0": {
-      "mapFile": "overworld_c8_0_plains_1pski.tmj",
-      "name": "中原平原分境 (8, 0)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c8_0_mountain_9scl5.tmj",
+      "name": "蜀道重巒分境 (8, 0)",
+      "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,0": {
-      "mapFile": "overworld_c9_0_desert_99nh.tmj",
+      "mapFile": "overworld_c9_0_desert_7x9vc.tmj",
       "name": "戈壁沙海分境 (9, 0)",
       "biome": "DESERT",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,0": {
-      "mapFile": "overworld_c10_0_snow_73ksy.tmj",
+      "mapFile": "overworld_c10_0_snow_sxyz.tmj",
       "name": "長白雪域分境 (10, 0)",
       "biome": "SNOW",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,0": {
-      "mapFile": "overworld_c11_0_swamp_7g3km.tmj",
-      "name": "苗疆迷沼分境 (11, 0)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c11_0_plains_7cgib.tmj",
+      "name": "中原平原分境 (11, 0)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,0": {
-      "mapFile": "overworld_c12_0_swamp_7cfut.tmj",
-      "name": "苗疆迷沼分境 (12, 0)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c12_0_desert_3laxx.tmj",
+      "name": "戈壁沙海分境 (12, 0)",
+      "biome": "DESERT",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,0": {
-      "mapFile": "overworld_c13_0_desert_7x6dm.tmj",
-      "name": "戈壁沙海分境 (13, 0)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c13_0_mountain_6f500.tmj",
+      "name": "蜀道重巒分境 (13, 0)",
+      "biome": "MOUNTAIN",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,0": {
-      "mapFile": "overworld_c14_0_swamp_85if2.tmj",
-      "name": "苗疆迷沼分境 (14, 0)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c14_0_mountain_3xkcm.tmj",
+      "name": "蜀道重巒分境 (14, 0)",
+      "biome": "MOUNTAIN",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,0": {
-      "mapFile": "overworld_c15_0_plains_1tlt.tmj",
-      "name": "中原平原分境 (15, 0)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c15_0_desert_8ao59.tmj",
+      "name": "戈壁沙海分境 (15, 0)",
+      "biome": "DESERT",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,1": {
-      "mapFile": "overworld_c0_1_mountain_9fskg.tmj",
-      "name": "蜀道重巒分境 (0, 1)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c0_1_desert_15eky.tmj",
+      "name": "戈壁沙海分境 (0, 1)",
+      "biome": "DESERT",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,1": {
-      "mapFile": "overworld_c1_1_mountain_5lm9e.tmj",
-      "name": "蜀道重巒分境 (1, 1)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c1_1_plains_3dsrm.tmj",
+      "name": "中原平原分境 (1, 1)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,1": {
-      "mapFile": "overworld_c2_1_plains_9e4br.tmj",
+      "mapFile": "overworld_c2_1_plains_7sblb.tmj",
       "name": "中原平原分境 (2, 1)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,1": {
-      "mapFile": "overworld_c3_1_plains_2chyz.tmj",
+      "mapFile": "overworld_c3_1_plains_r6k2.tmj",
       "name": "中原平原分境 (3, 1)",
       "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,1": {
-      "mapFile": "overworld_c4_1_desert_6pe59.tmj",
-      "name": "戈壁沙海分境 (4, 1)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c4_1_snow_7gfoe.tmj",
+      "name": "華山派總壇 (4, 1)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": "華山派",
+        "factionName": "華山派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,1": {
-      "mapFile": "overworld_c5_1_plains_6e1he.tmj",
-      "name": "中原平原分境 (5, 1)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c5_1_swamp_2a4j2.tmj",
+      "name": "苗疆迷沼分境 (5, 1)",
+      "biome": "SWAMP",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,1": {
-      "mapFile": "overworld_c6_1_plains_8j7h9.tmj",
+      "mapFile": "overworld_c6_1_plains_1wt9o.tmj",
       "name": "中原平原分境 (6, 1)",
       "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,1": {
-      "mapFile": "overworld_c7_1_snow_4w2ho.tmj",
-      "name": "長白雪域分境 (7, 1)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c7_1_mountain_cw5m.tmj",
+      "name": "蜀道重巒分境 (7, 1)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,1": {
-      "mapFile": "overworld_c8_1_snow_8xbrs.tmj",
-      "name": "長白雪域分境 (8, 1)",
-      "biome": "SNOW",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "9,1": {
-      "mapFile": "overworld_c9_1_snow_66zfz.tmj",
-      "name": "長白雪域分境 (9, 1)",
-      "biome": "SNOW",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "10,1": {
-      "mapFile": "overworld_c10_1_mountain_4tlpw.tmj",
-      "name": "蜀道重巒分境 (10, 1)",
-      "biome": "MOUNTAIN",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "11,1": {
-      "mapFile": "overworld_c11_1_swamp_ukpr.tmj",
-      "name": "苗疆迷沼分境 (11, 1)",
+      "mapFile": "overworld_c8_1_swamp_84npw.tmj",
+      "name": "苗疆迷沼分境 (8, 1)",
       "biome": "SWAMP",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "9,1": {
+      "mapFile": "overworld_c9_1_plains_6ryfv.tmj",
+      "name": "中原平原分境 (9, 1)",
+      "biome": "PLAINS",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "10,1": {
+      "mapFile": "overworld_c10_1_swamp_40gll.tmj",
+      "name": "苗疆迷沼分境 (10, 1)",
+      "biome": "SWAMP",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "11,1": {
+      "mapFile": "overworld_c11_1_plains_323g.tmj",
+      "name": "中原平原分境 (11, 1)",
+      "biome": "PLAINS",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,1": {
-      "mapFile": "overworld_c12_1_plains_7v18.tmj",
+      "mapFile": "overworld_c12_1_plains_9sybg.tmj",
       "name": "中原平原分境 (12, 1)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,1": {
-      "mapFile": "overworld_c13_1_plains_54y3f.tmj",
+      "mapFile": "overworld_c13_1_plains_1ygwk.tmj",
       "name": "中原平原分境 (13, 1)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,1": {
-      "mapFile": "overworld_c14_1_plains_8w905.tmj",
-      "name": "中原平原分境 (14, 1)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c14_1_snow_5x0na.tmj",
+      "name": "長白雪域分境 (14, 1)",
+      "biome": "SNOW",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,1": {
-      "mapFile": "overworld_c15_1_plains_5hbcm.tmj",
-      "name": "中原平原分境 (15, 1)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c15_1_mountain_41gyb.tmj",
+      "name": "蜀道重巒分境 (15, 1)",
+      "biome": "MOUNTAIN",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,2": {
-      "mapFile": "overworld_c0_2_mountain_42fuv.tmj",
-      "name": "蜀道重巒分境 (0, 2)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c0_2_desert_5ebhm.tmj",
+      "name": "戈壁沙海分境 (0, 2)",
+      "biome": "DESERT",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,2": {
-      "mapFile": "overworld_c1_2_snow_7y2su.tmj",
-      "name": "長白雪域分境 (1, 2)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c1_2_mountain_7dcve.tmj",
+      "name": "蜀道重巒分境 (1, 2)",
+      "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,2": {
-      "mapFile": "overworld_c2_2_plains_5zme4.tmj",
-      "name": "中原平原分境 (2, 2)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c2_2_snow_4e2xr.tmj",
+      "name": "長白雪域分境 (2, 2)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,2": {
-      "mapFile": "overworld_c3_2_plains_7paqd.tmj",
-      "name": "中原平原分境 (3, 2)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c3_2_snow_12uwq.tmj",
+      "name": "長白雪域分境 (3, 2)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,2": {
-      "mapFile": "overworld_c4_2_mountain_1y80g.tmj",
-      "name": "蜀道重巒分境 (4, 2)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c4_2_plains_7wyex.tmj",
+      "name": "中原平原分境 (4, 2)",
+      "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,2": {
-      "mapFile": "overworld_c5_2_snow_2ivsq.tmj",
-      "name": "長白雪域分境 (5, 2)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c5_2_mountain_50wvz.tmj",
+      "name": "蜀道重巒分境 (5, 2)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,2": {
-      "mapFile": "overworld_c6_2_swamp_2jtbu.tmj",
+      "mapFile": "overworld_c6_2_swamp_3kx2j.tmj",
       "name": "苗疆迷沼分境 (6, 2)",
       "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,2": {
-      "mapFile": "overworld_c7_2_plains_1z8ak.tmj",
+      "mapFile": "overworld_c7_2_plains_58m8x.tmj",
       "name": "中原平原分境 (7, 2)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,2": {
-      "mapFile": "overworld_c8_2_mountain_34b8f.tmj",
-      "name": "蜀道重巒分境 (8, 2)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c8_2_swamp_8v9id.tmj",
+      "name": "苗疆迷沼分境 (8, 2)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,2": {
-      "mapFile": "overworld_c9_2_plains_3zla9.tmj",
+      "mapFile": "overworld_c9_2_plains_3gauq.tmj",
       "name": "中原平原分境 (9, 2)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,2": {
-      "mapFile": "overworld_c10_2_desert_9suvs.tmj",
-      "name": "戈壁沙海分境 (10, 2)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c10_2_swamp_94hve.tmj",
+      "name": "苗疆迷沼分境 (10, 2)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,2": {
-      "mapFile": "overworld_c11_2_mountain_3da2v.tmj",
-      "name": "蜀道重巒分境 (11, 2)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c11_2_plains_8u1kc.tmj",
+      "name": "中原平原分境 (11, 2)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,2": {
-      "mapFile": "overworld_c12_2_plains_3umhw.tmj",
-      "name": "中原平原分境 (12, 2)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c12_2_swamp_4jv52.tmj",
+      "name": "苗疆迷沼分境 (12, 2)",
+      "biome": "SWAMP",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,2": {
-      "mapFile": "overworld_c13_2_desert_4iq52.tmj",
-      "name": "戈壁沙海分境 (13, 2)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c13_2_snow_8arpy.tmj",
+      "name": "長白雪域分境 (13, 2)",
+      "biome": "SNOW",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,2": {
-      "mapFile": "overworld_c14_2_plains_8lc8i.tmj",
-      "name": "中原平原分境 (14, 2)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c14_2_mountain_3lkag.tmj",
+      "name": "蜀道重巒分境 (14, 2)",
+      "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,2": {
-      "mapFile": "overworld_c15_2_mountain_yn9e.tmj",
+      "mapFile": "overworld_c15_2_mountain_2ujxk.tmj",
       "name": "蜀道重巒分境 (15, 2)",
       "biome": "MOUNTAIN",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "華山派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,3": {
-      "mapFile": "overworld_c0_3_mountain_1jdy5.tmj",
-      "name": "蜀道重巒分境 (0, 3)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c0_3_plains_4evb9.tmj",
+      "name": "中原平原分境 (0, 3)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,3": {
-      "mapFile": "overworld_c1_3_plains_572ky.tmj",
-      "name": "中原平原分境 (1, 3)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c1_3_mountain_8b7hh.tmj",
+      "name": "蜀道重巒分境 (1, 3)",
+      "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,3": {
-      "mapFile": "overworld_c2_3_plains_1h2pu.tmj",
-      "name": "中原平原分境 (2, 3)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c2_3_swamp_7qj9c.tmj",
+      "name": "苗疆迷沼分境 (2, 3)",
+      "biome": "SWAMP",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,3": {
-      "mapFile": "overworld_c3_3_mountain_9gwtd.tmj",
+      "mapFile": "overworld_c3_3_mountain_2kpvr.tmj",
       "name": "蜀道重巒分境 (3, 3)",
       "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,3": {
-      "mapFile": "overworld_c4_3_mountain_8nyeh.tmj",
+      "mapFile": "overworld_c4_3_mountain_1p533.tmj",
       "name": "蜀道重巒分境 (4, 3)",
       "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,3": {
-      "mapFile": "overworld_c5_3_plains_69mjf.tmj",
-      "name": "中原平原分境 (5, 3)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c5_3_desert_4w7iu.tmj",
+      "name": "戈壁沙海分境 (5, 3)",
+      "biome": "DESERT",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,3": {
-      "mapFile": "overworld_c6_3_plains_22kfa.tmj",
+      "mapFile": "overworld_c6_3_plains_7rnkp.tmj",
       "name": "中原平原分境 (6, 3)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,3": {
-      "mapFile": "overworld_c7_3_mountain_6i1o6.tmj",
-      "name": "蜀道重巒分境 (7, 3)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c7_3_desert_8muy5.tmj",
+      "name": "戈壁沙海分境 (7, 3)",
+      "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,3": {
-      "mapFile": "overworld_c8_3_plains_83vlq.tmj",
+      "mapFile": "overworld_c8_3_plains_9n6do.tmj",
       "name": "中原平原分境 (8, 3)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,3": {
-      "mapFile": "overworld_c9_3_swamp_6ihcm.tmj",
-      "name": "苗疆迷沼分境 (9, 3)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c9_3_mountain_6dhk9.tmj",
+      "name": "蜀道重巒分境 (9, 3)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,3": {
-      "mapFile": "overworld_c10_3_plains_79b4o.tmj",
+      "mapFile": "overworld_c10_3_plains_13nbt.tmj",
       "name": "中原平原分境 (10, 3)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,3": {
-      "mapFile": "overworld_c11_3_mountain_6a3kp.tmj",
-      "name": "蜀道重巒分境 (11, 3)",
-      "biome": "MOUNTAIN",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "12,3": {
-      "mapFile": "overworld_c12_3_snow_8zvej.tmj",
-      "name": "長白雪域分境 (12, 3)",
-      "biome": "SNOW",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "13,3": {
-      "mapFile": "overworld_c13_3_swamp_70ye2.tmj",
-      "name": "苗疆迷沼分境 (13, 3)",
-      "biome": "SWAMP",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "14,3": {
-      "mapFile": "overworld_c14_3_mountain_4bix2.tmj",
-      "name": "蜀道重巒分境 (14, 3)",
-      "biome": "MOUNTAIN",
-      "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "15,3": {
-      "mapFile": "overworld_c15_3_desert_9wt0u.tmj",
-      "name": "戈壁沙海分境 (15, 3)",
-      "biome": "DESERT",
-      "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "0,4": {
-      "mapFile": "overworld_c0_4_mountain_1ztvj.tmj",
-      "name": "蜀道重巒分境 (0, 4)",
-      "biome": "MOUNTAIN",
-      "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "1,4": {
-      "mapFile": "overworld_c1_4_mountain_71bfn.tmj",
-      "name": "蜀道重巒分境 (1, 4)",
-      "biome": "MOUNTAIN",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "2,4": {
-      "mapFile": "overworld_c2_4_plains_4n1ub.tmj",
-      "name": "中原平原分境 (2, 4)",
+      "mapFile": "overworld_c11_3_plains_6ujj6.tmj",
+      "name": "中原平原分境 (11, 3)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "少林寺"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "12,3": {
+      "mapFile": "overworld_c12_3_plains_79zc4.tmj",
+      "name": "中原平原分境 (12, 3)",
+      "biome": "PLAINS",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "13,3": {
+      "mapFile": "overworld_c13_3_plains_1ic9m.tmj",
+      "name": "中原平原分境 (13, 3)",
+      "biome": "PLAINS",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "14,3": {
+      "mapFile": "overworld_c14_3_desert_3jlra.tmj",
+      "name": "戈壁沙海分境 (14, 3)",
+      "biome": "DESERT",
+      "difficulty": 4,
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "15,3": {
+      "mapFile": "overworld_c15_3_plains_bgjr.tmj",
+      "name": "中原平原分境 (15, 3)",
+      "biome": "PLAINS",
+      "difficulty": 5,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "0,4": {
+      "mapFile": "overworld_c0_4_plains_1cime.tmj",
+      "name": "中原平原分境 (0, 4)",
+      "biome": "PLAINS",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "1,4": {
+      "mapFile": "overworld_c1_4_swamp_282gt.tmj",
+      "name": "苗疆迷沼分境 (1, 4)",
+      "biome": "SWAMP",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "2,4": {
+      "mapFile": "overworld_c2_4_mountain_3yodh.tmj",
+      "name": "蜀道重巒分境 (2, 4)",
+      "biome": "MOUNTAIN",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,4": {
-      "mapFile": "overworld_c3_4_desert_2yg2y.tmj",
-      "name": "戈壁沙海分境 (3, 4)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c3_4_mountain_18uco.tmj",
+      "name": "蜀道重巒分境 (3, 4)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,4": {
-      "mapFile": "overworld_c4_4_plains_58a50.tmj",
+      "mapFile": "overworld_c4_4_plains_9lh06.tmj",
       "name": "中原平原分境 (4, 4)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "少林寺"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,4": {
-      "mapFile": "overworld_c5_4_swamp_3l3x8.tmj",
-      "name": "苗疆迷沼分境 (5, 4)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c5_4_mountain_1w170.tmj",
+      "name": "蜀道重巒分境 (5, 4)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,4": {
-      "mapFile": "overworld_c6_4_mountain_9m7e6.tmj",
-      "name": "蜀道重巒分境 (6, 4)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c6_4_snow_54skq.tmj",
+      "name": "長白雪域分境 (6, 4)",
+      "biome": "SNOW",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,4": {
-      "mapFile": "overworld_c7_4_desert_9njmn.tmj",
-      "name": "戈壁沙海分境 (7, 4)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c7_4_mountain_5kdzk.tmj",
+      "name": "蜀道重巒分境 (7, 4)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,4": {
-      "mapFile": "overworld_c8_4_swamp_2jotk.tmj",
-      "name": "苗疆迷沼分境 (8, 4)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c8_4_desert_6z5p7.tmj",
+      "name": "戈壁沙海分境 (8, 4)",
+      "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,4": {
-      "mapFile": "overworld_c9_4_plains_86k6p.tmj",
-      "name": "中原平原分境 (9, 4)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c9_4_desert_90w93.tmj",
+      "name": "戈壁沙海分境 (9, 4)",
+      "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,4": {
-      "mapFile": "overworld_c10_4_mountain_7v9d3.tmj",
-      "name": "蜀道重巒分境 (10, 4)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c10_4_snow_lkpe.tmj",
+      "name": "長白雪域分境 (10, 4)",
+      "biome": "SNOW",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,4": {
-      "mapFile": "overworld_c11_4_desert_9bxhp.tmj",
+      "mapFile": "overworld_c11_4_desert_3lmr1.tmj",
       "name": "戈壁沙海分境 (11, 4)",
       "biome": "DESERT",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "峨嵋派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,4": {
-      "mapFile": "overworld_c12_4_desert_5v034.tmj",
-      "name": "戈壁沙海分境 (12, 4)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c12_4_mountain_18xs1.tmj",
+      "name": "蜀道重巒分境 (12, 4)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,4": {
-      "mapFile": "overworld_c13_4_mountain_24amu.tmj",
-      "name": "蜀道重巒分境 (13, 4)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c13_4_plains_7xz4o.tmj",
+      "name": "中原平原分境 (13, 4)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,4": {
-      "mapFile": "overworld_c14_4_snow_28hpr.tmj",
+      "mapFile": "overworld_c14_4_snow_8vq3k.tmj",
       "name": "長白雪域分境 (14, 4)",
       "biome": "SNOW",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,4": {
-      "mapFile": "overworld_c15_4_mountain_dt0u.tmj",
-      "name": "蜀道重巒分境 (15, 4)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c15_4_swamp_7yev6.tmj",
+      "name": "苗疆迷沼分境 (15, 4)",
+      "biome": "SWAMP",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,5": {
-      "mapFile": "overworld_c0_5_snow_10rf4.tmj",
-      "name": "長白雪域分境 (0, 5)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c0_5_mountain_2ob1j.tmj",
+      "name": "蜀道重巒分境 (0, 5)",
+      "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,5": {
-      "mapFile": "overworld_c1_5_snow_2eust.tmj",
-      "name": "長白雪域分境 (1, 5)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c1_5_mountain_7u8fv.tmj",
+      "name": "蜀道重巒分境 (1, 5)",
+      "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,5": {
-      "mapFile": "overworld_c2_5_snow_8nh3i.tmj",
-      "name": "長白雪域分境 (2, 5)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c2_5_mountain_3hf0b.tmj",
+      "name": "蜀道重巒分境 (2, 5)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,5": {
-      "mapFile": "overworld_c3_5_plains_9x3if.tmj",
-      "name": "中原平原分境 (3, 5)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c3_5_swamp_42c7k.tmj",
+      "name": "苗疆迷沼分境 (3, 5)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,5": {
-      "mapFile": "overworld_c4_5_mountain_u7hb.tmj",
-      "name": "蜀道重巒分境 (4, 5)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c4_5_plains_t3d0.tmj",
+      "name": "中原平原分境 (4, 5)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,5": {
-      "mapFile": "overworld_c5_5_mountain_84aev.tmj",
-      "name": "蜀道重巒分境 (5, 5)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c5_5_desert_8qg13.tmj",
+      "name": "戈壁沙海分境 (5, 5)",
+      "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,5": {
-      "mapFile": "overworld_c6_5_snow_g92d.tmj",
-      "name": "長白雪域分境 (6, 5)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c6_5_mountain_4b56v.tmj",
+      "name": "蜀道重巒分境 (6, 5)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,5": {
-      "mapFile": "overworld_c7_5_snow_4rp4m.tmj",
+      "mapFile": "overworld_c7_5_snow_1d9uo.tmj",
       "name": "長白雪域分境 (7, 5)",
       "biome": "SNOW",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,5": {
-      "mapFile": "overworld_c8_5_snow_5029r.tmj",
-      "name": "長白雪域分境 (8, 5)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c8_5_plains_2ry01.tmj",
+      "name": "中原平原分境 (8, 5)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,5": {
-      "mapFile": "overworld_c9_5_desert_qql7.tmj",
-      "name": "戈壁沙海分境 (9, 5)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c9_5_snow_iqlt.tmj",
+      "name": "長白雪域分境 (9, 5)",
+      "biome": "SNOW",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,5": {
-      "mapFile": "overworld_c10_5_snow_80hbw.tmj",
+      "mapFile": "overworld_c10_5_snow_9weoq.tmj",
       "name": "長白雪域分境 (10, 5)",
       "biome": "SNOW",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,5": {
-      "mapFile": "overworld_c11_5_swamp_7tggo.tmj",
-      "name": "苗疆迷沼分境 (11, 5)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c11_5_mountain_72r2y.tmj",
+      "name": "蜀道重巒分境 (11, 5)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,5": {
-      "mapFile": "overworld_c12_5_snow_9173d.tmj",
-      "name": "長白雪域分境 (12, 5)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c12_5_plains_53gmz.tmj",
+      "name": "中原平原分境 (12, 5)",
+      "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,5": {
-      "mapFile": "overworld_c13_5_snow_ipe6.tmj",
+      "mapFile": "overworld_c13_5_snow_9jb8e.tmj",
       "name": "長白雪域分境 (13, 5)",
       "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,5": {
-      "mapFile": "overworld_c14_5_plains_2q1o0.tmj",
+      "mapFile": "overworld_c14_5_plains_1zf46.tmj",
       "name": "中原平原分境 (14, 5)",
       "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,5": {
-      "mapFile": "overworld_c15_5_mountain_7axi2.tmj",
+      "mapFile": "overworld_c15_5_mountain_96i67.tmj",
       "name": "蜀道重巒分境 (15, 5)",
       "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,6": {
-      "mapFile": "overworld_c0_6_swamp_8tjac.tmj",
-      "name": "苗疆迷沼分境 (0, 6)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c0_6_snow_3lvwr.tmj",
+      "name": "長白雪域分境 (0, 6)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,6": {
-      "mapFile": "overworld_c1_6_desert_1x3ov.tmj",
-      "name": "戈壁沙海分境 (1, 6)",
-      "biome": "DESERT",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "mapFile": "overworld_c1_6_snow_7vuhx.tmj",
+      "name": "長白雪域分境 (1, 6)",
+      "biome": "SNOW",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,6": {
-      "mapFile": "overworld_c2_6_plains_6od1g.tmj",
+      "mapFile": "overworld_c2_6_plains_249ex.tmj",
       "name": "中原平原分境 (2, 6)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,6": {
-      "mapFile": "overworld_c3_6_swamp_600rg.tmj",
-      "name": "苗疆迷沼分境 (3, 6)",
-      "biome": "SWAMP",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "mapFile": "overworld_c3_6_snow_1pa37.tmj",
+      "name": "長白雪域分境 (3, 6)",
+      "biome": "SNOW",
+      "difficulty": 1,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,6": {
-      "mapFile": "overworld_c4_6_plains_0dgq.tmj",
+      "mapFile": "overworld_c4_6_plains_4lppg.tmj",
       "name": "中原平原分境 (4, 6)",
       "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,6": {
-      "mapFile": "overworld_c5_6_snow_2s5ax.tmj",
-      "name": "長白雪域分境 (5, 6)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c5_6_desert_34jgq.tmj",
+      "name": "戈壁沙海分境 (5, 6)",
+      "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,6": {
-      "mapFile": "overworld_c6_6_plains_5kfsi.tmj",
+      "mapFile": "overworld_c6_6_plains_9g94g.tmj",
       "name": "中原平原分境 (6, 6)",
       "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,6": {
-      "mapFile": "overworld_c7_6_mountain_8gdl6.tmj",
-      "name": "蜀道重巒分境 (7, 6)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c7_6_desert_c1n2.tmj",
+      "name": "峨嵋派總壇 (7, 6)",
+      "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": "峨嵋派",
+        "factionName": "峨嵋派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,6": {
-      "mapFile": "overworld_c8_6_desert_6tmi.tmj",
-      "name": "戈壁沙海分境 (8, 6)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c8_6_plains_2m7uz.tmj",
+      "name": "中原平原分境 (8, 6)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,6": {
-      "mapFile": "overworld_c9_6_desert_433lw.tmj",
-      "name": "戈壁沙海分境 (9, 6)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c9_6_plains_5pa4p.tmj",
+      "name": "中原平原分境 (9, 6)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,6": {
-      "mapFile": "overworld_c10_6_snow_3qxjt.tmj",
-      "name": "長白雪域分境 (10, 6)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c10_6_plains_5rxoz.tmj",
+      "name": "中原平原分境 (10, 6)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,6": {
-      "mapFile": "overworld_c11_6_swamp_7e0dx.tmj",
+      "mapFile": "overworld_c11_6_swamp_6jjhc.tmj",
       "name": "苗疆迷沼分境 (11, 6)",
       "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,6": {
-      "mapFile": "overworld_c12_6_plains_7t7g6.tmj",
-      "name": "中原平原分境 (12, 6)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c12_6_swamp_46bzb.tmj",
+      "name": "苗疆迷沼分境 (12, 6)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,6": {
-      "mapFile": "overworld_c13_6_plains_2q38l.tmj",
-      "name": "中原平原分境 (13, 6)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c13_6_snow_3bknz.tmj",
+      "name": "長白雪域分境 (13, 6)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,6": {
-      "mapFile": "overworld_c14_6_desert_2rmrg.tmj",
-      "name": "戈壁沙海分境 (14, 6)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c14_6_plains_8mu9j.tmj",
+      "name": "中原平原分境 (14, 6)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,6": {
-      "mapFile": "overworld_c15_6_plains_1g354.tmj",
-      "name": "中原平原分境 (15, 6)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c15_6_mountain_84y7s.tmj",
+      "name": "蜀道重巒分境 (15, 6)",
+      "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,7": {
-      "mapFile": "overworld_c0_7_desert_4mwqw.tmj",
-      "name": "戈壁沙海分境 (0, 7)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c0_7_plains_8ayre.tmj",
+      "name": "中原平原分境 (0, 7)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,7": {
-      "mapFile": "overworld_c1_7_desert_21rxr.tmj",
-      "name": "戈壁沙海分境 (1, 7)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c1_7_plains_9e6x4.tmj",
+      "name": "中原平原分境 (1, 7)",
+      "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "華山派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,7": {
-      "mapFile": "overworld_c2_7_desert_9erpa.tmj",
-      "name": "戈壁沙海分境 (2, 7)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c2_7_snow_2p40t.tmj",
+      "name": "長白雪域分境 (2, 7)",
+      "biome": "SNOW",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,7": {
-      "mapFile": "overworld_c3_7_plains_3ckqb.tmj",
-      "name": "中原平原分境 (3, 7)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c3_7_mountain_4sk1i.tmj",
+      "name": "蜀道重巒分境 (3, 7)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,7": {
-      "mapFile": "overworld_c4_7_desert_5pzfs.tmj",
-      "name": "戈壁沙海分境 (4, 7)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c4_7_plains_27am3.tmj",
+      "name": "中原平原分境 (4, 7)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,7": {
-      "mapFile": "overworld_c5_7_snow_7i12r.tmj",
-      "name": "長白雪域分境 (5, 7)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c5_7_mountain_7s2ic.tmj",
+      "name": "蜀道重巒分境 (5, 7)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,7": {
-      "mapFile": "overworld_c6_7_plains_5xn6u.tmj",
+      "mapFile": "overworld_c6_7_plains_7ydjm.tmj",
       "name": "中原平原分境 (6, 7)",
       "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,7": {
-      "mapFile": "overworld_c7_7_plains_5mwkf.tmj",
-      "name": "中原平原分境 (7, 7)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c7_7_snow_70p2s.tmj",
+      "name": "長白雪域分境 (7, 7)",
+      "biome": "SNOW",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,7": {
-      "mapFile": "overworld_c8_7_plains_3d0gl.tmj",
+      "mapFile": "overworld_c8_7_plains_1bhb1.tmj",
       "name": "中原平原分境 (8, 7)",
       "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,7": {
-      "mapFile": "overworld_c9_7_mountain_8cur5.tmj",
-      "name": "蜀道重巒分境 (9, 7)",
-      "biome": "MOUNTAIN",
-      "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "10,7": {
-      "mapFile": "overworld_c10_7_mountain_6h6tw.tmj",
-      "name": "蜀道重巒分境 (10, 7)",
-      "biome": "MOUNTAIN",
-      "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "11,7": {
-      "mapFile": "overworld_c11_7_plains_617z.tmj",
-      "name": "中原平原分境 (11, 7)",
-      "biome": "PLAINS",
-      "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "12,7": {
-      "mapFile": "overworld_c12_7_mountain_2ahqx.tmj",
-      "name": "蜀道重巒分境 (12, 7)",
-      "biome": "MOUNTAIN",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "13,7": {
-      "mapFile": "overworld_c13_7_mountain_20ck5.tmj",
-      "name": "蜀道重巒分境 (13, 7)",
-      "biome": "MOUNTAIN",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "14,7": {
-      "mapFile": "overworld_c14_7_swamp_6zqll.tmj",
-      "name": "苗疆迷沼分境 (14, 7)",
-      "biome": "SWAMP",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "15,7": {
-      "mapFile": "overworld_c15_7_mountain_4c426.tmj",
-      "name": "蜀道重巒分境 (15, 7)",
-      "biome": "MOUNTAIN",
-      "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "0,8": {
-      "mapFile": "overworld_c0_8_plains_6lu2v.tmj",
-      "name": "中原平原分境 (0, 8)",
-      "biome": "PLAINS",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "1,8": {
-      "mapFile": "overworld_c1_8_snow_2irnv.tmj",
-      "name": "長白雪域分境 (1, 8)",
-      "biome": "SNOW",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "2,8": {
-      "mapFile": "overworld_c2_8_mountain_98weu.tmj",
-      "name": "蜀道重巒分境 (2, 8)",
-      "biome": "MOUNTAIN",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "3,8": {
-      "mapFile": "overworld_c3_8_desert_85i4g.tmj",
-      "name": "戈壁沙海分境 (3, 8)",
+      "mapFile": "overworld_c9_7_desert_5r8mu.tmj",
+      "name": "戈壁沙海分境 (9, 7)",
       "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "10,7": {
+      "mapFile": "overworld_c10_7_swamp_7hlg8.tmj",
+      "name": "苗疆迷沼分境 (10, 7)",
+      "biome": "SWAMP",
+      "difficulty": 1,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "11,7": {
+      "mapFile": "overworld_c11_7_snow_4ku2w.tmj",
+      "name": "長白雪域分境 (11, 7)",
+      "biome": "SNOW",
+      "difficulty": 1,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "逍遙派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "12,7": {
+      "mapFile": "overworld_c12_7_desert_14qig.tmj",
+      "name": "戈壁沙海分境 (12, 7)",
+      "biome": "DESERT",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "13,7": {
+      "mapFile": "overworld_c13_7_desert_6lmsd.tmj",
+      "name": "戈壁沙海分境 (13, 7)",
+      "biome": "DESERT",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "14,7": {
+      "mapFile": "overworld_c14_7_mountain_6nmdd.tmj",
+      "name": "蜀道重巒分境 (14, 7)",
+      "biome": "MOUNTAIN",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "15,7": {
+      "mapFile": "overworld_c15_7_plains_7rks0.tmj",
+      "name": "中原平原分境 (15, 7)",
+      "biome": "PLAINS",
+      "difficulty": 4,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "0,8": {
+      "mapFile": "overworld_c0_8_snow_8q6xa.tmj",
+      "name": "長白雪域分境 (0, 8)",
+      "biome": "SNOW",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "1,8": {
+      "mapFile": "overworld_c1_8_desert_1c4pg.tmj",
+      "name": "武當派總壇 (1, 8)",
+      "biome": "DESERT",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": "武當派",
+        "factionName": "武當派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "2,8": {
+      "mapFile": "overworld_c2_8_plains_6lc8y.tmj",
+      "name": "中原平原分境 (2, 8)",
+      "biome": "PLAINS",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "3,8": {
+      "mapFile": "overworld_c3_8_snow_5rfxb.tmj",
+      "name": "長白雪域分境 (3, 8)",
+      "biome": "SNOW",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,8": {
-      "mapFile": "overworld_c4_8_plains_4k8rx.tmj",
-      "name": "中原平原分境 (4, 8)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c4_8_desert_1d461.tmj",
+      "name": "戈壁沙海分境 (4, 8)",
+      "biome": "DESERT",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "丐幫"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,8": {
-      "mapFile": "overworld_c5_8_mountain_9grnw.tmj",
+      "mapFile": "overworld_c5_8_mountain_5c3an.tmj",
       "name": "蜀道重巒分境 (5, 8)",
       "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,8": {
-      "mapFile": "overworld_c6_8_desert_2v5y7.tmj",
-      "name": "戈壁沙海分境 (6, 8)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c6_8_plains_99we8.tmj",
+      "name": "中原平原分境 (6, 8)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,8": {
-      "mapFile": "overworld_c7_8_snow_7fe7y.tmj",
-      "name": "長白雪域分境 (7, 8)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c7_8_plains_2xlwc.tmj",
+      "name": "中原平原分境 (7, 8)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,8": {
-      "mapFile": "overworld_c8_8_plains_9yq5y.tmj",
+      "mapFile": "overworld_c8_8_plains_7iwd2.tmj",
       "name": "中原平原分境 (8, 8)",
       "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,8": {
-      "mapFile": "overworld_c9_8_plains_2iqky.tmj",
+      "mapFile": "overworld_c9_8_plains_9yeog.tmj",
       "name": "中原平原分境 (9, 8)",
       "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,8": {
-      "mapFile": "overworld_c10_8_swamp_91jz5.tmj",
-      "name": "苗疆迷沼分境 (10, 8)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c10_8_mountain_7eld0.tmj",
+      "name": "蜀道重巒分境 (10, 8)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,8": {
-      "mapFile": "overworld_c11_8_swamp_1dj2t.tmj",
+      "mapFile": "overworld_c11_8_swamp_75u73.tmj",
       "name": "苗疆迷沼分境 (11, 8)",
       "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,8": {
-      "mapFile": "overworld_c12_8_snow_4m02z.tmj",
-      "name": "長白雪域分境 (12, 8)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c12_8_mountain_5xavs.tmj",
+      "name": "蜀道重巒分境 (12, 8)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,8": {
-      "mapFile": "overworld_c13_8_plains_6xz0m.tmj",
+      "mapFile": "overworld_c13_8_plains_2z6is.tmj",
       "name": "中原平原分境 (13, 8)",
       "biome": "PLAINS",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "difficulty": 3,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "武當派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,8": {
-      "mapFile": "overworld_c14_8_mountain_1fzeo.tmj",
-      "name": "蜀道重巒分境 (14, 8)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c14_8_plains_77nfb.tmj",
+      "name": "中原平原分境 (14, 8)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,8": {
-      "mapFile": "overworld_c15_8_swamp_6tshe.tmj",
-      "name": "苗疆迷沼分境 (15, 8)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c15_8_mountain_8kjb6.tmj",
+      "name": "蜀道重巒分境 (15, 8)",
+      "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,9": {
-      "mapFile": "overworld_c0_9_snow_1ykn1.tmj",
-      "name": "長白雪域分境 (0, 9)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c0_9_desert_64b9c.tmj",
+      "name": "戈壁沙海分境 (0, 9)",
+      "biome": "DESERT",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,9": {
-      "mapFile": "overworld_c1_9_snow_49ahl.tmj",
-      "name": "長白雪域分境 (1, 9)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c1_9_plains_22oan.tmj",
+      "name": "中原平原分境 (1, 9)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,9": {
-      "mapFile": "overworld_c2_9_desert_70h0w.tmj",
+      "mapFile": "overworld_c2_9_desert_5dped.tmj",
       "name": "戈壁沙海分境 (2, 9)",
       "biome": "DESERT",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,9": {
-      "mapFile": "overworld_c3_9_mountain_4luz.tmj",
-      "name": "蜀道重巒分境 (3, 9)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c3_9_snow_6d8yo.tmj",
+      "name": "長白雪域分境 (3, 9)",
+      "biome": "SNOW",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,9": {
-      "mapFile": "overworld_c4_9_plains_301qv.tmj",
-      "name": "中原平原分境 (4, 9)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c4_9_mountain_2lsic.tmj",
+      "name": "蜀道重巒分境 (4, 9)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,9": {
-      "mapFile": "overworld_c5_9_plains_4rx2w.tmj",
+      "mapFile": "overworld_c5_9_plains_98zwy.tmj",
       "name": "中原平原分境 (5, 9)",
       "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,9": {
-      "mapFile": "overworld_c6_9_plains_gqjp.tmj",
-      "name": "中原平原分境 (6, 9)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c6_9_mountain_3dj1f.tmj",
+      "name": "蜀道重巒分境 (6, 9)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,9": {
-      "mapFile": "overworld_c7_9_plains_81kos.tmj",
-      "name": "中原平原分境 (7, 9)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c7_9_swamp_8gtle.tmj",
+      "name": "苗疆迷沼分境 (7, 9)",
+      "biome": "SWAMP",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,9": {
-      "mapFile": "overworld_c8_9_plains_9lgn.tmj",
-      "name": "中原平原分境 (8, 9)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c8_9_swamp_5hxbq.tmj",
+      "name": "苗疆迷沼分境 (8, 9)",
+      "biome": "SWAMP",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,9": {
-      "mapFile": "overworld_c9_9_swamp_4cap1.tmj",
+      "mapFile": "overworld_c9_9_swamp_3i9e8.tmj",
       "name": "苗疆迷沼分境 (9, 9)",
       "biome": "SWAMP",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,9": {
-      "mapFile": "overworld_c10_9_snow_3n15n.tmj",
-      "name": "長白雪域分境 (10, 9)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c10_9_swamp_7fu39.tmj",
+      "name": "苗疆迷沼分境 (10, 9)",
+      "biome": "SWAMP",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,9": {
-      "mapFile": "overworld_c11_9_snow_9fzom.tmj",
-      "name": "長白雪域分境 (11, 9)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c11_9_plains_42w41.tmj",
+      "name": "逍遙派總壇 (11, 9)",
+      "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": "逍遙派",
+        "factionName": "逍遙派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,9": {
-      "mapFile": "overworld_c12_9_desert_9twhq.tmj",
-      "name": "戈壁沙海分境 (12, 9)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c12_9_snow_5d0y7.tmj",
+      "name": "長白雪域分境 (12, 9)",
+      "biome": "SNOW",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,9": {
-      "mapFile": "overworld_c13_9_swamp_98yjv.tmj",
-      "name": "苗疆迷沼分境 (13, 9)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c13_9_desert_3wfe8.tmj",
+      "name": "戈壁沙海分境 (13, 9)",
+      "biome": "DESERT",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,9": {
-      "mapFile": "overworld_c14_9_snow_9jc2n.tmj",
-      "name": "長白雪域分境 (14, 9)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c14_9_mountain_9lh8j.tmj",
+      "name": "蜀道重巒分境 (14, 9)",
+      "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,9": {
-      "mapFile": "overworld_c15_9_swamp_9z4b2.tmj",
-      "name": "苗疆迷沼分境 (15, 9)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c15_9_plains_4ab3t.tmj",
+      "name": "中原平原分境 (15, 9)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,10": {
-      "mapFile": "overworld_c0_10_mountain_7abiz.tmj",
+      "mapFile": "overworld_c0_10_mountain_maey.tmj",
       "name": "蜀道重巒分境 (0, 10)",
       "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,10": {
-      "mapFile": "overworld_c1_10_desert_234sq.tmj",
+      "mapFile": "overworld_c1_10_desert_7q31x.tmj",
       "name": "戈壁沙海分境 (1, 10)",
       "biome": "DESERT",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,10": {
-      "mapFile": "overworld_c2_10_swamp_2jby5.tmj",
-      "name": "苗疆迷沼分境 (2, 10)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c2_10_desert_4mkqk.tmj",
+      "name": "戈壁沙海分境 (2, 10)",
+      "biome": "DESERT",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,10": {
-      "mapFile": "overworld_c3_10_plains_90bz9.tmj",
-      "name": "中原平原分境 (3, 10)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c3_10_snow_1mpye.tmj",
+      "name": "長白雪域分境 (3, 10)",
+      "biome": "SNOW",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "武當派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,10": {
-      "mapFile": "overworld_c4_10_desert_69oe.tmj",
-      "name": "戈壁沙海分境 (4, 10)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c4_10_plains_8p3pm.tmj",
+      "name": "中原平原分境 (4, 10)",
+      "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,10": {
-      "mapFile": "overworld_c5_10_desert_8bkt0.tmj",
-      "name": "戈壁沙海分境 (5, 10)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c5_10_plains_6jbud.tmj",
+      "name": "中原平原分境 (5, 10)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,10": {
-      "mapFile": "overworld_c6_10_plains_4gad2.tmj",
-      "name": "中原平原分境 (6, 10)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c6_10_swamp_3w7et.tmj",
+      "name": "苗疆迷沼分境 (6, 10)",
+      "biome": "SWAMP",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,10": {
-      "mapFile": "overworld_c7_10_mountain_80jsq.tmj",
-      "name": "蜀道重巒分境 (7, 10)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c7_10_plains_2kecn.tmj",
+      "name": "中原平原分境 (7, 10)",
+      "biome": "PLAINS",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,10": {
-      "mapFile": "overworld_c8_10_plains_944cy.tmj",
-      "name": "中原平原分境 (8, 10)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c8_10_snow_9hoff.tmj",
+      "name": "長白雪域分境 (8, 10)",
+      "biome": "SNOW",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,10": {
-      "mapFile": "overworld_c9_10_plains_2de55.tmj",
-      "name": "中原平原分境 (9, 10)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c9_10_snow_96eqp.tmj",
+      "name": "長白雪域分境 (9, 10)",
+      "biome": "SNOW",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,10": {
-      "mapFile": "overworld_c10_10_desert_8f5sg.tmj",
-      "name": "戈壁沙海分境 (10, 10)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c10_10_swamp_20caj.tmj",
+      "name": "苗疆迷沼分境 (10, 10)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,10": {
-      "mapFile": "overworld_c11_10_snow_1yxod.tmj",
-      "name": "長白雪域分境 (11, 10)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c11_10_plains_617u5.tmj",
+      "name": "中原平原分境 (11, 10)",
+      "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,10": {
-      "mapFile": "overworld_c12_10_plains_68e76.tmj",
-      "name": "中原平原分境 (12, 10)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c12_10_swamp_6f72c.tmj",
+      "name": "苗疆迷沼分境 (12, 10)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,10": {
-      "mapFile": "overworld_c13_10_plains_937s6.tmj",
-      "name": "中原平原分境 (13, 10)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c13_10_snow_3l155.tmj",
+      "name": "長白雪域分境 (13, 10)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,10": {
-      "mapFile": "overworld_c14_10_desert_6cqh7.tmj",
-      "name": "戈壁沙海分境 (14, 10)",
-      "biome": "DESERT",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "15,10": {
-      "mapFile": "overworld_c15_10_snow_9q3to.tmj",
-      "name": "長白雪域分境 (15, 10)",
+      "mapFile": "overworld_c14_10_snow_7676m.tmj",
+      "name": "長白雪域分境 (14, 10)",
       "biome": "SNOW",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
-    "0,11": {
-      "mapFile": "overworld_c0_11_plains_6pdg7.tmj",
-      "name": "中原平原分境 (0, 11)",
+    "15,10": {
+      "mapFile": "overworld_c15_10_plains_4fhzv.tmj",
+      "name": "中原平原分境 (15, 10)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "0,11": {
+      "mapFile": "overworld_c0_11_desert_8rwqj.tmj",
+      "name": "戈壁沙海分境 (0, 11)",
+      "biome": "DESERT",
+      "difficulty": 4,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,11": {
-      "mapFile": "overworld_c1_11_plains_7r9hh.tmj",
+      "mapFile": "overworld_c1_11_plains_7kusb.tmj",
       "name": "中原平原分境 (1, 11)",
       "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,11": {
-      "mapFile": "overworld_c2_11_mountain_ctmd.tmj",
-      "name": "蜀道重巒分境 (2, 11)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c2_11_plains_9k8zw.tmj",
+      "name": "中原平原分境 (2, 11)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,11": {
-      "mapFile": "overworld_c3_11_swamp_797zx.tmj",
-      "name": "苗疆迷沼分境 (3, 11)",
-      "biome": "SWAMP",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "4,11": {
-      "mapFile": "overworld_c4_11_plains_33rsy.tmj",
-      "name": "中原平原分境 (4, 11)",
+      "mapFile": "overworld_c3_11_plains_5joqp.tmj",
+      "name": "中原平原分境 (3, 11)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "4,11": {
+      "mapFile": "overworld_c4_11_mountain_1qirx.tmj",
+      "name": "蜀道重巒分境 (4, 11)",
+      "biome": "MOUNTAIN",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "逍遙派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,11": {
-      "mapFile": "overworld_c5_11_plains_2juog.tmj",
+      "mapFile": "overworld_c5_11_plains_vi90.tmj",
       "name": "中原平原分境 (5, 11)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,11": {
-      "mapFile": "overworld_c6_11_plains_2luyp.tmj",
-      "name": "中原平原分境 (6, 11)",
-      "biome": "PLAINS",
-      "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "mapFile": "overworld_c6_11_desert_8a87c.tmj",
+      "name": "戈壁沙海分境 (6, 11)",
+      "biome": "DESERT",
+      "difficulty": 1,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,11": {
-      "mapFile": "overworld_c7_11_swamp_7234b.tmj",
-      "name": "苗疆迷沼分境 (7, 11)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c7_11_mountain_3l2g.tmj",
+      "name": "蜀道重巒分境 (7, 11)",
+      "biome": "MOUNTAIN",
       "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,11": {
-      "mapFile": "overworld_c8_11_swamp_69o6.tmj",
-      "name": "苗疆迷沼分境 (8, 11)",
-      "biome": "SWAMP",
-      "difficulty": 1,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "mapFile": "overworld_c8_11_mountain_5hdi0.tmj",
+      "name": "蜀道重巒分境 (8, 11)",
+      "biome": "MOUNTAIN",
+      "difficulty": 2,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,11": {
-      "mapFile": "overworld_c9_11_plains_2ohoo.tmj",
-      "name": "中原平原分境 (9, 11)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c9_11_mountain_q53g.tmj",
+      "name": "蜀道重巒分境 (9, 11)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,11": {
-      "mapFile": "overworld_c10_11_plains_4ke8b.tmj",
-      "name": "中原平原分境 (10, 11)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c10_11_swamp_5x3d1.tmj",
+      "name": "苗疆迷沼分境 (10, 11)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,11": {
-      "mapFile": "overworld_c11_11_plains_410qg.tmj",
-      "name": "中原平原分境 (11, 11)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c11_11_snow_6ddk8.tmj",
+      "name": "長白雪域分境 (11, 11)",
+      "biome": "SNOW",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "少林寺"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,11": {
-      "mapFile": "overworld_c12_11_snow_3xnp1.tmj",
-      "name": "長白雪域分境 (12, 11)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c12_11_mountain_adqg.tmj",
+      "name": "蜀道重巒分境 (12, 11)",
+      "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,11": {
-      "mapFile": "overworld_c13_11_plains_2843q.tmj",
-      "name": "中原平原分境 (13, 11)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c13_11_snow_27szf.tmj",
+      "name": "長白雪域分境 (13, 11)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,11": {
-      "mapFile": "overworld_c14_11_mountain_69j6s.tmj",
-      "name": "蜀道重巒分境 (14, 11)",
-      "biome": "MOUNTAIN",
-      "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "15,11": {
-      "mapFile": "overworld_c15_11_plains_uyhu.tmj",
-      "name": "中原平原分境 (15, 11)",
+      "mapFile": "overworld_c14_11_plains_38qek.tmj",
+      "name": "中原平原分境 (14, 11)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "15,11": {
+      "mapFile": "overworld_c15_11_desert_3tb0p.tmj",
+      "name": "戈壁沙海分境 (15, 11)",
+      "biome": "DESERT",
+      "difficulty": 4,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,12": {
-      "mapFile": "overworld_c0_12_plains_5r58m.tmj",
+      "mapFile": "overworld_c0_12_plains_4bq4t.tmj",
       "name": "中原平原分境 (0, 12)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,12": {
-      "mapFile": "overworld_c1_12_snow_7zvcs.tmj",
-      "name": "長白雪域分境 (1, 12)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c1_12_swamp_9td8j.tmj",
+      "name": "苗疆迷沼分境 (1, 12)",
+      "biome": "SWAMP",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,12": {
-      "mapFile": "overworld_c2_12_snow_23q5c.tmj",
-      "name": "長白雪域分境 (2, 12)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c2_12_swamp_678tm.tmj",
+      "name": "苗疆迷沼分境 (2, 12)",
+      "biome": "SWAMP",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,12": {
-      "mapFile": "overworld_c3_12_plains_7trk0.tmj",
+      "mapFile": "overworld_c3_12_plains_5cc59.tmj",
       "name": "中原平原分境 (3, 12)",
       "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,12": {
-      "mapFile": "overworld_c4_12_plains_55hl7.tmj",
-      "name": "中原平原分境 (4, 12)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c4_12_swamp_j4xu.tmj",
+      "name": "苗疆迷沼分境 (4, 12)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,12": {
-      "mapFile": "overworld_c5_12_snow_7le6g.tmj",
-      "name": "長白雪域分境 (5, 12)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c5_12_mountain_1ly1h.tmj",
+      "name": "蜀道重巒分境 (5, 12)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,12": {
-      "mapFile": "overworld_c6_12_plains_89shw.tmj",
-      "name": "中原平原分境 (6, 12)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c6_12_mountain_2s392.tmj",
+      "name": "蜀道重巒分境 (6, 12)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,12": {
-      "mapFile": "overworld_c7_12_plains_f5q1.tmj",
+      "mapFile": "overworld_c7_12_plains_7fx5b.tmj",
       "name": "中原平原分境 (7, 12)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,12": {
-      "mapFile": "overworld_c8_12_desert_17o6r.tmj",
-      "name": "戈壁沙海分境 (8, 12)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c8_12_mountain_81yi3.tmj",
+      "name": "蜀道重巒分境 (8, 12)",
+      "biome": "MOUNTAIN",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,12": {
-      "mapFile": "overworld_c9_12_swamp_53cnq.tmj",
-      "name": "苗疆迷沼分境 (9, 12)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c9_12_desert_3scao.tmj",
+      "name": "戈壁沙海分境 (9, 12)",
+      "biome": "DESERT",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,12": {
-      "mapFile": "overworld_c10_12_snow_f9zl.tmj",
-      "name": "長白雪域分境 (10, 12)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c10_12_swamp_2855a.tmj",
+      "name": "苗疆迷沼分境 (10, 12)",
+      "biome": "SWAMP",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "丐幫"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,12": {
-      "mapFile": "overworld_c11_12_plains_jg45.tmj",
-      "name": "中原平原分境 (11, 12)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c11_12_desert_6g2p5.tmj",
+      "name": "戈壁沙海分境 (11, 12)",
+      "biome": "DESERT",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,12": {
-      "mapFile": "overworld_c12_12_swamp_tvlu.tmj",
-      "name": "苗疆迷沼分境 (12, 12)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c12_12_snow_55hfz.tmj",
+      "name": "長白雪域分境 (12, 12)",
+      "biome": "SNOW",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,12": {
-      "mapFile": "overworld_c13_12_plains_3op9r.tmj",
+      "mapFile": "overworld_c13_12_plains_4cqud.tmj",
       "name": "中原平原分境 (13, 12)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,12": {
-      "mapFile": "overworld_c14_12_mountain_8y4uv.tmj",
-      "name": "蜀道重巒分境 (14, 12)",
-      "biome": "MOUNTAIN",
-      "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "15,12": {
-      "mapFile": "overworld_c15_12_mountain_83zq0.tmj",
-      "name": "蜀道重巒分境 (15, 12)",
-      "biome": "MOUNTAIN",
-      "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "0,13": {
-      "mapFile": "overworld_c0_13_desert_36ypg.tmj",
-      "name": "戈壁沙海分境 (0, 13)",
-      "biome": "DESERT",
-      "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "1,13": {
-      "mapFile": "overworld_c1_13_swamp_524lh.tmj",
-      "name": "苗疆迷沼分境 (1, 13)",
+      "mapFile": "overworld_c14_12_swamp_6n74b.tmj",
+      "name": "苗疆迷沼分境 (14, 12)",
       "biome": "SWAMP",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "15,12": {
+      "mapFile": "overworld_c15_12_desert_75372.tmj",
+      "name": "少林寺總壇 (15, 12)",
+      "biome": "DESERT",
+      "difficulty": 5,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": "少林寺",
+        "factionName": "少林寺"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "0,13": {
+      "mapFile": "overworld_c0_13_snow_3d02r.tmj",
+      "name": "長白雪域分境 (0, 13)",
+      "biome": "SNOW",
+      "difficulty": 5,
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "1,13": {
+      "mapFile": "overworld_c1_13_desert_4mhn2.tmj",
+      "name": "戈壁沙海分境 (1, 13)",
+      "biome": "DESERT",
+      "difficulty": 4,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,13": {
-      "mapFile": "overworld_c2_13_mountain_2qqzt.tmj",
-      "name": "蜀道重巒分境 (2, 13)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c2_13_plains_1il7p.tmj",
+      "name": "中原平原分境 (2, 13)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,13": {
-      "mapFile": "overworld_c3_13_swamp_29x6z.tmj",
+      "mapFile": "overworld_c3_13_swamp_6u2vl.tmj",
       "name": "苗疆迷沼分境 (3, 13)",
       "biome": "SWAMP",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,13": {
-      "mapFile": "overworld_c4_13_swamp_8xxtj.tmj",
-      "name": "苗疆迷沼分境 (4, 13)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c4_13_plains_70cug.tmj",
+      "name": "中原平原分境 (4, 13)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": true,
+        "sectHqName": null,
+        "factionName": "峨嵋派"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,13": {
-      "mapFile": "overworld_c5_13_mountain_4rqb5.tmj",
-      "name": "蜀道重巒分境 (5, 13)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c5_13_plains_93f8l.tmj",
+      "name": "中原平原分境 (5, 13)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,13": {
-      "mapFile": "overworld_c6_13_plains_4hs1x.tmj",
+      "mapFile": "overworld_c6_13_plains_75avj.tmj",
       "name": "中原平原分境 (6, 13)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,13": {
-      "mapFile": "overworld_c7_13_plains_1ah96.tmj",
+      "mapFile": "overworld_c7_13_plains_6hcnk.tmj",
       "name": "中原平原分境 (7, 13)",
       "biome": "PLAINS",
       "difficulty": 2,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,13": {
-      "mapFile": "overworld_c8_13_mountain_1mhw3.tmj",
-      "name": "蜀道重巒分境 (8, 13)",
-      "biome": "MOUNTAIN",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "9,13": {
-      "mapFile": "overworld_c9_13_snow_5xh4l.tmj",
-      "name": "長白雪域分境 (9, 13)",
-      "biome": "SNOW",
-      "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "10,13": {
-      "mapFile": "overworld_c10_13_plains_9ldw.tmj",
-      "name": "中原平原分境 (10, 13)",
+      "mapFile": "overworld_c8_13_plains_g6gi.tmj",
+      "name": "中原平原分境 (8, 13)",
       "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "9,13": {
+      "mapFile": "overworld_c9_13_plains_9vmu0.tmj",
+      "name": "中原平原分境 (9, 13)",
+      "biome": "PLAINS",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "10,13": {
+      "mapFile": "overworld_c10_13_snow_2nx5t.tmj",
+      "name": "長白雪域分境 (10, 13)",
+      "biome": "SNOW",
+      "difficulty": 3,
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,13": {
-      "mapFile": "overworld_c11_13_plains_1s5sh.tmj",
+      "mapFile": "overworld_c11_13_plains_2lp64.tmj",
       "name": "中原平原分境 (11, 13)",
       "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,13": {
-      "mapFile": "overworld_c12_13_swamp_186ee.tmj",
-      "name": "苗疆迷沼分境 (12, 13)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c12_13_plains_4omv3.tmj",
+      "name": "中原平原分境 (12, 13)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,13": {
-      "mapFile": "overworld_c13_13_snow_2z1jz.tmj",
-      "name": "長白雪域分境 (13, 13)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c13_13_swamp_7mh9u.tmj",
+      "name": "苗疆迷沼分境 (13, 13)",
+      "biome": "SWAMP",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,13": {
-      "mapFile": "overworld_c14_13_mountain_4ole9.tmj",
-      "name": "蜀道重巒分境 (14, 13)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c14_13_plains_7wzf.tmj",
+      "name": "中原平原分境 (14, 13)",
+      "biome": "PLAINS",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,13": {
-      "mapFile": "overworld_c15_13_mountain_cxhs.tmj",
-      "name": "蜀道重巒分境 (15, 13)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c15_13_plains_6y7v.tmj",
+      "name": "中原平原分境 (15, 13)",
+      "biome": "PLAINS",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,14": {
-      "mapFile": "overworld_c0_14_plains_18n0z.tmj",
-      "name": "中原平原分境 (0, 14)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c0_14_swamp_7udzw.tmj",
+      "name": "苗疆迷沼分境 (0, 14)",
+      "biome": "SWAMP",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,14": {
-      "mapFile": "overworld_c1_14_swamp_67avp.tmj",
-      "name": "苗疆迷沼分境 (1, 14)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c1_14_snow_5k3tq.tmj",
+      "name": "長白雪域分境 (1, 14)",
+      "biome": "SNOW",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,14": {
-      "mapFile": "overworld_c2_14_swamp_54uqx.tmj",
-      "name": "苗疆迷沼分境 (2, 14)",
+      "mapFile": "overworld_c2_14_swamp_5nq0n.tmj",
+      "name": "丐幫總壇 (2, 14)",
       "biome": "SWAMP",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": "丐幫",
+        "factionName": "丐幫"
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,14": {
-      "mapFile": "overworld_c3_14_plains_7y97j.tmj",
-      "name": "中原平原分境 (3, 14)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c3_14_mountain_hz1u.tmj",
+      "name": "蜀道重巒分境 (3, 14)",
+      "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,14": {
-      "mapFile": "overworld_c4_14_desert_3mbqg.tmj",
+      "mapFile": "overworld_c4_14_desert_6mtdb.tmj",
       "name": "戈壁沙海分境 (4, 14)",
       "biome": "DESERT",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,14": {
-      "mapFile": "overworld_c5_14_snow_5cehm.tmj",
-      "name": "長白雪域分境 (5, 14)",
-      "biome": "SNOW",
+      "mapFile": "overworld_c5_14_plains_6o320.tmj",
+      "name": "中原平原分境 (5, 14)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,14": {
-      "mapFile": "overworld_c6_14_desert_62wjg.tmj",
-      "name": "戈壁沙海分境 (6, 14)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c6_14_mountain_9u9ps.tmj",
+      "name": "蜀道重巒分境 (6, 14)",
+      "biome": "MOUNTAIN",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,14": {
-      "mapFile": "overworld_c7_14_mountain_7hr43.tmj",
-      "name": "蜀道重巒分境 (7, 14)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c7_14_swamp_8jkt0.tmj",
+      "name": "苗疆迷沼分境 (7, 14)",
+      "biome": "SWAMP",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,14": {
-      "mapFile": "overworld_c8_14_desert_8lyu9.tmj",
-      "name": "戈壁沙海分境 (8, 14)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c8_14_plains_41q1l.tmj",
+      "name": "中原平原分境 (8, 14)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,14": {
-      "mapFile": "overworld_c9_14_mountain_678xm.tmj",
-      "name": "蜀道重巒分境 (9, 14)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c9_14_plains_6vlkx.tmj",
+      "name": "中原平原分境 (9, 14)",
+      "biome": "PLAINS",
       "difficulty": 3,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,14": {
-      "mapFile": "overworld_c10_14_mountain_7lcy4.tmj",
-      "name": "蜀道重巒分境 (10, 14)",
-      "biome": "MOUNTAIN",
-      "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "11,14": {
-      "mapFile": "overworld_c11_14_desert_7770a.tmj",
-      "name": "戈壁沙海分境 (11, 14)",
-      "biome": "DESERT",
-      "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "12,14": {
-      "mapFile": "overworld_c12_14_plains_3clfo.tmj",
-      "name": "中原平原分境 (12, 14)",
+      "mapFile": "overworld_c10_14_plains_ruv0.tmj",
+      "name": "中原平原分境 (10, 14)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "11,14": {
+      "mapFile": "overworld_c11_14_plains_4lopx.tmj",
+      "name": "中原平原分境 (11, 14)",
+      "biome": "PLAINS",
+      "difficulty": 4,
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "12,14": {
+      "mapFile": "overworld_c12_14_snow_1zj8u.tmj",
+      "name": "長白雪域分境 (12, 14)",
+      "biome": "SNOW",
+      "difficulty": 4,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,14": {
-      "mapFile": "overworld_c13_14_swamp_2evqi.tmj",
-      "name": "苗疆迷沼分境 (13, 14)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c13_14_mountain_9ba25.tmj",
+      "name": "蜀道重巒分境 (13, 14)",
+      "biome": "MOUNTAIN",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,14": {
-      "mapFile": "overworld_c14_14_desert_2vc7b.tmj",
+      "mapFile": "overworld_c14_14_desert_25rxw.tmj",
       "name": "戈壁沙海分境 (14, 14)",
       "biome": "DESERT",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "15,14": {
-      "mapFile": "overworld_c15_14_mountain_3dey.tmj",
-      "name": "蜀道重巒分境 (15, 14)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c15_14_desert_5zozr.tmj",
+      "name": "戈壁沙海分境 (15, 14)",
+      "biome": "DESERT",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "0,15": {
-      "mapFile": "overworld_c0_15_plains_4vzoj.tmj",
+      "mapFile": "overworld_c0_15_plains_66n0g.tmj",
       "name": "中原平原分境 (0, 15)",
       "biome": "PLAINS",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "1,15": {
-      "mapFile": "overworld_c1_15_plains_atgx.tmj",
-      "name": "中原平原分境 (1, 15)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c1_15_mountain_785b.tmj",
+      "name": "蜀道重巒分境 (1, 15)",
+      "biome": "MOUNTAIN",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "2,15": {
-      "mapFile": "overworld_c2_15_swamp_3monk.tmj",
-      "name": "苗疆迷沼分境 (2, 15)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c2_15_plains_2s4bn.tmj",
+      "name": "中原平原分境 (2, 15)",
+      "biome": "PLAINS",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "3,15": {
-      "mapFile": "overworld_c3_15_plains_3o2e7.tmj",
+      "mapFile": "overworld_c3_15_plains_77bc3.tmj",
       "name": "中原平原分境 (3, 15)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "4,15": {
-      "mapFile": "overworld_c4_15_plains_6i2x7.tmj",
-      "name": "中原平原分境 (4, 15)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c4_15_desert_74yw3.tmj",
+      "name": "戈壁沙海分境 (4, 15)",
+      "biome": "DESERT",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "5,15": {
-      "mapFile": "overworld_c5_15_plains_gom6.tmj",
-      "name": "中原平原分境 (5, 15)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c5_15_snow_6uj1k.tmj",
+      "name": "長白雪域分境 (5, 15)",
+      "biome": "SNOW",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "6,15": {
-      "mapFile": "overworld_c6_15_mountain_94ndo.tmj",
-      "name": "蜀道重巒分境 (6, 15)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c6_15_plains_frtb.tmj",
+      "name": "中原平原分境 (6, 15)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "7,15": {
-      "mapFile": "overworld_c7_15_swamp_46oox.tmj",
-      "name": "苗疆迷沼分境 (7, 15)",
-      "biome": "SWAMP",
+      "mapFile": "overworld_c7_15_plains_5gygq.tmj",
+      "name": "中原平原分境 (7, 15)",
+      "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "8,15": {
-      "mapFile": "overworld_c8_15_plains_15c9g.tmj",
+      "mapFile": "overworld_c8_15_plains_84y4i.tmj",
       "name": "中原平原分境 (8, 15)",
       "biome": "PLAINS",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "9,15": {
-      "mapFile": "overworld_c9_15_desert_7cqum.tmj",
-      "name": "戈壁沙海分境 (9, 15)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c9_15_mountain_3nmr5.tmj",
+      "name": "蜀道重巒分境 (9, 15)",
+      "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "10,15": {
-      "mapFile": "overworld_c10_15_swamp_1e6p8.tmj",
+      "mapFile": "overworld_c10_15_swamp_4g5cj.tmj",
       "name": "苗疆迷沼分境 (10, 15)",
       "biome": "SWAMP",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "11,15": {
-      "mapFile": "overworld_c11_15_plains_83wxj.tmj",
-      "name": "中原平原分境 (11, 15)",
-      "biome": "PLAINS",
+      "mapFile": "overworld_c11_15_mountain_1haup.tmj",
+      "name": "蜀道重巒分境 (11, 15)",
+      "biome": "MOUNTAIN",
       "difficulty": 4,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "12,15": {
-      "mapFile": "overworld_c12_15_mountain_5i3jz.tmj",
-      "name": "蜀道重巒分境 (12, 15)",
-      "biome": "MOUNTAIN",
+      "mapFile": "overworld_c12_15_swamp_9km7w.tmj",
+      "name": "苗疆迷沼分境 (12, 15)",
+      "biome": "SWAMP",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "13,15": {
-      "mapFile": "overworld_c13_15_desert_73bi6.tmj",
-      "name": "戈壁沙海分境 (13, 15)",
-      "biome": "DESERT",
+      "mapFile": "overworld_c13_15_mountain_9xron.tmj",
+      "name": "蜀道重巒分境 (13, 15)",
+      "biome": "MOUNTAIN",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": false,
+        "hasTown": true,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     },
     "14,15": {
-      "mapFile": "overworld_c14_15_desert_9k87i.tmj",
-      "name": "戈壁沙海分境 (14, 15)",
-      "biome": "DESERT",
-      "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
-    },
-    "15,15": {
-      "mapFile": "overworld_c15_15_plains_5g52h.tmj",
-      "name": "中原平原分境 (15, 15)",
+      "mapFile": "overworld_c14_15_plains_9lb8h.tmj",
+      "name": "中原平原分境 (14, 15)",
       "biome": "PLAINS",
       "difficulty": 5,
-      "assignedAt": "2026-11-27T15:52:12.176Z"
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
+    },
+    "15,15": {
+      "mapFile": "overworld_c15_15_swamp_7zr7b.tmj",
+      "name": "苗疆迷沼分境 (15, 15)",
+      "biome": "SWAMP",
+      "difficulty": 5,
+      "pois": {
+        "hasInn": true,
+        "hasTown": false,
+        "hasSectBranch": false,
+        "sectHqName": null,
+        "factionName": ""
+      },
+      "assignedAt": "2026-11-28T11:21:01.604Z"
     }
   }
 }

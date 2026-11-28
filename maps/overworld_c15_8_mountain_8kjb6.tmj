@@ -1,0 +1,473 @@
+{
+  "compressionlevel": -1,
+  "width": 16,
+  "height": 16,
+  "tilewidth": 40,
+  "tileheight": 40,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.2",
+  "version": "1.10",
+  "type": "map",
+  "properties": [
+    {
+      "name": "mapName",
+      "type": "string",
+      "value": "蜀道重巒分境 (15, 8)"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "value": "蜀道重巒分境（★★★★☆ 凶險萬分），天地遼闊，常有各路江湖散客與猛獸遊歷。"
+    },
+    {
+      "name": "difficulty",
+      "type": "int",
+      "value": 4
+    },
+    {
+      "name": "specialType",
+      "type": "string",
+      "value": "NORMAL"
+    },
+    {
+      "name": "faction",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "possibleQuests",
+      "type": "string",
+      "value": "除盡長白雪域嗜血妖獸\n護送忠義營軍餉赴開封"
+    },
+    {
+      "name": "possibleLoot",
+      "type": "string",
+      "value": "鳴鴻熟銅伏魔棍\n寒鐵幽冥奪魂短匕\n追魂神機連珠袖箭"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "崎嶇荒丘失足滾落碎石坡\n官道拾得商旅遺落錢袋"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "天目長老\n太古蒼龍\n大內侍衛長"
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "Jianghu_Overworld_Tiles",
+      "tilewidth": 40,
+      "tileheight": 40,
+      "tilecount": 8,
+      "columns": 8,
+      "tiles": [
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "PLAINS"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "MOUNTAIN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 999
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "FOREST"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "TOWN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "INN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "HILLS"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "SECT_BRANCH"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "SECT_HQ"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Terrain_Layer",
+      "type": "tilelayer",
+      "width": 16,
+      "height": 16,
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        1,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        1,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        2,
+        6,
+        1,
+        6,
+        2,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        2,
+        6,
+        1,
+        2,
+        6,
+        6,
+        2,
+        2,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        1,
+        2,
+        6,
+        2,
+        6,
+        6,
+        2,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        1,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        2,
+        1,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        2,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        2,
+        6,
+        2,
+        6,
+        2,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "id": 2,
+      "name": "POIs_and_Entities",
+      "type": "objectgroup",
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "objects": []
+    }
+  ]
+}

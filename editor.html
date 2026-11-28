@@ -631,9 +631,11 @@
         { gid: 1, key: 'PLAINS', name: '平原官道', cost: '1 小時', color: '#1a261f', icon: '·' },
         { gid: 2, key: 'MOUNTAIN', name: '高聳崇山', cost: '不可通行', color: '#313845', icon: '⛰️' },
         { gid: 3, key: 'FOREST', name: '黑風密林', cost: '3 小時', color: '#0e2015', icon: '🌲' },
-        { gid: 4, key: 'TOWN', name: '洛陽古城', cost: '1 小時/城鎮', color: '#632b17', icon: '🏯' },
+        { gid: 4, key: 'TOWN', name: '城鎮市集', cost: '1 小時/城鎮', color: '#632b17', icon: '🏯' },
         { gid: 5, key: 'INN', name: '龍門客棧', cost: '1 小時/客棧', color: '#8d3f0d', icon: '🍶' },
-        { gid: 6, key: 'HILLS', name: '崎嶇荒丘', cost: '2 小時', color: '#27291e', icon: '▲' }
+        { gid: 6, key: 'HILLS', name: '崎嶇荒丘', cost: '2 小時', color: '#27291e', icon: '▲' },
+        { gid: 7, key: 'SECT_BRANCH', name: '門派分舵', cost: '1 小時/學藝', color: '#3b1d5a', icon: '⛩️' },
+        { gid: 8, key: 'SECT_HQ', name: '門派總舵', cost: '1 小時/拜師', color: '#7c2d12', icon: '🏛️' }
       ],
       BATTLE: [
         { gid: 1, key: 'FLOOR', name: '青石地面', cost: '100 能量', color: '#161922', icon: '' },
@@ -1300,8 +1302,8 @@
         name: "Jianghu_Overworld_Tiles",
         tilewidth: 40,
         tileheight: 40,
-        tilecount: 6,
-        columns: 6,
+        tilecount: PALETTES.OVERWORLD.length,
+        columns: PALETTES.OVERWORLD.length,
         tiles: PALETTES.OVERWORLD.map((p, i) => ({
           id: i,
           properties: [
@@ -1332,7 +1334,11 @@
           const gid = mapGrid[y * GRID_SIZE + x];
           if (isOverworld) {
             if (gid === 4) {
-              objects.push({ id: objId++, name: "洛陽大城", type: "TOWN", x: x * 40, y: y * 40, width: 40, height: 40, properties: [{ name: "services", type: "string", value: "REST,TRADE,BOUNTY" }] });
+              objects.push({ id: objId++, name: "城鎮市集", type: "TOWN", x: x * 40, y: y * 40, width: 40, height: 40, properties: [{ name: "services", type: "string", value: "REST,TRADE,BOUNTY" }] });
+            } else if (gid === 7) {
+              objects.push({ id: objId++, name: "門派分舵", type: "SECT_BRANCH", x: x * 40, y: y * 40, width: 40, height: 40, properties: [{ name: "services", type: "string", value: "LEARN_MARTIAL" }] });
+            } else if (gid === 8) {
+              objects.push({ id: objId++, name: "門派總舵", type: "SECT_HQ", x: x * 40, y: y * 40, width: 40, height: 40, properties: [{ name: "services", type: "string", value: "JOIN_SECT,LEARN_MARTIAL" }] });
             } else if (gid === 5) {
               objects.push({ id: objId++, name: "龍門客棧", type: "INN", x: x * 40, y: y * 40, width: 40, height: 40, properties: [{ name: "services", type: "string", value: "REST,RUMOR,BOUNTY" }] });
             }

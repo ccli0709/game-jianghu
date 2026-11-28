@@ -4,7 +4,7 @@
   "heroName": "李暮雲",
   "version": "1.0.0",
   "createdAt": "2026-11-28T09:12:02.890Z",
-  "updatedAt": "2026-11-28T10:39:29.025Z",
+  "updatedAt": "2026-11-28T11:00:15.582Z",
   "curChunkX": 7,
   "curChunkY": 2,
   "currentChunkName": "中原平原分境 (7, 2)",
@@ -11021,7 +11021,7 @@
           "atk": 338,
           "critRate": 52,
           "armorPierce": 45,
-          "summary": "外功攻擊力 +338 ｜ 暴擊率 +52% ｜ 穿透護甲 +45"
+          "summary": "外功攻擊力 +338 ｜ ��擊率 +52% ｜ 穿透護甲 +45"
         },
         {
           "level": 20,
@@ -14234,7 +14234,7 @@
           "qiMax": 240,
           "regen": 19,
           "damageReduction": 34,
-          "summary": "護體防禦 +101 ｜ 氣血上限 +228 ｜ 真氣上限 +240 ｜ 每時辰調息 +19 ｜ 減傷 +34%"
+          "summary": "護體防禦 +101 �� 氣血上限 +228 ｜ 真氣上限 +240 ｜ 每時辰調息 +19 ｜ 減傷 +34%"
         }
       ]
     },
@@ -27276,7 +27276,7 @@
       "title": "魔物 · 古墓腐屍 (第2階)",
       "icon": "👹",
       "color": "#dc2626",
-      "desc": "出沒於天目巫山一帶的魔物【古墓腐屍】(Lv.11~20)，擅使幽冥恐懼凝視。",
+      "desc": "出沒於天目巫山一帶的魔物【��墓腐屍】(Lv.11~20)，擅使幽冥恐懼凝視。",
       "attackPattern": "STUN_GAZE",
       "skillName": "幽冥恐懼凝視·式",
       "attributes": {
@@ -28097,7 +28097,7 @@
     "minLevel": 1,
     "maxLevel": 12,
     "isBreakthroughPending": false,
-    "exp": 205,
+    "exp": 330,
     "maxExp": 1181,
     "freeAttributePoints": 10,
     "statuses": [],
@@ -28106,19 +28106,19 @@
     "maxHp": 287,
     "qi": 211,
     "maxQi": 211,
-    "gold": 1868,
+    "gold": 1921,
     "speed": 85,
-    "energy": 49,
+    "energy": 93,
     "stunnedTurns": 0,
     "hitShake": 0,
     "hitFlash": 0,
-    "owX": 2,
-    "owY": 1,
-    "bx": 6,
-    "by": 5,
+    "owX": 3,
+    "owY": 4,
+    "bx": 4,
+    "by": 8,
     "currentMoveCost": 1,
-    "visualX": 80.00000000000003,
-    "visualY": 40.000000000000014,
+    "visualX": 120,
+    "visualY": 160,
     "attributes": {
       "str": 74,
       "agi": 32,
@@ -28235,7 +28235,7 @@
         "tierClass": "tier-white",
         "maxLevel": 20,
         "currentLevel": 10,
-        "exp": 237,
+        "exp": 287,
         "title": "融會貫通",
         "desc": "江湖散客入門打坐行氣法門，調理內息，滋潤四肢百骸。",
         "levelBonuses": [
@@ -28674,9 +28674,9 @@
         "tier": "凡品",
         "tierClass": "tier-white",
         "maxLevel": 20,
-        "currentLevel": 3,
-        "exp": 33,
-        "title": "初窺門徑",
+        "currentLevel": 4,
+        "exp": 71,
+        "title": "略有小成",
         "desc": "隨手拾石擲擊的遠程牽制手法，射程 3 格，專剋游擊敵手。",
         "levelBonuses": [
           {
@@ -28866,32 +28866,8 @@
     "learnedMartials": []
   },
   "clock": {
-    "day": 18,
-    "hour": 10
+    "day": 19,
+    "hour": 2
   },
-  "roamingEnemies": [
-    {
-      "id": "char_human_t2_1_zot",
-      "name": "太湖水賊",
-      "race": "HUMAN",
-      "form": "TIER_2",
-      "formName": "草莽遊俠",
-      "level": 12,
-      "attackPattern": "PARRY_COUNTER",
-      "skillName": "守勢招架反制·式",
-      "x": 3,
-      "y": 4,
-      "isBoss": false,
-      "isEvolutionBoss": false,
-      "color": 3718648,
-      "visualX": 120,
-      "visualY": 160,
-      "hp": 214,
-      "maxHp": 214,
-      "speed": 102,
-      "def": 43,
-      "atk": 48,
-      "icon": "👤"
-    }
-  ]
+  "roamingEnemies": []
 }

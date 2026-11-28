@@ -1,0 +1,490 @@
+{
+  "compressionlevel": -1,
+  "width": 16,
+  "height": 16,
+  "tilewidth": 40,
+  "tileheight": 40,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.2",
+  "version": "1.10",
+  "type": "map",
+  "properties": [
+    {
+      "name": "mapName",
+      "type": "string",
+      "value": "蜀道重巒分境 (3, 3)"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "value": "蜀道重巒分境（★★☆☆☆ 略有凶險），天地遼闊，常有各路江湖散客與猛獸遊歷。"
+    },
+    {
+      "name": "difficulty",
+      "type": "int",
+      "value": 2
+    },
+    {
+      "name": "specialType",
+      "type": "string",
+      "value": "TOWN_MARKET"
+    },
+    {
+      "name": "faction",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "possibleQuests",
+      "type": "string",
+      "value": "追查太湖七十二洞天奇石\n天目山莊急件傳書"
+    },
+    {
+      "name": "possibleLoot",
+      "type": "string",
+      "value": "金絲八卦護心鏡\n玄冰生肌斷續膏\n靈芝大還天王丹"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "官道拾得商旅遺落錢袋\n戈壁暗風飛沙割面"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "幽谷白猿\n金國細作\n荒村殭屍"
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "Jianghu_Overworld_Tiles",
+      "tilewidth": 40,
+      "tileheight": 40,
+      "tilecount": 8,
+      "columns": 8,
+      "tiles": [
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "PLAINS"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "MOUNTAIN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 999
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "FOREST"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "TOWN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "INN"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "HILLS"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "SECT_BRANCH"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "SECT_HQ"
+            },
+            {
+              "name": "hourCost",
+              "type": "int",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Terrain_Layer",
+      "type": "tilelayer",
+      "width": 16,
+      "height": 16,
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        2,
+        2,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        2,
+        2,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        2,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        1,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        2,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        2,
+        6,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        1,
+        2,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        4,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        2,
+        1,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        1,
+        2,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        6,
+        6,
+        2,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "id": 2,
+      "name": "POIs_and_Entities",
+      "type": "objectgroup",
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "objects": [
+        {
+          "id": 1,
+          "name": "城鎮市集",
+          "type": "TOWN",
+          "x": 360,
+          "y": 440,
+          "width": 40,
+          "height": 40,
+          "properties": [
+            {
+              "name": "services",
+              "type": "string",
+              "value": "REST,TRADE,BOUNTY"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

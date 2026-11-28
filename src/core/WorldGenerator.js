@@ -14,6 +14,7 @@
 }(typeof self !== 'undefined' ? self : this, function () {
   const BIOMES = ['PLAINS', 'MOUNTAIN', 'SWAMP', 'DESERT', 'SNOW'];
   const DIFFICULTIES = [1, 2, 3, 4, 5];
+  const ORTHODOX_SECTS = ['少林寺', '武當派', '華山派', '丐幫', '峨嵋派', '逍遙派'];
 
   const BIOME_META = {
     PLAINS: { name: '中原平原分境', short: '🌲 中原', color: '#143823' },
@@ -109,25 +110,18 @@
   /**
    * 生成單一區域地圖的 16x16 Tiled (.tmj) 資料
    */
-  function createProceduralRegionalMap(biome, difficulty, x, y, filename, rng = Math.random) {
+  function createProceduralRegionalMap(biome, difficulty, x, y, filename, rng = Math.random, poiFlags = null) {
     const grid = new Uint8Array(16 * 16);
     const diff = Math.min(5, Math.max(1, parseInt(difficulty, 10) || 2));
+    const flags = poiFlags || { hasInn: true, hasTown: diff <= 2, hasSectBranch: false, sectHqName: null, factionName: '' };
 
-    // GID 定義: 1=平原, 2=高山(不可通行), 3=密林, 4=城鎮, 5=客棧, 6=荒丘
+    // GID 定義: 1=平原, 2=高山(不可通行), 3=密林, 4=城鎮市集, 5=龍門客棧, 6=荒丘, 7=門派分舵, 8=門派總舵
     const obstacleCountBase = 15 + diff * 8;
-    const innX = 3 + Math.floor(rng() * 10);
-    const innY = 3 + Math.floor(rng() * 10);
 
     if (biome === 'PLAINS') {
       grid.fill(1);
       for (let i = 0; i < 20 + diff * 3; i++) grid[Math.floor(rng() * 256)] = 3;
       for (let i = 0; i < Math.floor(diff * 3); i++) grid[Math.floor(rng() * 256)] = 2;
-      if (diff <= 2) {
-        const tx = 2 + Math.floor(rng() * 12);
-        const ty = 2 + Math.floor(rng() * 12);
-        grid[ty * 16 + tx] = 4; // 低難度隨機城鎮
-      }
-      grid[innY * 16 + innX] = 5; // 客棧
     } else if (biome === 'MOUNTAIN') {
       grid.fill(6);
       for (let i = 0; i < obstacleCountBase + 15; i++) grid[Math.floor(rng() * 256)] = 2;
@@ -135,20 +129,16 @@
       const roadCol = 6 + Math.floor(rng() * 4);
       for (let cx = 0; cx < 16; cx++) grid[roadRow * 16 + cx] = 1; // 橫貫官道
       for (let cy = 0; cy < 16; cy++) grid[cy * 16 + roadCol] = 1; // 縱貫山徑
-      grid[innY * 16 + innX] = 5;
     } else if (biome === 'SWAMP') {
       grid.fill(1);
       for (let i = 0; i < 40 + diff * 5; i++) grid[Math.floor(rng() * 256)] = 3;
       for (let i = 0; i < diff * 4; i++) grid[Math.floor(rng() * 256)] = 2;
-      grid[innY * 16 + innX] = 5;
     } else if (biome === 'DESERT') {
       grid.fill(6);
       for (let i = 0; i < obstacleCountBase; i++) grid[Math.floor(rng() * 256)] = 2;
-      grid[innY * 16 + innX] = 5;
     } else if (biome === 'SNOW') {
       grid.fill(6);
       for (let i = 0; i < obstacleCountBase + 10; i++) grid[Math.floor(rng() * 256)] = 2;
-      grid[innY * 16 + innX] = 5;
     } else {
       grid.fill(1);
     }
@@ -166,12 +156,85 @@
         grid[oy * 16 + ox] = (biome === 'MOUNTAIN' || biome === 'DESERT' || biome === 'SNOW') ? 6 : 1;
       }
     }
-    // 確保客棧至少存在一處
-    if (grid[innY * 16 + innX] === 2) grid[innY * 16 + innX] = 5;
+
+    // 依 POI 規劃精準放置 城鎮市集(4)、龍門客棧(5)、門派分舵(7)、門派總舵(8)
+    const usedSpots = new Set();
+    const pickPoiSpot = () => {
+      for (let attempt = 0; attempt < 40; attempt++) {
+        const px = 2 + Math.floor(rng() * 12);
+        const py = 2 + Math.floor(rng() * 12);
+        const k = `${px},${py}`;
+        if (!usedSpots.has(k)) {
+          usedSpots.add(k);
+          return [px, py];
+        }
+      }
+      return [8, 8];
+    };
+
+    const objects = [];
+    let objId = 1;
+
+    if (flags.hasInn) {
+      const [ix, iy] = pickPoiSpot();
+      grid[iy * 16 + ix] = 5;
+      objects.push({
+        id: objId++,
+        name: '龍門客棧',
+        type: 'INN',
+        x: ix * 40,
+        y: iy * 40,
+        width: 40,
+        height: 40,
+        properties: [{ name: 'services', type: 'string', value: 'REST,RUMOR' }]
+      });
+    }
+    if (flags.hasTown) {
+      const [tx, ty] = pickPoiSpot();
+      grid[ty * 16 + tx] = 4;
+      objects.push({
+        id: objId++,
+        name: '城鎮市集',
+        type: 'TOWN',
+        x: tx * 40,
+        y: ty * 40,
+        width: 40,
+        height: 40,
+        properties: [{ name: 'services', type: 'string', value: 'REST,TRADE,BOUNTY' }]
+      });
+    }
+    if (flags.hasSectBranch) {
+      const [bx, by] = pickPoiSpot();
+      grid[by * 16 + bx] = 7;
+      objects.push({
+        id: objId++,
+        name: `${flags.factionName || '江湖'}分舵`,
+        type: 'SECT_BRANCH',
+        x: bx * 40,
+        y: by * 40,
+        width: 40,
+        height: 40,
+        properties: [{ name: 'services', type: 'string', value: 'LEARN_MARTIAL' }]
+      });
+    }
+    if (flags.sectHqName) {
+      const [hx, hy] = pickPoiSpot();
+      grid[hy * 16 + hx] = 8;
+      objects.push({
+        id: objId++,
+        name: `${flags.sectHqName}總舵`,
+        type: 'SECT_HQ',
+        x: hx * 40,
+        y: hy * 40,
+        width: 40,
+        height: 40,
+        properties: [{ name: 'services', type: 'string', value: 'JOIN_SECT,LEARN_MARTIAL' }]
+      });
+    }
 
     const meta = BIOME_META[biome] || { name: '未知分境' };
     const diffLabel = (DIFFICULTY_META[diff] && DIFFICULTY_META[diff].label) || '';
-    const mapTitle = `${meta.name} (${x}, ${y})`;
+    const mapTitle = flags.sectHqName ? `${flags.sectHqName}總壇 · ${meta.name} (${x}, ${y})` : `${meta.name} (${x}, ${y})`;
 
     return {
       compressionlevel: -1,
@@ -189,8 +252,8 @@
         { name: 'mapName', type: 'string', value: mapTitle },
         { name: 'description', type: 'string', value: `${meta.name}（${diffLabel}），天地遼闊，常有各路江湖散客與猛獸遊歷。` },
         { name: 'difficulty', type: 'int', value: diff },
-        { name: 'specialType', type: 'string', value: 'NORMAL' },
-        { name: 'faction', type: 'string', value: '' },
+        { name: 'specialType', type: 'string', value: flags.sectHqName ? 'SECT_BASE' : (flags.hasTown ? 'TOWN_MARKET' : 'NORMAL') },
+        { name: 'faction', type: 'string', value: flags.sectHqName || flags.factionName || '' },
         { name: 'possibleQuests', type: 'string', value: `【懸賞】擊斃${diff >= 4 ? '兇悍魔煞' : '遊蕩悍匪'} (賞金 ${diff * 35} 兩)\n【探尋】探查此地未名奇遇` },
         { name: 'possibleLoot', type: 'string', value: diff >= 4 ? '玄鐵重刃\n大還丹' : '青鋼短劍\n行軍乾糧' }
       ],
@@ -199,15 +262,17 @@
         name: 'Jianghu_Overworld_Tiles',
         tilewidth: 40,
         tileheight: 40,
-        tilecount: 6,
-        columns: 6,
+        tilecount: 8,
+        columns: 8,
         tiles: [
           { id: 0, properties: [{ name: 'terrainType', type: 'string', value: 'PLAINS' }, { name: 'hourCost', type: 'int', value: 1 }] },
           { id: 1, properties: [{ name: 'terrainType', type: 'string', value: 'MOUNTAIN' }, { name: 'hourCost', type: 'int', value: 999 }] },
           { id: 2, properties: [{ name: 'terrainType', type: 'string', value: 'FOREST' }, { name: 'hourCost', type: 'int', value: 3 }] },
           { id: 3, properties: [{ name: 'terrainType', type: 'string', value: 'TOWN' }, { name: 'hourCost', type: 'int', value: 1 }] },
           { id: 4, properties: [{ name: 'terrainType', type: 'string', value: 'INN' }, { name: 'hourCost', type: 'int', value: 1 }] },
-          { id: 5, properties: [{ name: 'terrainType', type: 'string', value: 'HILLS' }, { name: 'hourCost', type: 'int', value: 2 }] }
+          { id: 5, properties: [{ name: 'terrainType', type: 'string', value: 'HILLS' }, { name: 'hourCost', type: 'int', value: 2 }] },
+          { id: 6, properties: [{ name: 'terrainType', type: 'string', value: 'SECT_BRANCH' }, { name: 'hourCost', type: 'int', value: 1 }] },
+          { id: 7, properties: [{ name: 'terrainType', type: 'string', value: 'SECT_HQ' }, { name: 'hourCost', type: 'int', value: 1 }] }
         ]
       }],
       layers: [
@@ -231,18 +296,7 @@
           visible: true,
           x: 0,
           y: 0,
-          objects: [
-            {
-              id: 1,
-              name: diff <= 2 ? '官道驛站客棧' : '荒野險地茶棚',
-              type: 'INN',
-              x: 320,
-              y: 320,
-              width: 40,
-              height: 40,
-              properties: [{ name: 'services', type: 'string', value: 'REST,RUMOR' }]
-            }
-          ]
+          objects
         }
       ]
     };
@@ -376,7 +430,58 @@
       });
     }
 
-    // 4. 組裝 worldData.cells 與對應的區域地圖 TMJ
+    // 4. 規劃全世界區域地圖 POI 出現比例：
+    //    - 各門派「門派總舵」在全世界只能出現 1 次（不可調整）
+    //    - 「門派分舵」預設 5% (可調整)
+    //    - 「城鎮市集」預設 20% (可調整)
+    //    - 「龍門客棧」預設 50% (可調整)
+    const poiRatios = options.poiRatios || {};
+    const sectBranchPct = Math.max(0, Math.min(100, Number(poiRatios.sectBranchPct ?? 5)));
+    const townPct = Math.max(0, Math.min(100, Number(poiRatios.townPct ?? 20)));
+    const innPct = Math.max(0, Math.min(100, Number(poiRatios.innPct ?? 50)));
+
+    const sectBranchTarget = Math.round((targetCount * sectBranchPct) / 100);
+    const townTarget = Math.round((targetCount * townPct) / 100);
+    const innTarget = Math.round((targetCount * innPct) / 100);
+
+    const poiByKey = {};
+    coords.forEach(c => {
+      poiByKey[c.key] = { hasInn: false, hasTown: false, hasSectBranch: false, sectHqName: null, factionName: '' };
+    });
+
+    // 4A. 各門派總舵：每個門派在全世界精確出現 1 次
+    const hqCandidates = shuffleArray([...coords], rng);
+    ORTHODOX_SECTS.forEach((sectName, sIdx) => {
+      if (sIdx < hqCandidates.length) {
+        const key = hqCandidates[sIdx].key;
+        poiByKey[key].sectHqName = sectName;
+        poiByKey[key].factionName = sectName;
+      }
+    });
+
+    // 4B. 門派分舵 (預設 5%)
+    const branchCandidates = shuffleArray([...coords], rng);
+    for (let i = 0; i < Math.min(sectBranchTarget, branchCandidates.length); i++) {
+      const key = branchCandidates[i].key;
+      poiByKey[key].hasSectBranch = true;
+      if (!poiByKey[key].factionName) {
+        poiByKey[key].factionName = ORTHODOX_SECTS[i % ORTHODOX_SECTS.length];
+      }
+    }
+
+    // 4C. 城鎮市集 (預設 20%)
+    const townCandidates = shuffleArray([...coords], rng);
+    for (let i = 0; i < Math.min(townTarget, townCandidates.length); i++) {
+      poiByKey[townCandidates[i].key].hasTown = true;
+    }
+
+    // 4D. 龍門客棧 (預設 50%)
+    const innCandidates = shuffleArray([...coords], rng);
+    for (let i = 0; i < Math.min(innTarget, innCandidates.length); i++) {
+      poiByKey[innCandidates[i].key].hasInn = true;
+    }
+
+    // 5. 組裝 worldData.cells 與對應的區域地圖 TMJ
     const cells = {};
     const maps = {};
     const nowIso = new Date().toISOString();
@@ -399,6 +504,7 @@
     for (const c of coords) {
       const biome = coordBiomes[c.key] || 'PLAINS';
       const difficulty = coordDifficulties[c.key] || 2;
+      const poiFlags = poiByKey[c.key];
 
       // 確保檔名嚴格唯一
       let filename = '';
@@ -412,7 +518,7 @@
       let mapObj = null;
       let attempts = 0;
       do {
-        mapObj = createProceduralRegionalMap(biome, difficulty, c.x, c.y, filename, rng);
+        mapObj = createProceduralRegionalMap(biome, difficulty, c.x, c.y, filename, rng, poiFlags);
         const sig = `${biome}:${mapObj.layers[0].data.join(',')}`;
         if (!usedSignatures.has(sig) || attempts >= 8) {
           usedSignatures.add(sig);
@@ -425,9 +531,10 @@
 
       cells[c.key] = {
         mapFile: filename,
-        name: `${meta.name} (${c.x}, ${c.y})`,
+        name: poiFlags.sectHqName ? `${poiFlags.sectHqName}總壇 (${c.x}, ${c.y})` : `${meta.name} (${c.x}, ${c.y})`,
         biome,
         difficulty,
+        pois: poiFlags,
         assignedAt: nowIso
       };
 
@@ -444,6 +551,12 @@
         generatedCount: coords.length,
         biomeCounts,
         difficultyCounts: diffCounts,
+        poiStats: {
+          sectHqCount: Math.min(ORTHODOX_SECTS.length, coords.length),
+          sectBranchCount: Math.min(sectBranchTarget, coords.length),
+          townCount: Math.min(townTarget, coords.length),
+          innCount: Math.min(innTarget, coords.length)
+        },
         fillMode
       }
     };
@@ -452,6 +565,7 @@
   return {
     BIOMES,
     DIFFICULTIES,
+    ORTHODOX_SECTS,
     BIOME_META,
     DIFFICULTY_META,
     allocateCountsByRatios,

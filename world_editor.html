@@ -791,7 +791,46 @@
         <div id="diff-ratios-container" style="display:flex; flex-direction:column; gap:6px;"></div>
       </div>
 
-      <!-- 4. 覆蓋選項 -->
+      <!-- 3.5. 門派與據點圖塊在全世界區域地圖出現比例 -->
+      <div class="modal-section">
+        <div class="modal-sec-head">
+          <span>4. 據點與門派圖塊出現比例 (佔全世界區域地圖%)</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div class="ratio-row">
+            <span style="color:#fdba74;">🏛️ 各門派總舵 (鎖定)</span>
+            <input type="range" min="1" max="1" value="1" disabled>
+            <input type="text" class="ratio-num" value="1次/派" disabled style="color:#94a3b8;">
+            <span class="ratio-stat" style="color:#fbbf24;">固定共 6 座</span>
+          </div>
+          <div class="ratio-row">
+            <span style="color:#d8b4fe;">⛩️ 門派分舵 (%)</span>
+            <input type="range" id="poi-branch-range" min="0" max="100" value="5"
+              oninput="syncPoiRatio('branch', this.value)">
+            <input type="number" id="poi-branch-num" class="ratio-num" min="0" max="100" value="5"
+              onchange="syncPoiRatio('branch', this.value)">
+            <span class="ratio-stat" id="poi-branch-stat">5%</span>
+          </div>
+          <div class="ratio-row">
+            <span style="color:#fca5a5;">🏯 城鎮市集 (%)</span>
+            <input type="range" id="poi-town-range" min="0" max="100" value="20"
+              oninput="syncPoiRatio('town', this.value)">
+            <input type="number" id="poi-town-num" class="ratio-num" min="0" max="100" value="20"
+              onchange="syncPoiRatio('town', this.value)">
+            <span class="ratio-stat" id="poi-town-stat">20%</span>
+          </div>
+          <div class="ratio-row">
+            <span style="color:#fde047;">🍶 龍門客棧 (%)</span>
+            <input type="range" id="poi-inn-range" min="0" max="100" value="50"
+              oninput="syncPoiRatio('inn', this.value)">
+            <input type="number" id="poi-inn-num" class="ratio-num" min="0" max="100" value="50"
+              onchange="syncPoiRatio('inn', this.value)">
+            <span class="ratio-stat" id="poi-inn-stat">50%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 覆蓋選項 -->
       <div class="modal-section" style="gap:6px; font-size:0.8rem; color:#cbd5e1;">
         <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
           <input type="checkbox" id="batch-cleanup-old" checked>
@@ -1384,7 +1423,7 @@
 
         if (json && json.layers && json.layers[0]?.data) {
           const data = json.layers[0].data;
-          const colors = { 1: '#1a261f', 2: '#313845', 3: '#0e2015', 4: '#632b17', 5: '#8d3f0d', 6: '#27291e' };
+          const colors = { 1: '#1a261f', 2: '#313845', 3: '#0e2015', 4: '#632b17', 5: '#8d3f0d', 6: '#27291e', 7: '#3b1d5a', 8: '#7c2d12' };
           for (let x = 0; x < 16; x++) {
             for (let y = 0; y < 16; y++) {
               const gid = data[y * 16 + x] || 1;
@@ -1611,6 +1650,7 @@
       document.getElementById('batch-progress-wrap').style.display = 'none';
       document.getElementById('btn-run-batch-gen').disabled = false;
       renderRatioControls();
+      updatePoiStatsPreview();
       document.getElementById('modal-batch-generate').classList.add('open');
     }
 
@@ -1693,7 +1733,28 @@
       renderRatioControls();
     }
 
-    document.getElementById('batch-preserve-center')?.addEventListener('change', renderRatioControls);
+    function syncPoiRatio(kind, rawVal) {
+      const val = Math.max(0, Math.min(100, parseInt(rawVal, 10) || 0));
+      document.getElementById(`poi-${kind}-range`).value = val;
+      document.getElementById(`poi-${kind}-num`).value = val;
+      updatePoiStatsPreview();
+    }
+
+    function updatePoiStatsPreview() {
+      const preserveCenter = document.getElementById('batch-preserve-center')?.checked;
+      const total = Math.max(0, worldData.width * worldData.height - (preserveCenter ? 1 : 0));
+      ['branch', 'town', 'inn'].forEach(k => {
+        const pct = parseInt(document.getElementById(`poi-${k}-num`)?.value, 10) || 0;
+        const cnt = Math.round((total * pct) / 100);
+        const statEl = document.getElementById(`poi-${k}-stat`);
+        if (statEl) statEl.innerText = `${pct}% (${cnt}格)`;
+      });
+    }
+
+    document.getElementById('batch-preserve-center')?.addEventListener('change', () => {
+      renderRatioControls();
+      updatePoiStatsPreview();
+    });
 
     async function executeBatchWorldGeneration() {
       const btn = document.getElementById('btn-run-batch-gen');
@@ -1718,11 +1779,16 @@
 
       await new Promise(r => setTimeout(r, 20));
 
+      const sectBranchPct = Math.max(0, Math.min(100, parseInt(document.getElementById('poi-branch-num')?.value, 10) ?? 5));
+      const townPct = Math.max(0, Math.min(100, parseInt(document.getElementById('poi-town-num')?.value, 10) ?? 20));
+      const innPct = Math.max(0, Math.min(100, parseInt(document.getElementById('poi-inn-num')?.value, 10) ?? 50));
+
       const result = WorldGenerator.generateWorldLayout({
         width: worldData.width,
         height: worldData.height,
         biomeRatios: batchConfig.biomeRatios,
         difficultyRatios: batchConfig.difficultyRatios,
+        poiRatios: { sectBranchPct, townPct, innPct },
         fillMode,
         preserveCenterDefault,
         existingCenterCell
