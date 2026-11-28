@@ -678,10 +678,16 @@
       const chosenRace = biomeBias[Math.floor(Math.random() * biomeBias.length)];
 
       // 在角色庫中尋找相符種族且等級落差在合理範圍內的角色 (相差不超過 4 級)
-      const matching = chars.filter(c =>
+      let matching = chars.filter(c =>
         c.race === chosenRace &&
         Math.abs((c.level || 1) - playerLevel) <= 4
       );
+
+      // 新手保護：Lv.1~2 時優先過濾掉遠程風箏怪 (TACTICAL_KITE) 與高速突進撲擊怪 (BEAST_POUNCE)
+      if (playerLevel <= 2 && matching.length > 0) {
+        const newbieSafe = matching.filter(c => c.attackPattern !== 'TACTICAL_KITE' && c.attackPattern !== 'BEAST_POUNCE');
+        if (newbieSafe.length > 0) matching = newbieSafe;
+      }
 
       if (matching.length > 0) {
         const selected = matching[Math.floor(Math.random() * matching.length)];

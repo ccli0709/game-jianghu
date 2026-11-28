@@ -1,14 +1,14 @@
 {
-  "id": "story_1795840555570",
-  "title": "秋水明霞錄",
+  "id": "story_1795857122750",
+  "title": "風雲際會篇",
   "heroName": "李暮雲",
   "version": "1.0.0",
-  "createdAt": "2026-11-28T04:35:55.740Z",
-  "updatedAt": "2026-11-28T04:35:55.766Z",
+  "createdAt": "2026-11-28T09:12:02.890Z",
+  "updatedAt": "2026-11-28T10:09:41.666Z",
   "curChunkX": 7,
-  "curChunkY": 7,
-  "currentChunkName": "中原平原分境 (7, 7)",
-  "currentMapFile": "overworld_c7_7_plains_5mwkf.tmj",
+  "curChunkY": 6,
+  "currentChunkName": "蜀道重巒分境 (7, 6)",
+  "currentMapFile": "overworld_c7_6_mountain_8gdl6.tmj",
   "worldData": {
     "id": "world_jianghu_main",
     "name": "神州浩土全圖",
@@ -2249,6 +2249,466 @@
             1,
             1,
             1
+          ]
+        },
+        {
+          "id": 2,
+          "name": "POIs_and_Entities",
+          "type": "objectgroup",
+          "opacity": 1,
+          "visible": true,
+          "x": 0,
+          "y": 0,
+          "objects": [
+            {
+              "id": 1,
+              "name": "官道驛站客棧",
+              "type": "INN",
+              "x": 320,
+              "y": 320,
+              "width": 40,
+              "height": 40,
+              "properties": [
+                {
+                  "name": "services",
+                  "type": "string",
+                  "value": "REST,RUMOR"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "overworld_c7_6_mountain_8gdl6.tmj": {
+      "compressionlevel": -1,
+      "width": 16,
+      "height": 16,
+      "tilewidth": 40,
+      "tileheight": 40,
+      "infinite": false,
+      "orientation": "orthogonal",
+      "renderorder": "right-down",
+      "tiledversion": "1.10.2",
+      "version": "1.10",
+      "type": "map",
+      "properties": [
+        {
+          "name": "mapName",
+          "type": "string",
+          "value": "蜀道重巒分境 (7, 6)"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "value": "蜀道重巒分境（★☆☆☆☆ 初入江湖），天地遼闊，常有各路江湖散客與猛獸遊歷。"
+        },
+        {
+          "name": "difficulty",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "name": "specialType",
+          "type": "string",
+          "value": "NORMAL"
+        },
+        {
+          "name": "faction",
+          "type": "string",
+          "value": ""
+        },
+        {
+          "name": "possibleQuests",
+          "type": "string",
+          "value": "天目山莊急件傳書\n清剿黑水寨悍匪"
+        },
+        {
+          "name": "possibleLoot",
+          "type": "string",
+          "value": "九霄青鋼長劍\n青鋒幽冥奪魂短匕\n奪魄飛刀"
+        },
+        {
+          "name": "possibleEvents",
+          "type": "string",
+          "value": "戈壁暗風飛沙割面\n摩挲太湖奇石參透勁道"
+        },
+        {
+          "name": "possibleEnemies",
+          "type": "string",
+          "value": "開禧秀才\n陰溝腐鼠妖\n巴蜀野犬"
+        }
+      ],
+      "tilesets": [
+        {
+          "firstgid": 1,
+          "name": "Jianghu_Overworld_Tiles",
+          "tilewidth": 40,
+          "tileheight": 40,
+          "tilecount": 6,
+          "columns": 6,
+          "tiles": [
+            {
+              "id": 0,
+              "properties": [
+                {
+                  "name": "terrainType",
+                  "type": "string",
+                  "value": "PLAINS"
+                },
+                {
+                  "name": "hourCost",
+                  "type": "int",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "id": 1,
+              "properties": [
+                {
+                  "name": "terrainType",
+                  "type": "string",
+                  "value": "MOUNTAIN"
+                },
+                {
+                  "name": "hourCost",
+                  "type": "int",
+                  "value": 999
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "properties": [
+                {
+                  "name": "terrainType",
+                  "type": "string",
+                  "value": "FOREST"
+                },
+                {
+                  "name": "hourCost",
+                  "type": "int",
+                  "value": 3
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "properties": [
+                {
+                  "name": "terrainType",
+                  "type": "string",
+                  "value": "TOWN"
+                },
+                {
+                  "name": "hourCost",
+                  "type": "int",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "properties": [
+                {
+                  "name": "terrainType",
+                  "type": "string",
+                  "value": "INN"
+                },
+                {
+                  "name": "hourCost",
+                  "type": "int",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "properties": [
+                {
+                  "name": "terrainType",
+                  "type": "string",
+                  "value": "HILLS"
+                },
+                {
+                  "name": "hourCost",
+                  "type": "int",
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "layers": [
+        {
+          "id": 1,
+          "name": "Terrain_Layer",
+          "type": "tilelayer",
+          "width": 16,
+          "height": 16,
+          "x": 0,
+          "y": 0,
+          "opacity": 1,
+          "visible": true,
+          "data": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            2,
+            6,
+            1,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            2,
+            6,
+            6,
+            6,
+            2,
+            6,
+            6,
+            2,
+            6,
+            1,
+            6,
+            6,
+            6,
+            6,
+            2,
+            2,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            2,
+            2,
+            6,
+            2,
+            6,
+            6,
+            2,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            6,
+            6,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            2,
+            6,
+            1,
+            6,
+            6,
+            6,
+            5,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            6,
+            6,
+            6,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            2,
+            6,
+            2,
+            6,
+            6,
+            1,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            6,
+            6,
+            6,
+            2,
+            6,
+            6,
+            6,
+            1,
+            6,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            2,
+            1,
+            2,
+            6,
+            6,
+            6,
+            6,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            2,
+            6,
+            2,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            1,
+            6,
+            2,
+            6,
+            2,
+            6,
+            6,
+            6,
+            6
           ]
         },
         {
@@ -12496,7 +12956,7 @@
           "qiMax": 162,
           "regen": 6,
           "damageReduction": 5,
-          "summary": "護體防禦 +57 ｜ 氣血上限 +199 ｜ 真氣上限 +162 ｜ 每時辰調息 +6 ｜ 減傷 +5%"
+          "summary": "護體防禦 +57 ｜ 氣血上限 +199 ｜ 真氣上�� +162 ｜ 每時辰調息 +6 ｜ 減傷 +5%"
         },
         {
           "level": 5,
@@ -20586,7 +21046,7 @@
         "bonusStat": "qiMax",
         "bonusLabel": "真氣容量",
         "bonusValue": 88,
-        "summary": "搭配【秘寶奇物 (秘笈寶品)】時，真氣容量額外 +88"
+        "summary": "搭配【��寶奇物 (秘笈寶品)】時，真氣容量額外 +88"
       },
       "desc": "【逍遙派·寶器】仙風道骨，神妙莫測，能以無相真氣催動各路奇門暗器與寶物。搭配【秘寶奇物 (秘笈寶品)】時，真氣容量額外 +88。",
       "levelBonuses": [
@@ -23777,7 +24237,7 @@
       "name": "臨安貨郎",
       "race": "HUMAN",
       "form": "TIER_1",
-      "formName": "鄉井布衣",
+      "formName": "��井布衣",
       "tierIndex": 1,
       "tierTotal": 5,
       "level": 2,
@@ -25788,43 +26248,43 @@
   ],
   "player": {
     "name": "李暮雲",
-    "title": "初入江湖的鄉民",
-    "realm": "平民百姓",
+    "title": "名動四方的正義之士",
+    "realm": "聲名鵲起",
     "race": "HUMAN",
-    "form": "CIVILIAN",
-    "formName": "鄉井平民",
-    "level": 1,
+    "form": "OUTLAW",
+    "formName": "綠林草莽",
+    "level": 8,
     "minLevel": 1,
-    "maxLevel": 5,
+    "maxLevel": 12,
     "isBreakthroughPending": false,
-    "exp": 0,
-    "maxExp": 100,
-    "freeAttributePoints": 5,
+    "exp": 341,
+    "maxExp": 563,
+    "freeAttributePoints": 45,
     "statuses": [],
     "sect": "尚未加入 (江湖散人)",
-    "hp": 100,
-    "maxHp": 100,
-    "qi": 50,
-    "maxQi": 50,
-    "gold": 50,
+    "hp": 266,
+    "maxHp": 266,
+    "qi": 195,
+    "maxQi": 195,
+    "gold": 1062,
     "speed": 85,
-    "energy": 100,
+    "energy": 79,
     "stunnedTurns": 0,
     "hitShake": 0,
     "hitFlash": 0,
-    "owX": 7,
-    "owY": 4,
+    "owX": 11,
+    "owY": 5,
     "bx": 3,
-    "by": 8,
+    "by": 7,
     "currentMoveCost": 1,
-    "visualX": 280,
-    "visualY": 160,
+    "visualX": 440,
+    "visualY": 200,
     "attributes": {
-      "str": 20,
-      "agi": 20,
-      "con": 20,
-      "wis": 20,
-      "lck": 20,
+      "str": 24,
+      "agi": 32,
+      "con": 23,
+      "wis": 23,
+      "lck": 23,
       "rep": 10,
       "strain": 0
     },
@@ -25889,6 +26349,52 @@
           "healHp": 45,
           "healQi": 0
         }
+      },
+      {
+        "id": "def_melee_com_1_xr3n",
+        "name": "紫電幽冥奪魂短匕",
+        "category": "MELEE_WEAPON",
+        "subCategory": "DAGGER",
+        "icon": "🗡️",
+        "tier": "COMMON",
+        "tierName": "凡品",
+        "tierClass": "tier-white",
+        "value": 45,
+        "stackMax": 1,
+        "weight": 3,
+        "requiredRealm": "初入江湖",
+        "desc": "玄門道派開山祖師所佩兵刃，內蘊純陽罡氣，能破各路邪魔外道。",
+        "attributes": {
+          "atk": 14,
+          "speedMod": -4,
+          "armorPiercing": 8,
+          "reach": 1,
+          "martialMove": "瞬影鎖喉",
+          "specialEffect": "擊中時 25% 機率【破甲】，削弱敵方護體防禦 30%"
+        }
+      },
+      {
+        "id": "def_melee_com_1_xr3n",
+        "name": "紫電幽冥奪魂短匕",
+        "category": "MELEE_WEAPON",
+        "subCategory": "DAGGER",
+        "icon": "🗡️",
+        "tier": "COMMON",
+        "tierName": "凡品",
+        "tierClass": "tier-white",
+        "value": 45,
+        "stackMax": 1,
+        "weight": 3,
+        "requiredRealm": "初入江湖",
+        "desc": "玄門道派開山祖師所佩兵刃，內蘊純陽罡氣，能破各路邪魔外道。",
+        "attributes": {
+          "atk": 14,
+          "speedMod": -4,
+          "armorPiercing": 8,
+          "reach": 1,
+          "martialMove": "瞬影鎖喉",
+          "specialEffect": "擊中時 25% 機率【破甲】，削弱敵方護體防禦 30%"
+        }
       }
     ],
     "equippedCultivations": [
@@ -25902,9 +26408,9 @@
         "tier": "凡品",
         "tierClass": "tier-white",
         "maxLevel": 20,
-        "currentLevel": 1,
-        "exp": 0,
-        "title": "初窺門徑",
+        "currentLevel": 7,
+        "exp": 138,
+        "title": "駕輕就熟",
         "desc": "江湖散客入門打坐行氣法門，調理內息，滋潤四肢百骸。",
         "levelBonuses": [
           {
@@ -26138,12 +26644,14 @@
         "sect": "NEUTRAL",
         "sectName": "江湖散人",
         "icon": "👊",
+        "cost": 8,
+        "range": 1,
         "tier": "凡品",
         "tierClass": "tier-white",
         "maxLevel": 20,
-        "currentLevel": 1,
-        "exp": 0,
-        "title": "初窺門徑",
+        "currentLevel": 4,
+        "exp": 35,
+        "title": "略有小成",
         "desc": "天下初學者通用外家拳術，招法樸實無華，出招時累積武功經驗。",
         "levelBonuses": [
           {
@@ -26327,14 +26835,213 @@
             "summary": "外功攻擊力 +76 ｜ 暴擊率 +47% ｜ 穿透護甲 +48"
           }
         ]
+      },
+      {
+        "id": "mar_neutral_flying_stone",
+        "name": "江湖飛石術",
+        "type": "MARTIAL",
+        "sect": "NEUTRAL",
+        "sectName": "江湖散人",
+        "icon": "🪨",
+        "cost": 6,
+        "range": 3,
+        "tier": "凡品",
+        "tierClass": "tier-white",
+        "maxLevel": 20,
+        "currentLevel": 1,
+        "exp": 48,
+        "title": "初窺門徑",
+        "desc": "隨手拾石擲擊的遠程牽制手法，射程 3 格，專剋游擊敵手。",
+        "levelBonuses": [
+          {
+            "level": 1,
+            "title": "初窺門徑",
+            "expNeeded": 50,
+            "atk": 10,
+            "critRate": 8,
+            "armorPierce": 0,
+            "summary": "外功攻擊力 +10 ｜ 暴擊率 +8% ｜ 穿透護甲 +0"
+          },
+          {
+            "level": 2,
+            "title": "初窺門徑",
+            "expNeeded": 61,
+            "atk": 13,
+            "critRate": 10,
+            "armorPierce": 3,
+            "summary": "外功攻擊力 +13 ｜ 暴擊率 +10% ｜ 穿透護甲 +3"
+          },
+          {
+            "level": 3,
+            "title": "初窺門徑",
+            "expNeeded": 74,
+            "atk": 16,
+            "critRate": 12,
+            "armorPierce": 5,
+            "summary": "外功攻擊力 +16 ｜ 暴擊率 +12% ｜ 穿透護甲 +5"
+          },
+          {
+            "level": 4,
+            "title": "略有小成",
+            "expNeeded": 91,
+            "atk": 18,
+            "critRate": 15,
+            "armorPierce": 8,
+            "summary": "外功攻擊力 +18 ｜ 暴擊率 +15% ｜ 穿透護甲 +8"
+          },
+          {
+            "level": 5,
+            "title": "略有小成",
+            "expNeeded": 111,
+            "atk": 21,
+            "critRate": 17,
+            "armorPierce": 10,
+            "summary": "外功攻擊力 +21 ｜ 暴擊率 +17% ｜ 穿透護甲 +10"
+          },
+          {
+            "level": 6,
+            "title": "略有小成",
+            "expNeeded": 135,
+            "atk": 24,
+            "critRate": 19,
+            "armorPierce": 13,
+            "summary": "外功攻擊力 +24 ｜ 暴擊率 +19% ｜ 穿透護甲 +13"
+          },
+          {
+            "level": 7,
+            "title": "駕輕就熟",
+            "expNeeded": 165,
+            "atk": 27,
+            "critRate": 21,
+            "armorPierce": 15,
+            "summary": "外功攻擊力 +27 ｜ 暴擊率 +21% ｜ 穿透護甲 +15"
+          },
+          {
+            "level": 8,
+            "title": "駕輕就熟",
+            "expNeeded": 201,
+            "atk": 30,
+            "critRate": 23,
+            "armorPierce": 18,
+            "summary": "外功攻擊力 +30 ｜ 暴擊率 +23% ｜ 穿透護甲 +18"
+          },
+          {
+            "level": 9,
+            "title": "駕輕就熟",
+            "expNeeded": 245,
+            "atk": 32,
+            "critRate": 26,
+            "armorPierce": 20,
+            "summary": "外功攻擊力 +32 ｜ 暴擊率 +26% ｜ 穿透護甲 +20"
+          },
+          {
+            "level": 10,
+            "title": "融會貫通",
+            "expNeeded": 299,
+            "atk": 35,
+            "critRate": 28,
+            "armorPierce": 23,
+            "summary": "外功攻擊力 +35 ｜ 暴擊率 +28% ｜ 穿透護甲 +23"
+          },
+          {
+            "level": 11,
+            "title": "融會貫通",
+            "expNeeded": 365,
+            "atk": 38,
+            "critRate": 30,
+            "armorPierce": 25,
+            "summary": "外功攻擊力 +38 ｜ 暴擊率 +30% ｜ 穿透護甲 +25"
+          },
+          {
+            "level": 12,
+            "title": "融會貫通",
+            "expNeeded": 446,
+            "atk": 41,
+            "critRate": 32,
+            "armorPierce": 28,
+            "summary": "外功攻擊力 +41 ｜ 暴擊率 +32% ｜ 穿透護甲 +28"
+          },
+          {
+            "level": 13,
+            "title": "爐火純青",
+            "expNeeded": 544,
+            "atk": 44,
+            "critRate": 34,
+            "armorPierce": 30,
+            "summary": "外功攻擊力 +44 ｜ 暴擊率 +34% ｜ 穿透護甲 +30"
+          },
+          {
+            "level": 14,
+            "title": "爐火純青",
+            "expNeeded": 663,
+            "atk": 46,
+            "critRate": 37,
+            "armorPierce": 33,
+            "summary": "外功攻擊力 +46 ｜ 暴擊率 +37% ｜ 穿透護甲 +33"
+          },
+          {
+            "level": 15,
+            "title": "爐火純青",
+            "expNeeded": 809,
+            "atk": 49,
+            "critRate": 39,
+            "armorPierce": 35,
+            "summary": "外功攻擊力 +49 ｜ 暴擊率 +39% ｜ 穿透護甲 +35"
+          },
+          {
+            "level": 16,
+            "title": "出神入化",
+            "expNeeded": 987,
+            "atk": 52,
+            "critRate": 41,
+            "armorPierce": 38,
+            "summary": "外功攻擊力 +52 ｜ 暴擊率 +41% ｜ 穿透護甲 +38"
+          },
+          {
+            "level": 17,
+            "title": "出神入化",
+            "expNeeded": 1204,
+            "atk": 55,
+            "critRate": 43,
+            "armorPierce": 40,
+            "summary": "外功攻擊力 +55 ｜ 暴擊率 +43% ｜ 穿透護甲 +40"
+          },
+          {
+            "level": 18,
+            "title": "出神入化",
+            "expNeeded": 1469,
+            "atk": 58,
+            "critRate": 45,
+            "armorPierce": 43,
+            "summary": "外功攻擊力 +58 ｜ 暴擊率 +45% ｜ 穿透護甲 +43"
+          },
+          {
+            "level": 19,
+            "title": "傲視群雄",
+            "expNeeded": 1792,
+            "atk": 60,
+            "critRate": 48,
+            "armorPierce": 45,
+            "summary": "外功攻擊力 +60 ｜ 暴擊率 +48% ｜ 穿透護甲 +45"
+          },
+          {
+            "level": 20,
+            "title": "登峰造極",
+            "expNeeded": 0,
+            "atk": 63,
+            "critRate": 50,
+            "armorPierce": 48,
+            "summary": "外功攻擊力 +63 ｜ 暴擊率 +50% ｜ 穿透護甲 +48"
+          }
+        ]
       }
     ],
     "learnedCultivations": [],
     "learnedMartials": []
   },
   "clock": {
-    "day": 1,
-    "hour": 8
+    "day": 7,
+    "hour": 15
   },
   "roamingEnemies": []
 }

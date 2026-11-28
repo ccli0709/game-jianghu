@@ -145,13 +145,23 @@
       height: 100% !important;
     }
 
+    #sidebar-left {
+      width: 330px;
+      background: #12131b;
+      border-right: 1px solid #212330;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
     #sidebar {
-      width: 410px;
+      width: 380px;
       background: #12131b;
       border-left: 1px solid #212330;
       display: flex;
       flex-direction: column;
       z-index: 10;
+      overflow-y: auto;
     }
 
     .panel {
@@ -1340,6 +1350,15 @@
   </header>
 
   <main>
+    <!-- 左側面板：江湖見聞與戰報 -->
+    <aside id="sidebar-left">
+      <div id="log-container">
+        <div class="panel-title" style="padding:12px 18px 8px 18px; margin-bottom:0; border-bottom:1px solid #1c1e2a;">
+          江湖見聞與戰報</div>
+        <div id="combat-log"></div>
+      </div>
+    </aside>
+
     <div id="canvas-wrapper">
       <div id="pixi-viewport"></div>
 
@@ -1720,12 +1739,6 @@
         </div>
       </div>
 
-      <!-- 戰報大事記 -->
-      <div id="log-container">
-        <div class="panel-title" style="padding:10px 18px 0 18px; margin-bottom:0;">江湖見聞與戰報</div>
-        <div id="combat-log"></div>
-      </div>
-
       <div class="kbd-tip">
         • <b>Pixi.js WebGL 驅動</b>：平滑補間插值（Lerp Animation）＋ 晝夜混合遮罩。<br>
         • <b>模組化</b>：地圖與陣地支援外部 JSON 宣告式範本；渲染層全數掛載於 SceneGraph。
@@ -1987,9 +2000,25 @@
         this.tiles[this.idx(7, 3)] = this.defs.INN.id;
         this.tiles[this.idx(13, 11)] = this.defs.TOWN.id;
 
-        this.roamingEnemies = [
-          this.createRoamingEnemy(4, 3, 'PLAINS', false)
-        ];
+        this.roamingEnemies = [];
+        this.ensureRoamingEnemiesCount(2 + Math.floor(Math.random() * 2), 'PLAINS');
+      }
+
+      // 確保區域地圖初始具備 2~3 名可隨機移動的野怪
+      ensureRoamingEnemiesCount(targetCount = 2, biome = 'PLAINS') {
+        const px = (typeof game !== 'undefined' && game && game.player) ? game.player.owX : 7;
+        const py = (typeof game !== 'undefined' && game && game.player) ? game.player.owY : 4;
+        let guard = 0;
+        while (this.roamingEnemies.length < targetCount && guard < 120) {
+          guard++;
+          const rx = Math.floor(Math.random() * this.w);
+          const ry = Math.floor(Math.random() * this.h);
+          if (Math.abs(rx - px) + Math.abs(ry - py) <= 2) continue;
+          const tile = this.getTileData(rx, ry);
+          if (!this.isPassable(rx, ry) || tile.id === 3 || tile.id === 4) continue;
+          if (this.roamingEnemies.some(e => e.x === rx && e.y === ry)) continue;
+          this.roamingEnemies.push(this.createRoamingEnemy(rx, ry, biome, false));
+        }
       }
 
       getTileData(x, y) {
@@ -2027,11 +2056,10 @@
             this.tiles[i] = gidMap[gid] !== undefined ? gidMap[gid] : 0;
           }
         }
-        // 重設遊蕩怪，採用角色設定生成
+        // 重設遊蕩怪，採用角色設定生成，初到地圖平均出現 2~3 個野怪
         const curBiome = this.properties?.biome || 'PLAINS';
         this.roamingEnemies = [];
         const objLayer = tiledJson.layers.find(l => l.type === 'objectgroup');
-        let spawnEnemy = true;
         if (objLayer && objLayer.objects) {
           for (const obj of objLayer.objects) {
             if (obj.type === 'SPAWNER' || obj.name.includes('怪') || obj.name.includes('寨')) {
@@ -2039,13 +2067,11 @@
               const gy = Math.floor(obj.y / TILE_PX);
               const isBoss = obj.name.includes('首領') || obj.name.includes('王') || obj.name.includes('寨主');
               this.roamingEnemies.push(this.createRoamingEnemy(gx, gy, curBiome, isBoss));
-              spawnEnemy = false;
             }
           }
         }
-        if (spawnEnemy) {
-          this.roamingEnemies.push(this.createRoamingEnemy(6, 6, curBiome, false));
-        }
+        const targetCount = 2 + Math.floor(Math.random() * 2); // 2 或 3 個 (平均 2.5)
+        this.ensureRoamingEnemiesCount(targetCount, curBiome);
       }
 
       initBiome(biome) {
@@ -3499,7 +3525,89 @@
           this.triggerRandomOverworldEvent(destTile);
         }
 
+        // 野怪隨機移動與依地圖難度主動攻擊判定
+        this.advanceRoamingEnemies();
+
         this.updateUI();
+      }
+
+      // 區域地圖野怪漫遊與主動襲擊 AI (難度越高越容易主動追擊玩家)
+      advanceRoamingEnemies() {
+        if (!this.overworld || !Array.isArray(this.overworld.roamingEnemies) || this.mode !== MODE.OVERWORLD) return;
+        const difficulty = Math.min(5, Math.max(1, parseInt(this.overworld.properties?.difficulty, 10) || 1));
+        const aggroChance = Math.min(0.85, (difficulty - 1) * 0.2 + 0.1);
+        const playerTile = this.overworld.getTileData(this.player.owX, this.player.owY);
+        const playerInSafeZone = playerTile.id === 3 || playerTile.id === 4;
+
+        const dirs = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
+
+        for (let idx = 0; idx < this.overworld.roamingEnemies.length; idx++) {
+          const e = this.overworld.roamingEnemies[idx];
+          const dist = Math.abs(e.x - this.player.owX) + Math.abs(e.y - this.player.owY);
+          const isAggro = !playerInSafeZone && dist <= 5 && Math.random() < aggroChance;
+
+          const validMoves = [];
+          for (const d of dirs) {
+            const nx = e.x + d.dx;
+            const ny = e.y + d.dy;
+            if (!this.overworld.isPassable(nx, ny)) continue;
+            const t = this.overworld.getTileData(nx, ny);
+            if (t.id === 3 || t.id === 4) continue; // 不踏入客棧/城鎮安全區
+            if (this.overworld.roamingEnemies.some((o, oIdx) => oIdx !== idx && o.x === nx && o.y === ny)) continue;
+            validMoves.push({ x: nx, y: ny, distToPlayer: Math.abs(nx - this.player.owX) + Math.abs(ny - this.player.owY) });
+          }
+
+          if (validMoves.length === 0) continue;
+
+          let chosen = null;
+          if (isAggro) {
+            validMoves.sort((a, b) => a.distToPlayer - b.distToPlayer);
+            if (validMoves[0].distToPlayer < dist) {
+              chosen = validMoves[0];
+            }
+          } else if (Math.random() < 0.72) {
+            const nonPlayer = validMoves.filter(m => !(m.x === this.player.owX && m.y === this.player.owY));
+            if (nonPlayer.length > 0) {
+              chosen = nonPlayer[Math.floor(Math.random() * nonPlayer.length)];
+            }
+          }
+
+          if (chosen) {
+            e.x = chosen.x;
+            e.y = chosen.y;
+            e.visualX = chosen.x * TILE_PX;
+            e.visualY = chosen.y * TILE_PX;
+
+            // 若主動追擊踏中玩家，立即觸發遭遇戰鬥！
+            if (e.x === this.player.owX && e.y === this.player.owY && !playerInSafeZone) {
+              this.updateOverworldEnemiesDisplay();
+              this.addLog(`<span class="log-warn">⚠️【主動襲擊】</span>此地險惡（★${difficulty}），【${e.name}】察覺行蹤主動撲襲而來！`);
+              this.startBattle(e, idx);
+              return;
+            }
+          }
+        }
+
+        this.updateOverworldEnemiesDisplay();
+      }
+
+      // 嚴格從當前存檔的物品總管目錄解析真實存在的物品 (杜絕幽靈物品)
+      resolveItemFromStoryCatalog(preferredIdOrName) {
+        const pool = (this.currentStory?.items && this.currentStory.items.length > 0)
+          ? this.currentStory.items
+          : (this.itemsCatalog || []);
+        if (pool.length === 0) return null;
+
+        let found = null;
+        if (preferredIdOrName) {
+          found = pool.find(i => i.id === preferredIdOrName || i.name === preferredIdOrName);
+        }
+        if (!found) {
+          const usable = pool.filter(i => !i.equipRace || i.equipRace === 'HUMAN' || i.equipRace === 'ALL');
+          const subPool = usable.length > 0 ? usable : pool;
+          found = subPool[Math.floor(Math.random() * subPool.length)];
+        }
+        return found ? JSON.parse(JSON.stringify(found)) : null;
       }
 
       // 區域地圖隨機觸發事件 (拾財、頓悟增經驗、險惡地形受傷、江湖奇遇)
@@ -3544,6 +3652,14 @@
             this.player.statuses.push({ id: eff.statusEffect, duration: 2 });
           }
           logs.push(`狀態【${eff.statusEffect}】`);
+        }
+        if (eff.itemId) {
+          const evItem = this.resolveItemFromStoryCatalog(eff.itemId);
+          if (evItem) {
+            this.player.inventory = this.player.inventory || [];
+            this.player.inventory.push(evItem);
+            logs.push(`獲得物品【${evItem.name}】`);
+          }
         }
 
         const tagCls = eff.hpDelta < 0 ? 'log-warn' : 'log-rumor';
@@ -3825,6 +3941,8 @@
               sect: 'NEUTRAL',
               sectName: '江湖散人',
               icon: '👊',
+              cost: 8,
+              range: 1,
               tier: '凡品',
               tierClass: 'tier-white',
               maxLevel: 20,
@@ -3833,6 +3951,24 @@
               title: '初窺門徑',
               desc: '天下初學者通用外家拳術，招法樸實無華，出招時累積武功經驗。',
               levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('MARTIAL', { atk: 12, critRate: 5 }) : []
+            },
+            {
+              id: 'mar_neutral_flying_stone',
+              name: '江湖飛石術',
+              type: 'MARTIAL',
+              sect: 'NEUTRAL',
+              sectName: '江湖散人',
+              icon: '🪨',
+              cost: 6,
+              range: 3,
+              tier: '凡品',
+              tierClass: 'tier-white',
+              maxLevel: 20,
+              currentLevel: 1,
+              exp: 0,
+              title: '初窺門徑',
+              desc: '隨手拾石擲擊的遠程牽制手法，射程 3 格，專剋游擊敵手。',
+              levelBonuses: typeof generateLevelBonuses === 'function' ? generateLevelBonuses('MARTIAL', { atk: 10, critRate: 8 }) : []
             }
           ],
           learnedCultivations: [],
@@ -4283,21 +4419,23 @@
             return;
           }
 
-          const moveCost = this.battleArena.getMovementCost(tx, ty);
-          if (moveCost >= 9999) {
+          const rawMoveCost = this.battleArena.getMovementCost(tx, ty);
+          if (rawMoveCost >= 9999) {
             this.triggerBump(dx, dy);
             this.addLog('<span class="log-warn">【阻擋】</span>此處為堅實岩壁，無法穿透！');
             return;
           }
 
+          // 玩家輕功追擊步法：基礎移動僅耗地格 0.75x 能量，避免被遠程怪無限風箏
+          const moveCost = Math.max(30, Math.round(rawMoveCost * 0.75));
           p.bx = tx;
           p.by = ty;
           p.energy -= moveCost;
 
           const tile = this.battleArena.getTileData(tx, ty);
-          if (moveCost > 100) {
+          if (rawMoveCost > 100) {
             this.addLog(`<span class="log-warn">【艱難跋涉】</span>踏入${tile.name}，耗費 ${moveCost} 點能量！`);
-          } else if (moveCost < 100) {
+          } else if (rawMoveCost < 100) {
             this.addLog(`<span class="log-world">【如履薄冰】</span>踏上冰面順勢疾行，僅耗費 ${moveCost} 能量！`);
           }
 
@@ -4494,10 +4632,11 @@
             return;
           }
 
-          // 傷害與防禦減傷計算
+          // 傷害與防禦減傷計算（遠程模式遭貼身時傷害降為 0.65x）
           const baseAtk = enemy.atk || (enemy.isBoss ? 45 : 30);
           const mult = patternDef ? (patternDef.dmgMultiplier || 1.0) : 1.0;
-          let dmg = Math.max(5, Math.round(baseAtk * mult * (120 / (120 + stats.def))));
+          const closePenalty = (effectiveRange >= 2 && dist <= 1) ? 0.65 : 1.0;
+          let dmg = Math.max(4, Math.round(baseAtk * mult * closePenalty * (120 / (120 + stats.def))));
           this.player.hp -= dmg;
 
           // 視覺特效與打擊震顫
@@ -4556,17 +4695,27 @@
               this.player.stunnedTurns = 1;
               this.addLog('<span class="log-warn" style="color:#c084fc;">👁️【恐懼凝視】</span>魔物陰冷目光穿透心神，你陷入神智僵滯【暈眩】！');
             }
-          } else if (patternId === 'TACTICAL_KITE' || patternId === 'CIVILIAN_FLEE') {
-            // 游擊/逃避：攻擊後後撤 1 格拉開距離
-            const retreatX = enemy.x - Math.sign(this.player.bx - enemy.x);
-            const retreatY = enemy.y - Math.sign(this.player.by - enemy.y);
-            if (this.battleArena.isPassable(retreatX, retreatY) && !this.battleEnemies.some(o => o !== enemy && o.x === retreatX && o.y === retreatY && o.hp > 0)) {
-              enemy.x = retreatX;
-              enemy.y = retreatY;
-              enemy.visualX = retreatX * TILE_PX;
-              enemy.visualY = retreatY * TILE_PX;
+          } else if ((patternId === 'TACTICAL_KITE' || patternId === 'CIVILIAN_FLEE') && (enemy.kiteCooldown || 0) <= 0) {
+            // 游擊/逃避：僅擇單軸後撤 1 格，額外消耗 50 能量並進入 2 回合冷卻，防止無限風箏
+            const dx = Math.sign(this.player.bx - enemy.x);
+            const dy = Math.sign(this.player.by - enemy.y);
+            const candidates = Math.abs(this.player.bx - enemy.x) >= Math.abs(this.player.by - enemy.y)
+              ? [{ x: enemy.x - dx, y: enemy.y }, { x: enemy.x, y: enemy.y - dy }]
+              : [{ x: enemy.x, y: enemy.y - dy }, { x: enemy.x - dx, y: enemy.y }];
+
+            for (const pos of candidates) {
+              if (this.battleArena.isPassable(pos.x, pos.y) && !this.battleEnemies.some(o => o !== enemy && o.x === pos.x && o.y === pos.y && o.hp > 0)) {
+                enemy.x = pos.x;
+                enemy.y = pos.y;
+                enemy.visualX = pos.x * TILE_PX;
+                enemy.visualY = pos.y * TILE_PX;
+                enemy.energy -= 50;
+                enemy.kiteCooldown = 2;
+                break;
+              }
             }
           }
+          if (enemy.kiteCooldown > 0) enemy.kiteCooldown--;
 
           if (this.player.hp <= 0) {
             alert('你已受重創，被同福鏢局救回客棧...');
@@ -5667,11 +5816,11 @@
           game.addPlayerExp(rew.exp || 80);
           game.player.gold = (game.player.gold || 0) + (rew.gold || 50);
           let itemMsg = '';
-          if (rew.itemId && Array.isArray(game.itemsCatalog)) {
-            const rewardItem = game.itemsCatalog.find(i => i.id === rew.itemId) || game.itemsCatalog[0];
+          if (rew.itemId) {
+            const rewardItem = game.resolveItemFromStoryCatalog(rew.itemId);
             if (rewardItem) {
               game.player.inventory = game.player.inventory || [];
-              game.player.inventory.push(JSON.parse(JSON.stringify(rewardItem)));
+              game.player.inventory.push(rewardItem);
               itemMsg = `、稀有物品【${rewardItem.name}】`;
             }
           }
