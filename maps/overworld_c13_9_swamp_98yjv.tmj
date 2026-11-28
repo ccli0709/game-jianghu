@@ -39,12 +39,22 @@
     {
       "name": "possibleQuests",
       "type": "string",
-      "value": "【懸賞】擊斃遊蕩悍匪 (賞金 105 兩)\n【探尋】探查此地未名奇遇"
+      "value": "追查太湖七十二洞天奇石\n送達抗金密報予辛將軍"
     },
     {
       "name": "possibleLoot",
       "type": "string",
-      "value": "青鋼短劍\n行軍乾糧"
+      "value": "千年烏金玄石\n峨眉武學心法殘卷\n少林同福通緝令"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "忠義營斥候分贈乾糧飲水\n崎嶇荒丘失足滾落碎石坡"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "靈脈銀狼\n江南鏢師\n萬獸山君"
     }
   ],
   "tilesets": [

@@ -39,12 +39,22 @@
     {
       "name": "possibleQuests",
       "type": "string",
-      "value": "【懸賞】擊斃遊蕩悍匪 (賞金 70 兩)\n【探尋】探查此地未名奇遇"
+      "value": "護送忠義營軍餉赴開封\n清剿黑水寨悍匪"
     },
     {
       "name": "possibleLoot",
       "type": "string",
-      "value": "青鋼短劍\n行軍乾糧"
+      "value": "黑木鏢局暗鏢信印\n達摩鏢局暗鏢信印\n武當秘境玄鐵鑰"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "密林瘴霧誤觸毒荊棘\n枯井古匣尋獲金葉"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "綠林草莽\n黑水屍魅\n江南鏢師"
     }
   ],
   "tilesets": [

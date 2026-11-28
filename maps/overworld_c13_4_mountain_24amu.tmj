@@ -39,12 +39,22 @@
     {
       "name": "possibleQuests",
       "type": "string",
-      "value": "【懸賞】擊斃遊蕩悍匪 (賞金 105 兩)\n【探尋】探查此地未名奇遇"
+      "value": "探查巫山十二峰瘴氣源頭\n護送忠義營軍餉赴開封"
     },
     {
       "name": "possibleLoot",
       "type": "string",
-      "value": "青鋼短劍\n行軍乾糧"
+      "value": "玄天烏金玄石\n極地烏金玄石\n少林武學心法殘卷"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "崎嶇荒丘失足滾落碎石坡\n官道拾得商旅遺落錢袋"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "江南鏢師\n萬獸山君\n神劍弟子"
     }
   ],
   "tilesets": [

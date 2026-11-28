@@ -39,12 +39,22 @@
     {
       "name": "possibleQuests",
       "type": "string",
-      "value": "【懸賞】擊斃兇悍魔煞 (賞金 175 兩)\n【探尋】探查此地未名奇遇"
+      "value": "截擊塞外三絕密探\n除盡長白雪域嗜血妖獸"
     },
     {
       "name": "possibleLoot",
       "type": "string",
-      "value": "玄鐵重刃\n大還丹"
+      "value": "鳴鴻厚背重刀\n九幽神機連珠袖箭\n幽冥神機連珠袖箭"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "忠義營斥候分贈乾糧飲水\n崎嶇荒丘失足滾落碎石坡"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "巫山滅世煞\n九幽魔皇\n巫山神蛟"
     }
   ],
   "tilesets": [

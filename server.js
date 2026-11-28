@@ -14,10 +14,14 @@ const MARTIALS_FILE = path.join(DATA_DIR, 'martials.json');
 const MARTIALS_DEFAULT_FILE = path.join(DATA_DIR, 'martials_default.json');
 const CHARACTERS_FILE = path.join(DATA_DIR, 'characters.json');
 const CHARACTERS_DEFAULT_FILE = path.join(DATA_DIR, 'characters_default.json');
+const QUESTS_FILE = path.join(DATA_DIR, 'quests.json');
+const QUESTS_DEFAULT_FILE = path.join(DATA_DIR, 'quests_default.json');
 
 const ItemGenerator = require('./src/core/ItemGenerator');
 const MartialGenerator = require('./src/core/MartialGenerator');
 const CharacterGenerator = require('./src/core/CharacterGenerator');
+const QuestEventGenerator = require('./src/core/QuestEventGenerator');
+const MapSyncService = require('./src/core/MapSyncService');
 
 // 確保 maps, data 與 saves 目錄存在
 if (!fs.existsSync(MAPS_DIR)) {
@@ -93,6 +97,25 @@ function ensureDefaultCharacters() {
 }
 ensureDefaultCharacters();
 
+// 檢測初始任務事件檔：若無則建立預設 default 任務與隨機事件庫
+function ensureDefaultQuests() {
+  const needsDefault = !fs.existsSync(QUESTS_DEFAULT_FILE);
+  const needsQuests = !fs.existsSync(QUESTS_FILE);
+
+  if (needsDefault || needsQuests) {
+    const defaultQuests = QuestEventGenerator.generateDefaultQuestsCatalog();
+    const content = JSON.stringify(defaultQuests, null, 2);
+    if (!fs.existsSync(QUESTS_DEFAULT_FILE)) {
+      fs.writeFileSync(QUESTS_DEFAULT_FILE, content, 'utf8');
+    }
+    if (!fs.existsSync(QUESTS_FILE)) {
+      fs.writeFileSync(QUESTS_FILE, content, 'utf8');
+    }
+    console.log(`✅ 已成功生成並保存 default 任務與事件資料庫，共 ${defaultQuests.length} 筆！`);
+  }
+}
+ensureDefaultQuests();
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'application/javascript; charset=utf-8',
@@ -131,6 +154,21 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(mapFiles));
     });
+    return;
+  }
+
+  // API 1B: 檢查或同步區域地圖內的敵人/任務/事件/物品/門派設定是否與各總管相符
+  if (req.method === 'GET' && pathname === '/api/maps/check-references') {
+    const result = MapSyncService.syncAllRegionalMaps(MAPS_DIR, DATA_DIR, true);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true, ...result }));
+    return;
+  }
+
+  if (req.method === 'POST' && pathname === '/api/maps/sync-references') {
+    const result = MapSyncService.syncAllRegionalMaps(MAPS_DIR, DATA_DIR, false);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true, ...result }));
     return;
   }
 
@@ -665,6 +703,109 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ==========================================
+  // 任務與隨機事件全域管理 API (Quests & Events)
+  // ==========================================
+
+  // API 9.1: 取得所有任務事件存檔檔案清單
+  if (req.method === 'GET' && pathname === '/api/quests/files') {
+    ensureDefaultQuests();
+    fs.readdir(DATA_DIR, (err, files) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      const jsonFiles = files.filter(f => f.startsWith('quest') && f.endsWith('.json'));
+      if (files.includes('quests.json') && !jsonFiles.includes('quests.json')) jsonFiles.push('quests.json');
+      if (files.includes('quests_default.json') && !jsonFiles.includes('quests_default.json')) jsonFiles.push('quests_default.json');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(jsonFiles.length > 0 ? jsonFiles : ['quests.json', 'quests_default.json']));
+    });
+    return;
+  }
+
+  // API 9.2: 讀取指定任務事件存檔檔案
+  if (req.method === 'GET' && pathname.startsWith('/api/quests/files/')) {
+    const filename = path.basename(pathname.replace('/api/quests/files/', ''));
+    const filePath = path.join(DATA_DIR, filename);
+
+    if (!fs.existsSync(filePath)) {
+      ensureDefaultQuests();
+    }
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: `找不到任務事件存檔: ${filename}` }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // API 9.3: 寫入指定任務事件存檔檔案
+  if (req.method === 'POST' && pathname.startsWith('/api/quests/files/')) {
+    const filename = path.basename(pathname.replace('/api/quests/files/', ''));
+    const filePath = path.join(DATA_DIR, filename);
+
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        if (!Array.isArray(parsed)) throw new Error('任務事件資料必須為陣列');
+        fs.writeFile(filePath, JSON.stringify(parsed, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, message: `任務事件庫已保存至 ${filename}`, count: parsed.length }));
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message || '無效的 JSON 格式' }));
+      }
+    });
+    return;
+  }
+
+  // API 9.4: 取得預設/當前任務事件庫
+  if (req.method === 'GET' && (pathname === '/api/quests' || pathname === '/api/quests/default')) {
+    const targetFile = pathname === '/api/quests/default' ? QUESTS_DEFAULT_FILE : QUESTS_FILE;
+    if (!fs.existsSync(targetFile)) ensureDefaultQuests();
+    fs.readFile(fs.existsSync(targetFile) ? targetFile : QUESTS_DEFAULT_FILE, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // API 9.5: 重設預設任務事件庫
+  if (req.method === 'POST' && pathname === '/api/quests/reset-default') {
+    try {
+      const defaultQuests = QuestEventGenerator.generateDefaultQuestsCatalog();
+      const content = JSON.stringify(defaultQuests, null, 2);
+      fs.writeFileSync(QUESTS_DEFAULT_FILE, content, 'utf8');
+      fs.writeFileSync(QUESTS_FILE, content, 'utf8');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, message: `已重設預設任務事件庫，共 ${defaultQuests.length} 筆`, count: defaultQuests.length }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
   // API 8.1: 取得所有遊戲故事存檔列表 (摘要資訊)
   if (req.method === 'GET' && pathname === '/api/saves') {
     fs.readdir(SAVES_DIR, (err, files) => {
@@ -816,6 +957,7 @@ if (require.main === module) {
     console.log(`  物品設計總管: http://localhost:${PORT}/item_manager.html`);
     console.log(`  武學心法總管: http://localhost:${PORT}/martial_manager.html`);
     console.log(`  角色實體總管: http://localhost:${PORT}/character_manager.html`);
+    console.log(`  任務事件總管: http://localhost:${PORT}/quest_manager.html`);
     console.log(`  地圖儲存目錄: ${MAPS_DIR}`);
     console.log(`  物品資料檔案: ${ITEMS_FILE}`);
     console.log(`  武學資料檔案: ${MARTIALS_FILE}`);
@@ -825,4 +967,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { server, ensureDefaultItems, ensureDefaultMartials, ensureDefaultCharacters };
+module.exports = { server, ensureDefaultItems, ensureDefaultMartials, ensureDefaultCharacters, ensureDefaultQuests };

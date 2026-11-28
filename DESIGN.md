@@ -167,6 +167,13 @@ AssetRegistry.draw(ctx, 'tile_forest', px, py, width, height, fallbackCanvasDraw
 * **開局設定打包固化**：啟動新江湖故事時，深拷貝當前的世界地圖、起始及探索區域地圖、物品庫、武學心法庫與角色庫打包為獨立存檔（`saves/story_<timestamp>.json` 與 LocalStorage）。
 * **遊戲中編輯器隔離**：進入故事後頂部移除所有編輯器開啟按鈕，改為故事篇名、保存進度與返回首頁控制，確保單局存檔設定不受外部編輯器變動影響。
 
+### 3.11 任務與隨機事件總管 (`quest_manager.html` + `src/core/QuestEventGenerator.js`)
+
+* **劇情與設定參考**：任務事件內容全面參考 [story/神龙大侠传.txt](file:///d:/Repositories/game-jianghu/story/%E7%A5%9E%E9%BE%99%E5%A4%A7%E4%BE%A0%E4%BC%A0.txt) 與 [story/巫山传.txt](file:///d:/Repositories/game-jianghu/story/%E5%B7%AB%E5%B1%B1%E4%BC%A0.txt)（繁體中文），區分兩大機制：
+  * **江湖任務 (`QUEST`)**：需由主角於客棧或官府主動揭榜，並可自由選擇「接取」或「婉拒」；完成任務基本必得**經驗值 (`exp`) 與金錢 (`gold`)**，少數稀有任務額外獎勵**物品 (`itemId`)**。
+  * **隨機事件 (`EVENT`)**：漫遊區域地圖時依地形與機率自動觸發，涵蓋 **撿到錢財 (`TREASURE`)**、**觀景/奇石頓悟增加經驗值 (`EPIPHANY`)**、**險惡地形失足受傷 (`HAZARD`)** 與 **江湖善緣奇遇 (`ENCOUNTER`)**。
+* **一鍵生成與後端持久化**：[quest_manager.html](file:///d:/Repositories/game-jianghu/quest_manager.html) 支援一鍵生成指定數量的任務與隨機事件並保存至 `data/quests.json`，開局時一併打包固化入故事存檔。
+
 ### 2.2 核心排程器實作 (TypeScript)
 
 ```typescript
@@ -391,7 +398,7 @@ NPC 具備獨立認知資料庫，非單純好感度數值。
 
 ## 11. 自動化測試與品質保證 (`eng/tests/run_all_tests.js`)
 
-執行 `node eng/tests/run_all_tests.js` 可一次驗證以下 **12 套自動化測試**：
+執行 `node eng/tests/run_all_tests.js` 可一次驗證以下 **13 套自動化測試**：
 
 1. **WorldClock 時鐘與時辰系統** (`test_world_clock.js`)
 2. **A* 智能尋路演算法** (`test_pathfinder.js`)
@@ -405,3 +412,4 @@ NPC 具備獨立認知資料庫，非單純好感度數值。
 10. **主角形態進化、等級瓶頸與突破魔物系統** (`test_character_evolution.js`)
 11. **故事首頁、獨立存檔打包封裝與設定資料隔離** (`test_story_save_system.js`)
 12. **世界地圖一鍵舖滿隨機區域地圖、比例與難度展開引擎** (`test_world_generator.js`)
+13. **任務與隨機事件總管、接取獎勵與險地奇遇引擎** (`test_quest_event_schema.js`)

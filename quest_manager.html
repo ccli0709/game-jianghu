@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮世江湖 · 任務與隨機事件總管</title>
+  <style>
+    :root {
+      --bg-dark: #07080d;
+      --bg-panel: #11131c;
+      --bg-card: #161925;
+      --border-color: #262b3d;
+      --border-focus: #3b82f6;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-title { font-size: 1.15rem; font-weight: bold; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
+    .header-stats { font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 10px; }
+    .header-center { display: flex; align-items: center; gap: 8px; }
+    .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .file-select {
+      background: #090a0f;
+      border: 1px solid #2e344b;
+      color: #38bdf8;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .btn {
+      background: #1b1e2c;
+      border: 1px solid #2e354d;
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: #262b40; border-color: #475569; }
+    .btn-primary { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-save { background: #065f46; border-color: #059669; color: #ecfdf5; }
+    .btn-save:hover { background: #047857; }
+    .btn-danger { background: #450a0a; border-color: #991b1b; color: #fecaca; }
+    .btn-danger:hover { background: #7f1d1d; }
+
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    aside.sidebar {
+      width: 340px;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .sidebar-filter-box {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .search-input {
+      background: #090a0f;
+      border: 1px solid #2a3044;
+      color: var(--text-main);
+      padding: 7px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      outline: none;
+      width: 100%;
+    }
+    .search-input:focus { border-color: var(--border-focus); }
+    .tabs-row { display: flex; gap: 6px; }
+    .tab-btn {
+      flex: 1;
+      text-align: center;
+      padding: 5px 6px;
+      background: #171a26;
+      border: 1px solid #282e42;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .tab-btn.active { background: #1e3a8a; border-color: #3b82f6; color: #fff; font-weight: bold; }
+
+    .sidebar-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .entry-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .entry-card:hover { border-color: #475569; background: #1c2030; }
+    .entry-card.active { border-color: #3b82f6; background: #172038; }
+
+    .badge {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .badge-quest { background: #1e3a8a; color: #93c5fd; border: 1px solid #3b82f6; }
+    .badge-event { background: #451a03; color: #fcd34d; border: 1px solid #d97706; }
+
+    main.content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .editor-section {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .section-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .grid-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 0.76rem; color: var(--text-muted); font-weight: 600; }
+    .form-control {
+      background: #090a0f;
+      border: 1px solid #2b3145;
+      color: var(--text-main);
+      padding: 7px 10px;
+      border-radius: 5px;
+      font-size: 0.82rem;
+      outline: none;
+      width: 100%;
+    }
+    .form-control:focus { border-color: var(--border-focus); }
+    textarea.form-control { resize: vertical; min-height: 70px; font-family: inherit; line-height: 1.5; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 6, 10, 0.82);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      width: 560px;
+      max-width: 95vw;
+      background: #131622;
+      border: 1px solid #313852;
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85);
+    }
+
+    #toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #064e3b;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      border: 1px solid #10b981;
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-left">
+      <div class="header-title"><span>📜</span> 浮世江湖 · 任務與隨機事件總管</div>
+      <div class="header-stats">
+        <span>總計: <b id="stat-total">0</b></span> ·
+        <span>📜 任務: <b id="stat-quests" style="color:#93c5fd;">0</b></span> ·
+        <span>⚡ 事件: <b id="stat-events" style="color:#fcd34d;">0</b></span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <span style="font-size:0.78rem; color:#94a3b8;">存檔:</span>
+      <select class="file-select" id="save-file-select" onchange="onSelectSaveFileChange(this.value)">
+        <option value="quests.json">quests.json (遊戲運行庫)</option>
+        <option value="quests_default.json">quests_default.json (官方基準庫)</option>
+      </select>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#f3e8ff;" onclick="openBatchQuestModal()">✨ 一鍵生成隨機任務事件</button>
+      <button class="btn btn-save" onclick="saveQuestsToProject()">💾 保存至專案磁碟 (Ctrl+S)</button>
+      <button class="btn" onclick="resetDefaultQuests()">🔄 重設預設庫</button>
+      <button class="btn" style="border-color:#3b82f6; color:#93c5fd;" onclick="window.location.href='index.html'">🎮 返回江湖</button>
+      <button class="btn" style="border-color:#ec4899; color:#fbcfe8;" onclick="window.location.href='character_manager.html'">👾 角色總管</button>
+      <button class="btn" style="border-color:#10b981; color:#a7f3d0;" onclick="window.location.href='item_manager.html'">💎 物品總管</button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <aside class="sidebar">
+      <div class="sidebar-filter-box">
+        <input type="text" class="search-input" id="search-input" placeholder="🔍 搜尋任務/事件名稱、ID、描述..." oninput="renderSidebar()">
+        <div class="tabs-row">
+          <div class="tab-btn active" id="tab-all" onclick="setTypeTab('ALL')">全部</div>
+          <div class="tab-btn" id="tab-quest" onclick="setTypeTab('QUEST')">📜 江湖任務</div>
+          <div class="tab-btn" id="tab-event" onclick="setTypeTab('EVENT')">⚡ 隨機事件</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="createNewEntry('QUEST')">+ 新增任務</button>
+          <button class="btn" style="flex:1; justify-content:center; border-color:#d97706; color:#fcd34d;" onclick="createNewEntry('EVENT')">+ 新增事件</button>
+        </div>
+      </div>
+
+      <div class="sidebar-list" id="entries-list"></div>
+    </aside>
+
+    <main class="content-area">
+      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-panel); border:1px solid var(--border-color); border-radius:8px; padding:12px 18px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span id="preview-icon" style="font-size:1.6rem;">📜</span>
+          <div>
+            <div id="editor-title" style="font-size:1.15rem; font-weight:bold;">請選擇任務或事件</div>
+            <div id="editor-sub" style="font-size:0.76rem; color:var(--text-muted);">--</div>
+          </div>
+        </div>
+        <button class="btn btn-danger" onclick="deleteCurrentEntry()">🗑️ 刪除此項目</button>
+      </div>
+
+      <!-- 基本欄位 -->
+      <div class="editor-section">
+        <div class="section-title">📌 一、基本身分與劇情設定</div>
+        <div class="grid-form">
+          <div class="form-group">
+            <label>唯一代碼 (ID)</label>
+            <input type="text" class="form-control" id="f-id" oninput="onFieldChange('id', this.value)">
+          </div>
+          <div class="form-group">
+            <label>名稱標題</label>
+            <input type="text" class="form-control" id="f-title" oninput="onFieldChange('title', this.value)">
+          </div>
+          <div class="form-group">
+            <label>核心類別 (任務需主動接取 / 事件隨機觸發)</label>
+            <select class="form-control" id="f-entry-type" onchange="onEntryTypeChange(this.value)">
+              <option value="QUEST">📜 江湖任務 (QUEST - 主角主動選擇接取)</option>
+              <option value="EVENT">⚡ 隨機事件 (EVENT - 地圖探索隨機觸發)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>圖標 Emoji</label>
+            <input type="text" class="form-control" id="f-icon" oninput="onFieldChange('icon', this.value)">
+          </div>
+          <div class="form-group" id="group-subtype">
+            <label>任務子類型</label>
+            <select class="form-control" id="f-subtype" onchange="onFieldChange('subType', this.value)">
+              <option value="BOUNTY">⚔️ 緝拿除惡</option>
+              <option value="ESCORT">🛡️ 護送押鏢</option>
+              <option value="EXPLORE">🧭 秘境探查</option>
+              <option value="DELIVERY">📜 江湖傳書</option>
+            </select>
+          </div>
+          <div class="form-group" id="group-event-cat" style="display:none;">
+            <label>隨機事件分類</label>
+            <select class="form-control" id="f-event-cat" onchange="onFieldChange('eventCategory', this.value)">
+              <option value="TREASURE">🪙 意外拾財 (撿到錢)</option>
+              <option value="EPIPHANY">💡 江湖頓悟 (增加經驗值)</option>
+              <option value="HAZARD">⚠️ 險地受創 (險惡地形受傷)</option>
+              <option value="ENCOUNTER">🍵 偶遇善緣 (奇遇回血/指點)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>背景與劇情描述（參考《神龍大俠傳》《巫山傳》）</label>
+          <textarea class="form-control" id="f-desc" oninput="onFieldChange('desc', this.value)"></textarea>
+        </div>
+      </div>
+
+      <!-- QUEST 專屬欄位 -->
+      <div class="editor-section" id="section-quest-fields">
+        <div class="section-title">🎯 二、任務目標與完成獎勵（基本必得經驗與金錢，少數附帶物品）</div>
+        <div class="grid-form">
+          <div class="form-group">
+            <label>難度評級 (1~5 星)</label>
+            <input type="number" class="form-control" id="f-q-diff" min="1" max="5" oninput="onQuestFieldChange('difficulty', this.value)">
+          </div>
+          <div class="form-group">
+            <label>完成目標次數</label>
+            <input type="number" class="form-control" id="f-q-target" min="1" max="10" oninput="onQuestFieldChange('targetCount', this.value)">
+          </div>
+          <div class="form-group">
+            <label>獎勵經驗值 (EXP)</label>
+            <input type="number" class="form-control" id="f-q-exp" min="1" oninput="onRewardChange('exp', this.value)">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>獎勵碎銀 (兩)</label>
+            <input type="number" class="form-control" id="f-q-gold" min="1" oninput="onRewardChange('gold', this.value)">
+          </div>
+          <div class="form-group">
+            <label>少數稀有物品獎勵 (Item ID，留空代表無物品獎勵)</label>
+            <input type="text" class="form-control" id="f-q-item" placeholder="例如 med_xiaohuan_pill, arm_jade_pendant..." oninput="onRewardChange('itemId', this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT 專屬欄位 -->
+      <div class="editor-section" id="section-event-fields" style="display:none;">
+        <div class="section-title">⚡ 二、隨機事件觸發地形與即時效果</div>
+        <div class="form-group">
+          <label>可觸發地形（逗號分隔，如 ALL, PLAINS, HILLS, FOREST, MOUNTAIN, SWAMP, DESERT）</label>
+          <input type="text" class="form-control" id="f-e-terrains" oninput="onTerrainsChange(this.value)">
+        </div>
+        <div class="grid-form">
+          <div class="form-group">
+            <label>經驗值變化 (可為正數頓悟)</label>
+            <input type="number" class="form-control" id="f-e-exp" oninput="onEffectChange('expDelta', this.value)">
+          </div>
+          <div class="form-group">
+            <label>金錢變化 (撿到碎銀等)</label>
+            <input type="number" class="form-control" id="f-e-gold" oninput="onEffectChange('goldDelta', this.value)">
+          </div>
+          <div class="form-group">
+            <label>氣血變化 (險惡地形受傷請填負數)</label>
+            <input type="number" class="form-control" id="f-e-hp" oninput="onEffectChange('hpDelta', this.value)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>附加狀態效果</label>
+          <select class="form-control" id="f-e-status" onchange="onEffectChange('statusEffect', this.value)">
+            <option value="">無附加狀態</option>
+            <option value="WOUNDED">受傷 (WOUNDED)</option>
+            <option value="POISONED">中毒 (POISONED)</option>
+            <option value="INSPIRED">奮起 (INSPIRED)</option>
+          </select>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 一鍵生成隨機任務事件 Modal -->
+  <div id="modal-batch-quests" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #24293d; padding-bottom:10px;">
+        <h2 style="font-size:1.05rem;">✨ 一鍵生成隨機任務與事件（《神龍大俠傳》《巫山傳》）</h2>
+        <button class="btn" style="padding:3px 9px;" onclick="closeBatchQuestModal()">✕ 關閉</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>主動任務生成數量 (QUEST)</label>
+          <input type="number" class="form-control" id="batch-quest-count" value="12" min="1" max="50">
+        </div>
+        <div class="form-group">
+          <label>隨機事件生成數量 (EVENT)</label>
+          <input type="number" class="form-control" id="batch-event-count" value="12" min="1" max="50">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>任務附帶稀有物品獎勵比例 (0.0 ~ 0.6，預設 0.25 代表少數任務給物品)</label>
+        <input type="number" step="0.05" class="form-control" id="batch-item-ratio" value="0.25" min="0" max="0.6">
+      </div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:#fde68a; cursor:pointer;">
+        <input type="checkbox" id="batch-quest-clear" checked>
+        <span>清空原有任務事件庫後重新生成</span>
+      </label>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn" onclick="closeBatchQuestModal()">取消</button>
+        <button class="btn" style="background:#581c87; border-color:#7e22ce; color:#fff;" onclick="executeBatchQuestGen()">🚀 一鍵生成並保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-msg"></div>
+
+  <script src="src/core/QuestEventGenerator.js"></script>
+  <script src="src/core/ManagerSyncHelper.js"></script>
+  <script>
+    let questsCatalog = [];
+    let currentSelectedId = null;
+    let currentSaveFilename = 'quests.json';
+    let currentTypeTab = 'ALL';
+    let isConnectedToApi = false;
+
+    window.onload = async () => {
+      await loadCatalog();
+      window.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          saveQuestsToProject();
+        }
+      });
+    };
+
+    function showToast(msg, ok = true) {
+      const t = document.getElementById('toast-msg');
+      t.innerText = msg;
+      t.style.background = ok ? '#064e3b' : '#7f1d1d';
+      t.style.borderColor = ok ? '#059669' : '#dc2626';
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2600);
+    }
+
+    async function loadCatalog() {
+      try {
+        const res = await fetch('/api/quests/files');
+        if (res.ok) {
+          isConnectedToApi = true;
+          const files = await res.json();
+          const sel = document.getElementById('save-file-select');
+          sel.innerHTML = '';
+          files.forEach(f => {
+            const opt = document.createElement('option');
+            opt.value = f;
+            opt.innerText = f === 'quests.json' ? `${f} (遊戲運行庫)` : (f === 'quests_default.json' ? `${f} (官方基準庫)` : f);
+            sel.appendChild(opt);
+          });
+          sel.value = currentSaveFilename;
+
+          const dataRes = await fetch(`/api/quests/files/${currentSaveFilename}`);
+          if (dataRes.ok) {
+            questsCatalog = await dataRes.json();
+            renderSidebar();
+            if (questsCatalog.length > 0) selectEntry(questsCatalog[0].id);
+            return;
+          }
+        }
+      } catch (e) { }
+
+      questsCatalog = QuestEventGenerator.generateDefaultQuestsCatalog();
+      renderSidebar();
+      if (questsCatalog.length > 0) selectEntry(questsCatalog[0].id);
+    }
+
+    async function onSelectSaveFileChange(filename) {
+      currentSaveFilename = filename;
+      await loadCatalog();
+    }
+
+    function setTypeTab(tab) {
+      currentTypeTab = tab;
+      document.getElementById('tab-all').classList.toggle('active', tab === 'ALL');
+      document.getElementById('tab-quest').classList.toggle('active', tab === 'QUEST');
+      document.getElementById('tab-event').classList.toggle('active', tab === 'EVENT');
+      renderSidebar();
+    }
+
+    function renderSidebar() {
+      const list = document.getElementById('entries-list');
+      const query = document.getElementById('search-input').value.trim().toLowerCase();
+      list.innerHTML = '';
+
+      document.getElementById('stat-total').innerText = questsCatalog.length;
+      document.getElementById('stat-quests').innerText = questsCatalog.filter(x => x.entryType === 'QUEST').length;
+      document.getElementById('stat-events').innerText = questsCatalog.filter(x => x.entryType === 'EVENT').length;
+
+      const filtered = questsCatalog.filter(item => {
+        if (currentTypeTab !== 'ALL' && item.entryType !== currentTypeTab) return false;
+        if (query) {
+          return item.title.toLowerCase().includes(query) || item.id.toLowerCase().includes(query) || (item.desc || '').toLowerCase().includes(query);
+        }
+        return true;
+      });
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `entry-card ${item.id === currentSelectedId ? 'active' : ''}`;
+        card.onclick = () => selectEntry(item.id);
+        const isQuest = item.entryType === 'QUEST';
+        const badge = isQuest ? `<span class="badge badge-quest">📜 任務 ★${item.difficulty || 1}</span>` : `<span class="badge badge-event">⚡ 事件</span>`;
+        const summary = isQuest
+          ? `獎: ${item.rewards?.exp || 0} EXP · ${item.rewards?.gold || 0} 兩${item.rewards?.itemId ? ' · 🎁 稀有物品' : ''}`
+          : `地形: ${(item.triggerTerrains || ['ALL']).join(', ')}`;
+
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:700; font-size:0.86rem;">${item.icon || '📜'} ${item.title}</span>
+            ${badge}
+          </div>
+          <div style="font-size:0.72rem; color:#94a3b8;">${summary}</div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function selectEntry(id) {
+      currentSelectedId = id;
+      const item = questsCatalog.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById('preview-icon').innerText = item.icon || '📜';
+      document.getElementById('editor-title').innerText = item.title;
+      document.getElementById('editor-sub').innerText = `${item.entryType} · ${item.id}`;
+
+      document.getElementById('f-id').value = item.id;
+      document.getElementById('f-title').value = item.title;
+      document.getElementById('f-entry-type').value = item.entryType;
+      document.getElementById('f-icon').value = item.icon || '';
+      document.getElementById('f-desc').value = item.desc || '';
+
+      const isQuest = item.entryType === 'QUEST';
+      document.getElementById('group-subtype').style.display = isQuest ? 'flex' : 'none';
+      document.getElementById('group-event-cat').style.display = isQuest ? 'none' : 'flex';
+      document.getElementById('section-quest-fields').style.display = isQuest ? 'flex' : 'none';
+      document.getElementById('section-event-fields').style.display = isQuest ? 'none' : 'flex';
+
+      if (isQuest) {
+        document.getElementById('f-subtype').value = item.subType || 'BOUNTY';
+        document.getElementById('f-q-diff').value = item.difficulty || 1;
+        document.getElementById('f-q-target').value = item.targetCount || 1;
+        document.getElementById('f-q-exp').value = item.rewards?.exp || 50;
+        document.getElementById('f-q-gold').value = item.rewards?.gold || 30;
+        document.getElementById('f-q-item').value = item.rewards?.itemId || '';
+      } else {
+        document.getElementById('f-event-cat').value = item.eventCategory || 'TREASURE';
+        document.getElementById('f-e-terrains').value = (item.triggerTerrains || ['ALL']).join(', ');
+        document.getElementById('f-e-exp').value = item.effects?.expDelta || 0;
+        document.getElementById('f-e-gold').value = item.effects?.goldDelta || 0;
+        document.getElementById('f-e-hp').value = item.effects?.hpDelta || 0;
+        document.getElementById('f-e-status').value = item.effects?.statusEffect || '';
+      }
+
+      renderSidebar();
+    }
+
+    function getCurrent() {
+      return questsCatalog.find(x => x.id === currentSelectedId);
+    }
+
+    function onFieldChange(key, val) {
+      const item = getCurrent();
+      if (!item) return;
+      item[key] = val;
+      if (key === 'title' || key === 'icon') {
+        document.getElementById('preview-icon').innerText = item.icon || '📜';
+        document.getElementById('editor-title').innerText = item.title;
+        renderSidebar();
+      }
+      if (key === 'id') {
+        currentSelectedId = val;
+        renderSidebar();
+      }
+    }
+
+    function onEntryTypeChange(newType) {
+      const item = getCurrent();
+      if (!item) return;
+      item.entryType = newType;
+      if (newType === 'QUEST') {
+        item.subType = item.subType || 'BOUNTY';
+        item.difficulty = item.difficulty || 2;
+        item.targetCount = item.targetCount || 1;
+        item.rewards = item.rewards || { exp: 80, gold: 50, itemId: null };
+      } else {
+        item.eventCategory = item.eventCategory || 'TREASURE';
+        item.triggerTerrains = item.triggerTerrains || ['ALL'];
+        item.effects = item.effects || { expDelta: 0, goldDelta: 20, hpDelta: 0, statusEffect: null };
+      }
+      selectEntry(item.id);
+    }
+
+    function onQuestFieldChange(key, val) {
+      const item = getCurrent();
+      if (!item) return;
+      item[key] = parseInt(val, 10) || 1;
+      renderSidebar();
+    }
+
+    function onRewardChange(key, val) {
+      const item = getCurrent();
+      if (!item) return;
+      if (!item.rewards) item.rewards = { exp: 50, gold: 30, itemId: null };
+      item.rewards[key] = key === 'itemId' ? (val.trim() || null) : (parseInt(val, 10) || 0);
+      renderSidebar();
+    }
+
+    function onTerrainsChange(val) {
+      const item = getCurrent();
+      if (!item) return;
+      item.triggerTerrains = val.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+      if (item.triggerTerrains.length === 0) item.triggerTerrains = ['ALL'];
+      renderSidebar();
+    }
+
+    function onEffectChange(key, val) {
+      const item = getCurrent();
+      if (!item) return;
+      if (!item.effects) item.effects = { expDelta: 0, goldDelta: 0, hpDelta: 0, statusEffect: null };
+      item.effects[key] = key === 'statusEffect' ? (val || null) : (parseInt(val, 10) || 0);
+    }
+
+    function createNewEntry(entryType) {
+      const id = `${entryType.toLowerCase()}_${Date.now().toString(36)}`;
+      const entry = entryType === 'QUEST'
+        ? {
+            id, entryType: 'QUEST', subType: 'BOUNTY', subTypeName: '緝拿除惡', icon: '⚔️',
+            title: '新設江湖任務', difficulty: 2, targetCount: 1,
+            desc: '江湖俠士可主動前往接取此任務。',
+            rewards: { exp: 100, gold: 60, itemId: null }
+          }
+        : {
+            id, entryType: 'EVENT', eventCategory: 'TREASURE', eventCategoryName: '意外拾財', icon: '🪙',
+            title: '新設隨機事件', triggerTerrains: ['ALL'], weight: 10,
+            desc: '漫遊區域地圖時隨機觸發的奇遇。',
+            effects: { expDelta: 0, goldDelta: 20, hpDelta: 0, statusEffect: null }
+          };
+      questsCatalog.unshift(entry);
+      renderSidebar();
+      selectEntry(id);
+      showToast(`已新增${entryType === 'QUEST' ? '任務' : '隨機事件'}`);
+    }
+
+    function deleteCurrentEntry() {
+      const idx = questsCatalog.findIndex(x => x.id === currentSelectedId);
+      if (idx === -1) return;
+      questsCatalog.splice(idx, 1);
+      renderSidebar();
+      if (questsCatalog.length > 0) selectEntry(questsCatalog[0].id);
+      showToast('已刪除項目');
+    }
+
+    async function saveQuestsToProject() {
+      if (isConnectedToApi) {
+        try {
+          const res = await fetch(`/api/quests/files/${currentSaveFilename}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(questsCatalog, null, 2)
+          });
+          if (res.ok) {
+            const data = await res.json();
+            showToast(`✅ ${data.message || '保存成功'}`);
+            return;
+          }
+        } catch (e) { }
+      }
+      localStorage.setItem('JIANGHU_QUESTS_CATALOG', JSON.stringify(questsCatalog));
+      showToast('✅ 已保存至本地快取');
+    }
+
+    async function resetDefaultQuests() {
+      if (!confirm('確定要重設為預設《神龍大俠傳》《巫山傳》任務與事件庫嗎？')) return;
+      if (isConnectedToApi) {
+        const res = await fetch('/api/quests/reset-default', { method: 'POST' });
+        if (res.ok) {
+          await loadCatalog();
+          showToast('✅ 已重設為預設任務事件庫');
+          return;
+        }
+      }
+      questsCatalog = QuestEventGenerator.generateDefaultQuestsCatalog();
+      renderSidebar();
+      if (questsCatalog.length > 0) selectEntry(questsCatalog[0].id);
+      showToast('✅ 已還原預設任務事件庫');
+    }
+
+    function openBatchQuestModal() {
+      document.getElementById('modal-batch-quests').classList.add('open');
+    }
+    function closeBatchQuestModal() {
+      document.getElementById('modal-batch-quests').classList.remove('open');
+    }
+    async function executeBatchQuestGen() {
+      const questCount = parseInt(document.getElementById('batch-quest-count').value, 10) || 12;
+      const eventCount = parseInt(document.getElementById('batch-event-count').value, 10) || 12;
+      const itemRewardRatio = parseFloat(document.getElementById('batch-item-ratio').value) || 0.25;
+      const clearOld = document.getElementById('batch-quest-clear').checked;
+
+      const generated = QuestEventGenerator.generateBalancedQuestsCatalog({ questCount, eventCount, itemRewardRatio });
+      questsCatalog = clearOld ? generated : questsCatalog.concat(generated);
+      renderSidebar();
+      if (questsCatalog.length > 0) selectEntry(questsCatalog[0].id);
+      await saveQuestsToProject();
+      closeBatchQuestModal();
+      showToast(`✨ 已生成 ${generated.length} 筆任務與隨機事件並保存！`);
+    }
+  </script>
+</body>
+
+</html>

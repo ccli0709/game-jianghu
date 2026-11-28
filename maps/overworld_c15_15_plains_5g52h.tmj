@@ -39,12 +39,22 @@
     {
       "name": "possibleQuests",
       "type": "string",
-      "value": "【懸賞】擊斃兇悍魔煞 (賞金 175 兩)\n【探尋】探查此地未名奇遇"
+      "value": "除盡長白雪域嗜血妖獸\n討伐巫山九幽魔魁"
     },
     {
       "name": "possibleLoot",
       "type": "string",
-      "value": "玄鐵重刃\n大還丹"
+      "value": "紫電幽冥奪魂短匕\n無雙青鋼長劍\n奔雷九環鋼刀"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "遇見雲遊郎中贈藥療傷\n茶棚聽聞神龍大俠事蹟有感"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "巫山神蛟\n塞外武痴\n神龍傳人"
     }
   ],
   "tilesets": [

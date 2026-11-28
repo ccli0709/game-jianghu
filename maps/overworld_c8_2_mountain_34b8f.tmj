@@ -39,12 +39,22 @@
     {
       "name": "possibleQuests",
       "type": "string",
-      "value": "【懸賞】擊斃遊蕩悍匪 (賞金 70 兩)\n【探尋】探查此地未名奇遇"
+      "value": "天目山莊急件傳書\n緝拿浙西五虎餘黨"
     },
     {
       "name": "possibleLoot",
       "type": "string",
-      "value": "青鋼短劍\n行軍乾糧"
+      "value": "追魂神機連珠袖箭\n漫天含沙射影暗器匣\n千鱗金絲護腕"
+    },
+    {
+      "name": "possibleEvents",
+      "type": "string",
+      "value": "戈壁暗風飛沙割面\n摩挲太湖奇石參透勁道"
+    },
+    {
+      "name": "possibleEnemies",
+      "type": "string",
+      "value": "金國細作\n荒村殭屍\n巫山惡豹"
     }
   ],
   "tilesets": [

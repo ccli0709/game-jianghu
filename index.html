@@ -15,6 +15,7 @@
   <script src="src/core/ItemGenerator.js"></script>
   <script src="src/core/MartialGenerator.js"></script>
   <script src="src/core/CharacterGenerator.js"></script>
+  <script src="src/core/QuestEventGenerator.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -1285,11 +1286,15 @@
             <div style="font-size:1rem; font-weight:bold; color:#c084fc;">📜 武學心法總管</div>
             <div style="font-size:0.72rem; color:#e9d5ff; margin-top:3px;">配置外功招式、內功心法與 20 級成長矩陣</div>
           </button>
-          <button class="btn"
-            style="padding:14px; text-align:left; border-color:#ec4899; background:#500724; grid-column:span 2;"
+          <button class="btn" style="padding:14px; text-align:left; border-color:#ec4899; background:#500724;"
             onclick="window.location.href='character_manager.html'">
             <div style="font-size:1rem; font-weight:bold; color:#f472b6;">👾 角色實體總管</div>
             <div style="font-size:0.72rem; color:#fbcfe8; margin-top:3px;">設定人類、野獸、魔物三大種族全形態與 12 種相異攻擊模式</div>
+          </button>
+          <button class="btn" style="padding:14px; text-align:left; border-color:#f59e0b; background:#451a03;"
+            onclick="window.location.href='quest_manager.html'">
+            <div style="font-size:1rem; font-weight:bold; color:#fbbf24;">📜 任務事件總管</div>
+            <div style="font-size:0.72rem; color:#fde68a; margin-top:3px;">設定主動接取任務（經驗/金錢/物品）與區域隨機事件</div>
           </button>
         </div>
       </div>
@@ -1595,7 +1600,7 @@
             「聽聞黑風寨大當家近日在西北古道掠奪了一批官府暗鏢，各路好手正欲除之...」</p>
         </div>
         <div class="town-section">
-          <b style="color:#e2e8f0;">【懸賞告示榜】</b>
+          <b style="color:#e2e8f0;">【江湖委託 / 懸賞告示榜】</b>
           <div class="quest-card">
             <div>
               <div style="font-weight:700; color:#f87171; font-size:0.92rem;" id="town-quest-title">【通緝】黑風寨大當家【連震天】
@@ -1603,7 +1608,12 @@
               <div style="font-size:0.78rem; color:#94a3b8; margin-top:3px;" id="town-quest-desc">盤踞座標：西北荒丘 (4, 3) |
                 備有火油與護體硬功</div>
             </div>
-            <button class="btn" id="btn-accept-quest" onclick="acceptBounty()" style="align-items:center;">揭榜追兇</button>
+            <div style="display:flex; gap:6px; flex-shrink:0;">
+              <button class="btn" id="btn-accept-quest" onclick="acceptBounty()"
+                style="align-items:center; border-color:#10b981; color:#a7f3d0;">✅ 接取任務</button>
+              <button class="btn" id="btn-decline-quest" onclick="declineBounty()"
+                style="align-items:center; border-color:#64748b; color:#cbd5e1;">婉拒</button>
+            </div>
           </div>
         </div>
         <div class="town-section" style="display:flex; justify-content:space-between; margin-top:22px;">
@@ -3485,9 +3495,59 @@
 
         if (destTile.id === 4 || destTile.id === 3) {
           this.addLog(`<span class="log-world">【抵達】</span>抵達了 ${destTile.name}，可按 <kbd>E</kbd> 投宿歇息或打聽消息。`);
+        } else {
+          this.triggerRandomOverworldEvent(destTile);
         }
 
         this.updateUI();
+      }
+
+      // 區域地圖隨機觸發事件 (拾財、頓悟增經驗、險惡地形受傷、江湖奇遇)
+      triggerRandomOverworldEvent(destTile) {
+        const pool = (this.currentStory?.quests || this.questsCatalog || [])
+          .filter(q => q.entryType === 'EVENT');
+        if (pool.length === 0) return;
+
+        // 險惡地形 (荒丘 id=5, 密林 id=2) 觸發率略高，基準約 18%
+        const isHarsh = destTile.id === 5 || destTile.id === 2;
+        const triggerProb = isHarsh ? 0.24 : 0.15;
+        if (Math.random() > triggerProb) return;
+
+        const terrainKey = Object.keys(DEFAULT_OVERWORLD_DATA.terrainDefs)
+          .find(k => DEFAULT_OVERWORLD_DATA.terrainDefs[k].id === destTile.id) || 'PLAINS';
+
+        const matching = pool.filter(ev => {
+          const ts = ev.triggerTerrains || ['ALL'];
+          return ts.includes('ALL') || ts.includes(terrainKey);
+        });
+        const candidates = matching.length > 0 ? matching : pool;
+        const ev = candidates[Math.floor(Math.random() * candidates.length)];
+        if (!ev) return;
+
+        const eff = ev.effects || {};
+        const logs = [];
+        if (eff.goldDelta && eff.goldDelta !== 0) {
+          this.player.gold = Math.max(0, (this.player.gold || 0) + eff.goldDelta);
+          logs.push(`${eff.goldDelta > 0 ? '+' : ''}${eff.goldDelta} 兩碎銀`);
+        }
+        if (eff.expDelta && eff.expDelta > 0) {
+          this.addPlayerExp(eff.expDelta);
+          logs.push(`+${eff.expDelta} 經驗值`);
+        }
+        if (eff.hpDelta && eff.hpDelta !== 0) {
+          this.player.hp = Math.max(1, Math.min(this.player.maxHp, this.player.hp + eff.hpDelta));
+          logs.push(`氣血 ${eff.hpDelta > 0 ? '+' : ''}${eff.hpDelta}`);
+        }
+        if (eff.statusEffect) {
+          if (!this.player.statuses) this.player.statuses = [];
+          if (!this.player.statuses.some(s => s.id === eff.statusEffect)) {
+            this.player.statuses.push({ id: eff.statusEffect, duration: 2 });
+          }
+          logs.push(`狀態【${eff.statusEffect}】`);
+        }
+
+        const tagCls = eff.hpDelta < 0 ? 'log-warn' : 'log-rumor';
+        this.addLog(`<span class="${tagCls}">【奇遇事件 · ${ev.icon || '⚡'} ${ev.title}】</span>${ev.desc} (${logs.join(' ｜ ') || '安然無恙'})`);
       }
 
       // --- 世界地圖 3x3 系統與相鄰跨區漫遊核心邏輯 ---
@@ -3643,6 +3703,16 @@
           charactersSnapshot = typeof CharacterGenerator !== 'undefined' ? CharacterGenerator.generateDefaultCatalog() : [];
         }
 
+        // 5B. 抓取任務與隨機事件設定 (固化)
+        let questsSnapshot = [];
+        try {
+          const res = await fetch('/api/quests');
+          if (res.ok) questsSnapshot = await res.json();
+        } catch (e) { }
+        if (!questsSnapshot || questsSnapshot.length === 0) {
+          questsSnapshot = typeof QuestEventGenerator !== 'undefined' ? QuestEventGenerator.generateDefaultQuestsCatalog() : [];
+        }
+
         // 6. 初始主角 (人類、鄉井平民、等級 1、上限 5)
         const initialPlayer = {
           name: finalHero,
@@ -3786,6 +3856,7 @@
           items: itemsSnapshot,
           martials: martialsSnapshot,
           characters: charactersSnapshot,
+          quests: questsSnapshot,
           player: initialPlayer,
           clock: { day: 1, hour: 8 },
           roamingEnemies: []
@@ -5590,23 +5661,44 @@
           rumorP.innerText = `「${faction} ${desc}」`;
         }
 
-        // 2. 懸賞告示榜：隨機抽取區域地圖設定的可能出現任務
-        const questsText = props.possibleQuests || '';
-        const questList = questsText.split('\n').map(q => q.trim()).filter(Boolean);
-        const questTitle = questList.length > 0
-          ? questList[Math.floor(Math.random() * questList.length)]
-          : '【通緝】黑風寨大當家【連震天】 (賞金 100 兩)';
+        // 2. 若有已完成之主動任務，優先於客棧/官府結算獎勵 (經驗值、金錢、少數稀有物品)
+        if (game.activeQuest && game.activeQuest.completed) {
+          const rew = game.activeQuest.rewards || { exp: 80, gold: 50, itemId: null };
+          game.addPlayerExp(rew.exp || 80);
+          game.player.gold = (game.player.gold || 0) + (rew.gold || 50);
+          let itemMsg = '';
+          if (rew.itemId && Array.isArray(game.itemsCatalog)) {
+            const rewardItem = game.itemsCatalog.find(i => i.id === rew.itemId) || game.itemsCatalog[0];
+            if (rewardItem) {
+              game.player.inventory = game.player.inventory || [];
+              game.player.inventory.push(JSON.parse(JSON.stringify(rewardItem)));
+              itemMsg = `、稀有物品【${rewardItem.name}】`;
+            }
+          }
+          game.addLog(`<span class="log-world">【任務交差】</span>完成「${game.activeQuest.title}」！獲得 ${rew.exp} 經驗值、${rew.gold} 兩碎銀${itemMsg}。`);
+          game.activeQuest = null;
+          document.getElementById('quest-status').innerHTML = '暫無揭榜任務。前往客棧或市鎮【打聽消息】接取懸賞。';
+          game.updateUI();
+          if (typeof updateCharacterUI === 'function') updateCharacterUI();
+        }
 
-        const difficulty = parseInt(props.difficulty) || 2;
+        // 3. 懸賞告示榜：優先從故事固化 quests 庫抽取主動任務 (QUEST)
+        const questPool = (game.currentStory?.quests || game.questsCatalog || []).filter(q => q.entryType === 'QUEST');
+        const pickedQuest = questPool.length > 0 ? questPool[Math.floor(Math.random() * questPool.length)] : null;
+
+        const difficulty = pickedQuest ? (pickedQuest.difficulty || 2) : (parseInt(props.difficulty) || 2);
         const starStr = '★'.repeat(difficulty) + '☆'.repeat(Math.max(0, 5 - difficulty));
+        const questTitle = pickedQuest ? `${pickedQuest.icon || '📜'} ${pickedQuest.title}` : '【通緝】黑風寨大當家【連震天】';
+        const rewards = pickedQuest?.rewards || { exp: 50 + difficulty * 45, gold: 30 + difficulty * 35, itemId: null };
+        const itemHint = rewards.itemId ? ` ＋ 🎁 稀有物品` : '';
 
         document.getElementById('town-quest-title').innerText = questTitle;
-        document.getElementById('town-quest-desc').innerText = `危險評級：${starStr} ｜ 所在分境：${game.currentChunkName || '周邊疆土'} (4, 3)`;
+        document.getElementById('town-quest-desc').innerText = `${pickedQuest?.desc || ''} ｜ 評級：${starStr} ｜ 獎勵：${rewards.exp} 經驗 / ${rewards.gold} 兩${itemHint}`;
 
         currentBountyQuest = {
           title: questTitle,
-          difficulty: difficulty,
-          reward: difficulty * 40,
+          difficulty,
+          rewards,
           targetX: 4,
           targetY: 3
         };
@@ -5615,6 +5707,13 @@
       } else {
         game.addLog('<span class="log-warn">【提示】</span>此處非客棧或官府，無法入內打聽。');
       }
+    }
+
+    function declineBounty() {
+      if (game) {
+        game.addLog('<span class="log-time">【婉拒委託】</span>你略作思量後婉拒了此項委託，繼續自由雲遊江湖。');
+      }
+      closeTownDialog();
     }
 
     function closeTownDialog() {
@@ -5627,6 +5726,7 @@
         title: currentBountyQuest.title,
         targetX: currentBountyQuest.targetX,
         targetY: currentBountyQuest.targetY,
+        rewards: currentBountyQuest.rewards,
         completed: false
       };
       game.overworld.roamingEnemies.push({
@@ -5639,11 +5739,12 @@
         visualX: currentBountyQuest.targetX * TILE_PX,
         visualY: currentBountyQuest.targetY * TILE_PX
       });
-      game.addLog(`<span class="log-rumor">【揭榜】</span>已接下通緝令！目標【${game.activeQuest.title}】正盤踞在分境坐標 (${currentBountyQuest.targetX}, ${currentBountyQuest.targetY})。`);
+      game.addLog(`<span class="log-rumor">【主動接取】</span>已接下任務！目標【${game.activeQuest.title}】正盤踞在分境坐標 (${currentBountyQuest.targetX}, ${currentBountyQuest.targetY})。`);
+      const rew = game.activeQuest.rewards || {};
       document.getElementById('quest-status').innerHTML = `
         <b style="color:#f87171;">【進行中】${currentBountyQuest.title}</b><br>
         目標座標：荒野據點 (${currentBountyQuest.targetX}, ${currentBountyQuest.targetY})<br>
-        賞金：${currentBountyQuest.reward} 兩碎銀
+        完成獎勵：${rew.exp || 80} EXP · ${rew.gold || 50} 兩${rew.itemId ? ' · 🎁 稀有物品' : ''}
       `;
       closeTownDialog();
       game.updateOverworldEnemiesDisplay();

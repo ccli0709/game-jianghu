@@ -10,6 +10,8 @@ const { runTests: runCharacterSchemaTests } = require('./test_character_schema')
 const runCharacterEvolutionTests = require('./test_character_evolution');
 const runStorySaveTests = require('./test_story_save_system');
 const runWorldGeneratorTests = require('./test_world_generator');
+const runQuestEventTests = require('./test_quest_event_schema');
+const runMapSyncTests = require('./test_map_sync');
 
 console.log('====================================================');
 console.log('      《浮世江湖》系統品質保證與自動化測試套件        ');
@@ -30,7 +32,9 @@ const suites = [
   { name: '角色實體、三大種族、形態等級區間與相異攻擊模式', fn: runCharacterSchemaTests },
   { name: '主角形態進化、等級瓶頸約束與地圖特殊魔物系統', fn: runCharacterEvolutionTests },
   { name: '故事首頁、獨立存檔打包封裝與設定資料隔離系統', fn: runStorySaveTests },
-  { name: '世界地圖一鍵舖滿隨機區域地圖、比例與難度展開引擎', fn: runWorldGeneratorTests }
+  { name: '世界地圖一鍵舖滿隨機區域地圖、比例與難度展開引擎', fn: runWorldGeneratorTests },
+  { name: '任務與隨機事件總管、接取獎勵與險地奇遇引擎', fn: runQuestEventTests },
+  { name: '區域地圖與四大設定總管引用一致性與自動同步引擎', fn: runMapSyncTests }
 ];
 
 const startTime = Date.now();

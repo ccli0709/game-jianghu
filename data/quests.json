@@ -1,0 +1,438 @@
+[
+  {
+    "id": "quest_def_1",
+    "entryType": "QUEST",
+    "subType": "BOUNTY",
+    "subTypeName": "緝拿除惡",
+    "icon": "⚔️",
+    "title": "緝拿浙西五虎餘黨",
+    "difficulty": 1,
+    "targetCount": 1,
+    "desc": "臨安府官道近來有「浙西五虎」餘孽攔路劫道，官府懸賞十方俠士前往清剿。",
+    "rewards": {
+      "exp": 95,
+      "gold": 65,
+      "itemId": null
+    }
+  },
+  {
+    "id": "quest_def_2",
+    "entryType": "QUEST",
+    "subType": "DELIVERY",
+    "subTypeName": "江湖傳書",
+    "icon": "📜",
+    "title": "天目山莊急件傳書",
+    "difficulty": 1,
+    "targetCount": 1,
+    "desc": "西門莊主託付將一封密函火速送往忠義營，途中有金國細作窺伺，務必小心。",
+    "rewards": {
+      "exp": 95,
+      "gold": 65,
+      "itemId": null
+    }
+  },
+  {
+    "id": "quest_def_3",
+    "entryType": "QUEST",
+    "subType": "EXPLORE",
+    "subTypeName": "秘境探查",
+    "icon": "🧭",
+    "title": "追查太湖七十二洞天奇石",
+    "difficulty": 2,
+    "targetCount": 1,
+    "desc": "開封府總捕馬雲龍委託追查遺失的太湖仙石線索，據傳石屑落於江南水畔。",
+    "rewards": {
+      "exp": 140,
+      "gold": 100,
+      "itemId": "med_xiaohuan_pill"
+    }
+  },
+  {
+    "id": "quest_def_4",
+    "entryType": "QUEST",
+    "subType": "BOUNTY",
+    "subTypeName": "緝拿除惡",
+    "icon": "⚔️",
+    "title": "清剿黑水寨悍匪",
+    "difficulty": 2,
+    "targetCount": 1,
+    "desc": "黑水寨盜匪頻頻劫掠過往商隊，當地商會聯合出資招募俠客討伐寨主。",
+    "rewards": {
+      "exp": 140,
+      "gold": 100,
+      "itemId": null
+    }
+  },
+  {
+    "id": "quest_def_5",
+    "entryType": "QUEST",
+    "subType": "ESCORT",
+    "subTypeName": "護送押鏢",
+    "icon": "🛡️",
+    "title": "護送忠義營軍餉赴開封",
+    "difficulty": 3,
+    "targetCount": 1,
+    "desc": "抗金前線急需軍糧銀兩，忠義營招募武林好手護送鏢車穿越荒丘密林。",
+    "rewards": {
+      "exp": 185,
+      "gold": 135,
+      "itemId": null
+    }
+  },
+  {
+    "id": "quest_def_6",
+    "entryType": "QUEST",
+    "subType": "EXPLORE",
+    "subTypeName": "秘境探查",
+    "icon": "🧭",
+    "title": "探查巫山十二峰瘴氣源頭",
+    "difficulty": 3,
+    "targetCount": 1,
+    "desc": "巴蜀巫山近來瘴氣瀰漫，傳聞七十二洞妖道在深谷祭煉毒物，亟待俠士查明。",
+    "rewards": {
+      "exp": 185,
+      "gold": 135,
+      "itemId": "med_qingxin_pill"
+    }
+  },
+  {
+    "id": "quest_def_7",
+    "entryType": "QUEST",
+    "subType": "BOUNTY",
+    "subTypeName": "緝拿除惡",
+    "icon": "⚔️",
+    "title": "截擊塞外三絕密探",
+    "difficulty": 4,
+    "targetCount": 2,
+    "desc": "塞外三絕「地絕腿、火絕掌、風絕棍」門下煞星潛入中原，務必將其阻截於邊陲。",
+    "rewards": {
+      "exp": 230,
+      "gold": 170,
+      "itemId": "wpn_cold_iron_sword"
+    }
+  },
+  {
+    "id": "quest_def_8",
+    "entryType": "QUEST",
+    "subType": "EXPLORE",
+    "subTypeName": "秘境探查",
+    "icon": "🧭",
+    "title": "破除石窟古墓陰煞",
+    "difficulty": 4,
+    "targetCount": 2,
+    "desc": "古墓深處傳出妖異嘯聲，附近鄉民人心惶惶，懸賞高人入內鎮壓陰煞魔靈。",
+    "rewards": {
+      "exp": 230,
+      "gold": 170,
+      "itemId": null
+    }
+  },
+  {
+    "id": "quest_def_9",
+    "entryType": "QUEST",
+    "subType": "BOUNTY",
+    "subTypeName": "緝拿除惡",
+    "icon": "⚔️",
+    "title": "討伐巫山九幽魔魁",
+    "difficulty": 5,
+    "targetCount": 2,
+    "desc": "巫山絕頂出現九幽煞魔肆虐，正道群雄齊聚號召絕頂高手前往誅魔衛道。",
+    "rewards": {
+      "exp": 275,
+      "gold": 205,
+      "itemId": "arm_jade_pendant"
+    }
+  },
+  {
+    "id": "quest_def_10",
+    "entryType": "QUEST",
+    "subType": "ESCORT",
+    "subTypeName": "護送押鏢",
+    "icon": "🛡️",
+    "title": "護送神劍山莊秘寶入京",
+    "difficulty": 3,
+    "targetCount": 1,
+    "desc": "神劍山莊邵莊主欲將傳世寶匣送往臨安，沿途各路綠林虎視眈眈。",
+    "rewards": {
+      "exp": 185,
+      "gold": 135,
+      "itemId": null
+    }
+  },
+  {
+    "id": "quest_def_11",
+    "entryType": "QUEST",
+    "subType": "DELIVERY",
+    "subTypeName": "江湖傳書",
+    "icon": "📜",
+    "title": "送達抗金密報予辛將軍",
+    "difficulty": 2,
+    "targetCount": 1,
+    "desc": "江南義軍探得金軍動向，急需身法敏捷的俠士將密報送達前方大營。",
+    "rewards": {
+      "exp": 140,
+      "gold": 100,
+      "itemId": null
+    }
+  },
+  {
+    "id": "quest_def_12",
+    "entryType": "QUEST",
+    "subType": "BOUNTY",
+    "subTypeName": "緝拿除惡",
+    "icon": "⚔️",
+    "title": "除盡長白雪域嗜血妖獸",
+    "difficulty": 5,
+    "targetCount": 2,
+    "desc": "北方雪域連日暴雪，山中異變巨獸下山傷人，當地獵戶集資重賞求助。",
+    "rewards": {
+      "exp": 275,
+      "gold": 205,
+      "itemId": null
+    }
+  },
+  {
+    "id": "event_def_1",
+    "entryType": "EVENT",
+    "eventCategory": "TREASURE",
+    "eventCategoryName": "意外拾財",
+    "icon": "🪙",
+    "title": "破廟佛龕拾獲碎銀",
+    "triggerTerrains": [
+      "PLAINS",
+      "HILLS",
+      "ALL"
+    ],
+    "weight": 10,
+    "desc": "途經荒廢山神廟避雨時，在傾頹香案下發現前人遺落的銅錢碎銀。",
+    "effects": {
+      "expDelta": 0,
+      "goldDelta": 18,
+      "hpDelta": 0,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_2",
+    "entryType": "EVENT",
+    "eventCategory": "TREASURE",
+    "eventCategoryName": "意外拾財",
+    "icon": "🪙",
+    "title": "官道拾得商旅遺落錢袋",
+    "triggerTerrains": [
+      "PLAINS",
+      "ALL"
+    ],
+    "weight": 10,
+    "desc": "官道泥轍旁躺著一只錦囊錢袋，四顧無人認領，姑且收入行囊權作盤纏。",
+    "effects": {
+      "expDelta": 0,
+      "goldDelta": 26,
+      "hpDelta": 0,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_3",
+    "entryType": "EVENT",
+    "eventCategory": "TREASURE",
+    "eventCategoryName": "意外拾財",
+    "icon": "🪙",
+    "title": "枯井古匣尋獲金葉",
+    "triggerTerrains": [
+      "FOREST",
+      "HILLS"
+    ],
+    "weight": 10,
+    "desc": "在枯藤纏繞的古井石縫中摸出一只銅匣，內藏數片前朝金葉與半頁殘札。",
+    "effects": {
+      "expDelta": 10,
+      "goldDelta": 40,
+      "hpDelta": 0,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_4",
+    "entryType": "EVENT",
+    "eventCategory": "EPIPHANY",
+    "eventCategoryName": "江湖頓悟",
+    "icon": "💡",
+    "title": "摩挲太湖奇石參透勁道",
+    "triggerTerrains": [
+      "PLAINS",
+      "HILLS",
+      "ALL"
+    ],
+    "weight": 10,
+    "desc": "路見一塊宛如「七十二洞天」的太湖靈石，觀其孔竅氣流迴轉，忽然悟出運勁新法！",
+    "effects": {
+      "expDelta": 45,
+      "goldDelta": 0,
+      "hpDelta": 0,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_5",
+    "entryType": "EVENT",
+    "eventCategory": "EPIPHANY",
+    "eventCategoryName": "江湖頓悟",
+    "icon": "💡",
+    "title": "遙望巫山雲霧心生頓悟",
+    "triggerTerrains": [
+      "MOUNTAIN",
+      "HILLS",
+      "ALL"
+    ],
+    "weight": 10,
+    "desc": "立於峭壁看雲海翻湧聚散無常，心境豁然開朗，內息修為精進一籌。",
+    "effects": {
+      "expDelta": 60,
+      "goldDelta": 0,
+      "hpDelta": 0,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_6",
+    "entryType": "EVENT",
+    "eventCategory": "EPIPHANY",
+    "eventCategoryName": "江湖頓悟",
+    "icon": "💡",
+    "title": "茶棚聽聞神龍大俠事蹟有感",
+    "triggerTerrains": [
+      "PLAINS",
+      "FOREST"
+    ],
+    "weight": 10,
+    "desc": "憶起江湖流傳「俠之大者、泰山崩於前而色不改」之語，胸中豪氣頓生！",
+    "effects": {
+      "expDelta": 35,
+      "goldDelta": 0,
+      "hpDelta": 0,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_7",
+    "entryType": "EVENT",
+    "eventCategory": "HAZARD",
+    "eventCategoryName": "險地受創",
+    "icon": "⚠️",
+    "title": "崎嶇荒丘失足滾落碎石坡",
+    "triggerTerrains": [
+      "HILLS",
+      "MOUNTAIN"
+    ],
+    "weight": 10,
+    "desc": "山道碎石鬆動，一時腳下打滑跌入淺溝，雖勉強撐住卻擦傷筋骨。",
+    "effects": {
+      "expDelta": 5,
+      "goldDelta": 0,
+      "hpDelta": -18,
+      "statusEffect": "WOUNDED"
+    }
+  },
+  {
+    "id": "event_def_8",
+    "entryType": "EVENT",
+    "eventCategory": "HAZARD",
+    "eventCategoryName": "險地受創",
+    "icon": "⚠️",
+    "title": "密林瘴霧誤觸毒荊棘",
+    "triggerTerrains": [
+      "FOREST",
+      "SWAMP"
+    ],
+    "weight": 10,
+    "desc": "黑風密林霧氣濃厚，撥開枝葉時不慎被帶毒荊棘劃破衣袖。",
+    "effects": {
+      "expDelta": 0,
+      "goldDelta": 0,
+      "hpDelta": -14,
+      "statusEffect": "POISONED"
+    }
+  },
+  {
+    "id": "event_def_9",
+    "entryType": "EVENT",
+    "eventCategory": "HAZARD",
+    "eventCategoryName": "險地受創",
+    "icon": "⚠️",
+    "title": "戈壁暗風飛沙割面",
+    "triggerTerrains": [
+      "DESERT",
+      "HILLS"
+    ],
+    "weight": 10,
+    "desc": "大漠驟起狂風捲起碎石砂礫，迎面撲來令人皮肉生痛，耗損不少氣血。",
+    "effects": {
+      "expDelta": 0,
+      "goldDelta": 0,
+      "hpDelta": -15,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_10",
+    "entryType": "EVENT",
+    "eventCategory": "HAZARD",
+    "eventCategoryName": "險地受創",
+    "icon": "⚠️",
+    "title": "暗夜林間誤踩獵戶捕獸夾",
+    "triggerTerrains": [
+      "FOREST"
+    ],
+    "weight": 10,
+    "desc": "草叢深處暗藏鏽鐵獸夾，一時未察踏個正著，痛徹心扉！",
+    "effects": {
+      "expDelta": 0,
+      "goldDelta": 0,
+      "hpDelta": -22,
+      "statusEffect": "WOUNDED"
+    }
+  },
+  {
+    "id": "event_def_11",
+    "entryType": "EVENT",
+    "eventCategory": "ENCOUNTER",
+    "eventCategoryName": "偶遇善緣",
+    "icon": "🍵",
+    "title": "遇見雲遊郎中贈藥療傷",
+    "triggerTerrains": [
+      "ALL",
+      "PLAINS",
+      "FOREST"
+    ],
+    "weight": 10,
+    "desc": "一位背著藥簍的老醫見你風塵僕僕，隨手贈予一碗清熱草藥湯並指點穴位。",
+    "effects": {
+      "expDelta": 15,
+      "goldDelta": 0,
+      "hpDelta": 25,
+      "statusEffect": null
+    }
+  },
+  {
+    "id": "event_def_12",
+    "entryType": "EVENT",
+    "eventCategory": "ENCOUNTER",
+    "eventCategoryName": "偶遇善緣",
+    "icon": "🍵",
+    "title": "忠義營斥候分贈乾糧飲水",
+    "triggerTerrains": [
+      "PLAINS",
+      "HILLS",
+      "ALL"
+    ],
+    "weight": 10,
+    "desc": "途中遇見南宋忠義營巡哨義士，彼此交換江湖情報並贈予些許盤纏乾糧。",
+    "effects": {
+      "expDelta": 20,
+      "goldDelta": 10,
+      "hpDelta": 15,
+      "statusEffect": null
+    }
+  }
+]

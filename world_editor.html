@@ -1780,7 +1780,8 @@
           await saveWorldMapToProject();
         }
 
-        // 重新同步專案地圖列表
+        // 重新同步專案地圖列表與四大設定總管引用 (敵人/任務/事件/物品/門派)
+        await fetch('/api/maps/sync-references', { method: 'POST' });
         const listRes = await fetch('/api/maps');
         if (listRes.ok) {
           const files = await listRes.json();
