@@ -603,14 +603,12 @@
     <h3>新增專案地圖</h3>
     <div class="form-group">
       <label class="form-label">地圖檔名 (請包含 .tmj 或 .json 後綴):</label>
-      <input type="text" id="new-map-filename" class="form-input"
-        placeholder="例如: overworld_jiangnan.tmj 或 arena_cave.tmj">
+      <input type="text" id="new-map-filename" class="form-input" placeholder="例如: overworld_jiangnan.tmj">
     </div>
     <div class="form-group">
       <label class="form-label">地圖類型:</label>
       <select id="new-map-type" class="form-input" onchange="onNewMapTypeChange(this.value)">
         <option value="OVERWORLD">區域地圖漫遊 (Overworld - 16x16 / 時辰耗費)</option>
-        <option value="BATTLE">戰術小地圖 (Battle Arena - 16x16 / 能量消耗與掩體)</option>
       </select>
     </div>
     <div class="modal-actions">
@@ -1078,8 +1076,10 @@
     // 新增地圖視窗與邏輯
     // ==========================================
     function openNewMapModal() {
+      const input = document.getElementById('new-map-filename');
+      if (!input.value) input.value = 'overworld_new.tmj';
       document.getElementById('new-map-modal').style.display = 'block';
-      document.getElementById('new-map-filename').focus();
+      input.focus();
     }
 
     function closeNewMapModal() {

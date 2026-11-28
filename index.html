@@ -1611,12 +1611,17 @@
       </div>
 
       <!-- 客棧/城鎮互動視窗 -->
-      <div id="town-dialog">
+      <div id="town-dialog" style="max-height:86vh; overflow-y:auto;">
         <h2 id="town-title">🍶 龍門客棧</h2>
         <div class="town-section" id="town-rumors">
           <b style="color:#e2e8f0;">【江湖說書 / 打聽情報】</b>
           <p id="rumor-text" style="color:#fbbf24; margin-top:6px; line-height:1.5;">
             「聽聞黑風寨大當家近日在西北古道掠奪了一批官府暗鏢，各路好手正欲除之...」</p>
+        </div>
+        <div class="town-section">
+          <b style="color:#e2e8f0;">【客棧行商 / 市集貨架】</b> <span id="town-shop-tier-hint"
+            style="font-size:0.74rem; color:#94a3b8;"></span>
+          <div id="town-shop-list" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;"></div>
         </div>
         <div class="town-section">
           <b style="color:#e2e8f0;">【江湖委託 / 懸賞告示榜】</b>
@@ -2118,6 +2123,8 @@
 
       initArena(envTypeId) {
         this.tiles.fill(BATTLE_TILE.FLOOR.id);
+        this.surfaces.fill(BATTLE_SURFACE.NONE);
+        this.duration.fill(0);
 
         for (let x = 0; x < this.w; x++) {
           for (let y = 0; y < this.h; y++) {
@@ -2127,29 +2134,68 @@
           }
         }
 
-        // 掩體
-        this.tiles[this.idx(7, 6)] = BATTLE_TILE.WALL.id;
-        this.tiles[this.idx(7, 7)] = BATTLE_TILE.WALL.id;
-        this.tiles[this.idx(7, 8)] = BATTLE_TILE.WALL.id;
-        this.tiles[this.idx(7, 9)] = BATTLE_TILE.WALL.id;
+        const isNearSpawn = (x, y) =>
+          (Math.abs(x - 3) <= 1 && Math.abs(y - 8) <= 1) ||
+          (Math.abs(x - 12) <= 1 && Math.abs(y - 7) <= 1);
 
-        // 泥濘
-        this.tiles[this.idx(5, 4)] = BATTLE_TILE.MUD.id;
-        this.tiles[this.idx(6, 4)] = BATTLE_TILE.MUD.id;
-        this.tiles[this.idx(5, 5)] = BATTLE_TILE.MUD.id;
+        const scatter = (tileId, count, surfId = null, surfDur = 99) => {
+          let placed = 0, guard = 0;
+          while (placed < count && guard < 150) {
+            guard++;
+            const rx = 2 + Math.floor(Math.random() * (this.w - 4));
+            const ry = 2 + Math.floor(Math.random() * (this.h - 4));
+            if (isNearSpawn(rx, ry)) continue;
+            const i = this.idx(rx, ry);
+            if (surfId !== null) {
+              if (this.tiles[i] !== BATTLE_TILE.WALL.id && this.surfaces[i] === BATTLE_SURFACE.NONE) {
+                this.surfaces[i] = surfId;
+                this.duration[i] = surfDur;
+                placed++;
+              }
+            } else if (this.tiles[i] === BATTLE_TILE.FLOOR.id) {
+              this.tiles[i] = tileId;
+              placed++;
+            }
+          }
+        };
 
-        // 深水
-        this.tiles[this.idx(9, 8)] = BATTLE_TILE.WATER.id;
-        this.tiles[this.idx(10, 8)] = BATTLE_TILE.WATER.id;
-        this.tiles[this.idx(9, 9)] = BATTLE_TILE.WATER.id;
+        // 依區域地格類型 (envTypeId: 0=平原, 2=密林, 3=城鎮, 4=客棧, 5=荒丘) 動態生成戰場
+        if (envTypeId === 2) {
+          // 黑風密林：林木掩體多、泥濘沼澤與火油伏擊
+          scatter(BATTLE_TILE.WALL.id, 14);
+          scatter(BATTLE_TILE.MUD.id, 10);
+          scatter(BATTLE_TILE.WATER.id, 4);
+          scatter(null, 3, BATTLE_SURFACE.OIL, 99);
+        } else if (envTypeId === 5) {
+          // 崎嶇荒丘：大量碎石陡坡、山岩掩體與淺灘
+          scatter(BATTLE_TILE.RUBBLE.id, 16);
+          scatter(BATTLE_TILE.WALL.id, 8);
+          scatter(BATTLE_TILE.WATER.id, 4);
+          scatter(null, 1, BATTLE_SURFACE.OIL, 99);
+        } else if (envTypeId === 3 || envTypeId === 4) {
+          // 城鎮 / 客棧大堂：對稱柱位掩體 + 酒油地格
+          [[5, 5], [5, 10], [10, 5], [10, 10], [7, 4], [8, 11]].forEach(([px, py]) => {
+            this.tiles[this.idx(px, py)] = BATTLE_TILE.WALL.id;
+          });
+          scatter(null, 3, BATTLE_SURFACE.OIL, 99);
+        } else {
+          // 平原官道 (envTypeId === 0 或其他)：開闊場地、少量掩體與碎石/泥濘
+          scatter(BATTLE_TILE.WALL.id, 4);
+          scatter(BATTLE_TILE.MUD.id, 3);
+          scatter(BATTLE_TILE.RUBBLE.id, 3);
+          scatter(BATTLE_TILE.WATER.id, 2);
+          scatter(null, 2, BATTLE_SURFACE.OIL, 99);
+        }
 
-        // 碎石坡
-        this.tiles[this.idx(10, 4)] = BATTLE_TILE.RUBBLE.id;
-        this.tiles[this.idx(11, 4)] = BATTLE_TILE.RUBBLE.id;
-
-        // 火油
-        this.surfaces[this.idx(6, 8)] = BATTLE_SURFACE.OIL;
-        this.duration[this.idx(6, 8)] = 99;
+        // 確保雙方出生區與中路至少存在一條暢通路徑，避免隨機掩體完全堵死
+        for (let x = 3; x <= 12; x++) {
+          if (this.tiles[this.idx(x, 8)] === BATTLE_TILE.WALL.id) {
+            this.tiles[this.idx(x, 8)] = BATTLE_TILE.FLOOR.id;
+          }
+        }
+        this.tiles[this.idx(3, 8)] = BATTLE_TILE.FLOOR.id;
+        this.tiles[this.idx(12, 7)] = BATTLE_TILE.FLOOR.id;
+        this.tiles[this.idx(12, 8)] = BATTLE_TILE.FLOOR.id;
       }
 
       getTileData(x, y) {
@@ -2171,6 +2217,29 @@
       isPassable(x, y) {
         if (x < 0 || x >= this.w || y < 0 || y >= this.h) return false;
         return this.getMovementCost(x, y) < 9999;
+      }
+
+      // Bresenham 視線/彈道檢測：遠程攻擊不可穿透堅實石壁 (cost >= 9999)
+      hasLineOfSight(x0, y0, x1, y1) {
+        let cx = x0;
+        let cy = y0;
+        const dx = Math.abs(x1 - x0);
+        const dy = Math.abs(y1 - y0);
+        const sx = x0 < x1 ? 1 : -1;
+        const sy = y0 < y1 ? 1 : -1;
+        let err = dx - dy;
+
+        while (cx !== x1 || cy !== y1) {
+          if (!(cx === x0 && cy === y0) && !(cx === x1 && cy === y1)) {
+            if (this.getMovementCost(cx, cy) >= 9999) {
+              return false;
+            }
+          }
+          const e2 = 2 * err;
+          if (e2 > -dy) { err -= dy; cx += sx; }
+          if (e2 < dx) { err += dx; cy += sy; }
+        }
+        return true;
       }
 
       tickEnvironment(log) {
@@ -2962,7 +3031,7 @@
         if (p.equipment) {
           const w = p.equipment.weapon;
           if (w && w.attributes) {
-            equipAtk += (w.attributes.atk || 0);
+            equipAtk += (w.attributes.atk || w.attributes.rangedAtk || 0);
             equipCrit += (w.attributes.critRate || 0);
           }
           const a = p.equipment.armor;
@@ -4597,8 +4666,8 @@
         const patternDef = typeof ATTACK_PATTERNS !== 'undefined' ? ATTACK_PATTERNS[patternId] : null;
         let dist = Math.abs(this.player.bx - enemy.x) + Math.abs(this.player.by - enemy.y);
 
-        // 1. BEAST_POUNCE 猛獸突進撲擊特判：距離 2~3 格時直接暴衝撲至玩家身邊
-        if (patternId === 'BEAST_POUNCE' && dist >= 2 && dist <= 3) {
+        // 1. BEAST_POUNCE 猛獸突進撲擊特判：距離 2~3 格且視線無石壁阻隔時暴衝撲至玩家身邊
+        if (patternId === 'BEAST_POUNCE' && dist >= 2 && dist <= 3 && this.battleArena.hasLineOfSight(enemy.x, enemy.y, this.player.bx, this.player.by)) {
           // 尋找玩家周圍 4 鄰可停留的空格
           const adjOffsets = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
           for (const off of adjOffsets) {
@@ -4616,9 +4685,10 @@
           }
         }
 
-        // 判定當前距離是否在技能招式射程內
+        // 判定當前距離是否在技能招式射程內，且遠程攻擊不得穿透堅實石壁
         const effectiveRange = patternDef ? (patternDef.range || 1) : 1;
-        const canAttack = dist <= effectiveRange;
+        const hasLos = dist <= 1 || this.battleArena.hasLineOfSight(enemy.x, enemy.y, this.player.bx, this.player.by);
+        const canAttack = dist <= effectiveRange && hasLos;
 
         if (canAttack) {
           const stats = this.calcPlayerCombatStats();
@@ -5580,6 +5650,41 @@
       document.getElementById('equip-dialog').style.display = 'none';
     }
 
+    const ITEM_TIER_ZH = {
+      COMMON: '凡品',
+      UNCOMMON: '良品',
+      RARE: '上品',
+      EPIC: '極品',
+      LEGENDARY: '寶器',
+      MYTHIC: '神兵絕品'
+    };
+
+    function formatItemTierZh(item) {
+      if (!item) return '凡品';
+      if (item.tierName && !ITEM_TIER_ZH[item.tierName]) return item.tierName;
+      return ITEM_TIER_ZH[item.tier] || item.tierName || item.tier || '凡品';
+    }
+
+    function formatItemStatSummary(item) {
+      if (!item) return '無特殊加成';
+      if (item.stat) return item.stat;
+      const a = item.attributes || {};
+      const parts = [];
+      if (a.atk) parts.push(`攻擊 +${a.atk}`);
+      if (a.rangedAtk) parts.push(`遠攻 +${a.rangedAtk}`);
+      if (a.armorPiercing) parts.push(`破甲 +${a.armorPiercing}`);
+      if (a.critRate) parts.push(`暴擊 +${a.critRate}%`);
+      if (a.speedMod) parts.push(`速度 ${a.speedMod > 0 ? '+' : ''}${a.speedMod}%`);
+      if (a.def) parts.push(`防禦 +${a.def}`);
+      if (a.hpBonus) parts.push(`氣血 +${a.hpBonus}`);
+      if (a.dodgeMod || a.dodge) parts.push(`閃避 +${a.dodgeMod ?? a.dodge}%`);
+      if (a.healHp) parts.push(`回血 +${a.healHp}`);
+      if (a.healQi) parts.push(`回氣 +${a.healQi}`);
+      if (a.upgradeBonus) parts.push(`${a.upgradeBonus}`);
+      if (parts.length === 0 && a.specialEffect) parts.push(a.specialEffect);
+      return parts.length > 0 ? parts.join(' ｜ ') : (item.desc || '無特殊加成');
+    }
+
     function updateEquipmentUI() {
       if (!game || !game.player) return;
       const p = game.player;
@@ -5605,11 +5710,11 @@
         if (item) {
           if (nameEl) nameEl.innerHTML = `${item.icon || '⚔️'} ${item.name}`;
           if (tierEl) {
-            tierEl.innerText = item.tier || '普通';
+            tierEl.innerText = formatItemTierZh(item);
             tierEl.className = `equip-tier ${item.tierClass || 'tier-white'}`;
             tierEl.style.display = 'inline-block';
           }
-          if (statEl) statEl.innerText = item.stat || '無特殊加成';
+          if (statEl) statEl.innerText = formatItemStatSummary(item);
           if (descEl) descEl.innerText = item.desc || '';
           if (unequipBtn) unequipBtn.style.display = 'inline-block';
         } else {
@@ -5635,6 +5740,11 @@
         return;
       }
 
+      const curOwTile = (game.mode === MODE.OVERWORLD && game.overworld)
+        ? game.overworld.getTileData(game.player.owX, game.player.owY)
+        : null;
+      const isAtTownOrInn = !!(curOwTile && (curOwTile.id === 3 || curOwTile.id === 4));
+
       p.inventory.forEach((item, idx) => {
         const card = document.createElement('div');
         card.className = 'inv-item-card';
@@ -5645,6 +5755,11 @@
           ? `<button class="btn-action-equip" onclick="equipItem(${idx})">裝備</button>`
           : `<button class="btn-action-use" onclick="useItem(${idx})">使用</button>`;
 
+        const sellPrice = Math.max(1, Math.round((item.value || 20) * 0.6));
+        const sellBtn = isAtTownOrInn
+          ? `<button class="btn-action-use" style="background:#78350f; border-color:#d97706; color:#fde68a; margin-left:4px;" onclick="sellInventoryItem(${idx})">販售 +${sellPrice}兩</button>`
+          : '';
+
         const countBadge = item.count && item.count > 1 ? `<span style="color:#60a5fa; font-weight:bold; font-size:0.75rem;">x${item.count}</span>` : '';
 
         card.innerHTML = `
@@ -5653,16 +5768,42 @@
               <span>${item.icon || '📦'}</span>
               <span>${item.name}</span>
               ${countBadge}
-              <span class="equip-tier ${item.tierClass || 'tier-white'}" style="margin-left:4px;">${item.tier || '凡品'}</span>
+              <span class="equip-tier ${item.tierClass || 'tier-white'}" style="margin-left:4px;">${formatItemTierZh(item)}</span>
             </div>
-            <div class="inv-item-desc">${item.stat || item.desc || ''}</div>
+            <div class="inv-item-desc">${formatItemStatSummary(item)}</div>
           </div>
           <div class="inv-actions">
             ${actionBtn}
+            ${sellBtn}
           </div>
         `;
         invContainer.appendChild(card);
       });
+    }
+
+    // 站在客棧/城鎮時販售背包物品
+    function sellInventoryItem(index) {
+      if (!game || !game.player || game.mode !== MODE.OVERWORLD) return;
+      const tile = game.overworld.getTileData(game.player.owX, game.player.owY);
+      if (tile.id !== 3 && tile.id !== 4) {
+        game.addLog('<span class="log-warn">【提示】</span>必須站在客棧或城鎮內才可販售物品。');
+        return;
+      }
+      const item = game.player.inventory[index];
+      if (!item) return;
+
+      const sellPrice = Math.max(1, Math.round((item.value || 20) * 0.6));
+      game.player.gold = (game.player.gold || 0) + sellPrice;
+
+      if (item.count && item.count > 1) {
+        item.count--;
+      } else {
+        game.player.inventory.splice(index, 1);
+      }
+
+      game.addLog(`<span class="log-world">🪙【典當販售】</span>售出【${item.name}】，獲得 <b>${sellPrice}</b> 兩碎銀！`);
+      updateEquipmentUI();
+      game.updateUI();
     }
 
     // 裝備物品 (穿戴)
@@ -5852,10 +5993,105 @@
           targetY: 3
         };
 
+        // 4. 客棧/城鎮行商貨架：依區域地圖難度高低販售 6 項物品（必含 1 種回血藥）
+        renderTownShopByDifficulty(parseInt(props.difficulty, 10) || 1);
+
         document.getElementById('town-dialog').style.display = 'block';
       } else {
         game.addLog('<span class="log-warn">【提示】</span>此處非客棧或官府，無法入內打聽。');
       }
+    }
+
+    let currentTownShopItems = [];
+    const townShopCache = {};
+
+    function renderTownShopByDifficulty(mapDifficulty) {
+      const diff = Math.min(5, Math.max(1, mapDifficulty || 1));
+      const tierByDiff = {
+        1: ['COMMON', 'UNCOMMON'],
+        2: ['COMMON', 'UNCOMMON', 'RARE'],
+        3: ['UNCOMMON', 'RARE', 'EPIC'],
+        4: ['RARE', 'EPIC', 'LEGENDARY'],
+        5: ['EPIC', 'LEGENDARY', 'MYTHIC']
+      }[diff] || ['COMMON', 'UNCOMMON'];
+
+      const cacheKey = (game.currentMapFile || 'default') + '_d' + diff;
+      if (!townShopCache[cacheKey]) {
+        const catalog = (game.currentStory?.items && game.currentStory.items.length > 0)
+          ? game.currentStory.items
+          : (game.itemsCatalog || []);
+        const usableCatalog = catalog.filter(i => !i.equipRace || i.equipRace === 'HUMAN' || i.equipRace === 'ALL');
+        const pool = usableCatalog.length > 0 ? usableCatalog : catalog;
+
+        const chosen = [];
+        const usedIds = new Set();
+
+        // 1. 必選 1 種回血藥品
+        const medTierPool = pool.filter(i => i.category === 'MEDICINE' && tierByDiff.includes(i.tier) && ((i.attributes?.healHp || 0) > 0 || !i.attributes));
+        const medFallback = pool.filter(i => i.category === 'MEDICINE');
+        const medSource = medTierPool.length > 0 ? medTierPool : medFallback;
+        if (medSource.length > 0) {
+          const med = medSource[Math.floor(Math.random() * medSource.length)];
+          chosen.push(JSON.parse(JSON.stringify(med)));
+          usedIds.add(med.id);
+        }
+
+        // 2. 補齊其餘 5 項符合該地圖難度品質的物品
+        const tierPool = pool.filter(i => tierByDiff.includes(i.tier) && !usedIds.has(i.id));
+        const restSource = tierPool.length > 0 ? tierPool : pool.filter(i => !usedIds.has(i.id));
+        const shuffled = [...restSource].sort(() => Math.random() - 0.5);
+        for (const item of shuffled) {
+          if (chosen.length >= 6) break;
+          chosen.push(JSON.parse(JSON.stringify(item)));
+          usedIds.add(item.id);
+        }
+        // 若物品總管品項極少不足 6 件時允許重複補滿 6 項
+        while (chosen.length < 6 && pool.length > 0) {
+          chosen.push(JSON.parse(JSON.stringify(pool[chosen.length % pool.length])));
+        }
+        townShopCache[cacheKey] = chosen;
+      }
+
+      currentTownShopItems = townShopCache[cacheKey];
+      const hintEl = document.getElementById('town-shop-tier-hint');
+      if (hintEl) hintEl.innerText = `(區域難度 ★${diff} ｜ 共 ${currentTownShopItems.length} 項，含回血靈藥)`;
+
+      const listEl = document.getElementById('town-shop-list');
+      if (!listEl) return;
+      listEl.innerHTML = '';
+
+      currentTownShopItems.forEach((item, idx) => {
+        const price = Math.max(5, item.value || 30);
+        const card = document.createElement('div');
+        card.style.cssText = 'background:#161925; border:1px solid #2b3145; border-radius:6px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; gap:8px;';
+        card.innerHTML = `
+          <div style="min-width:0;">
+            <div style="font-size:0.82rem; font-weight:bold; color:#f1f5f9;">${item.icon || '📦'} ${item.name} <span class="equip-tier ${item.tierClass || 'tier-white'}">${formatItemTierZh(item)}</span></div>
+            <div style="font-size:0.7rem; color:#38bdf8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${formatItemStatSummary(item)}</div>
+          </div>
+          <button class="btn" style="padding:4px 9px; font-size:0.74rem; border-color:#f59e0b; color:#fde68a; flex-shrink:0;" onclick="buyShopItem(${idx})">🪙 ${price}兩</button>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    function buyShopItem(idx) {
+      if (!game || !game.player) return;
+      const item = currentTownShopItems[idx];
+      if (!item) return;
+      const price = Math.max(5, item.value || 30);
+      if ((game.player.gold || 0) < price) {
+        game.addLog(`<span class="log-warn">【盤纏不足】</span>購買【${item.name}】需 ${price} 兩碎銀，手頭銀兩不夠！`);
+        return;
+      }
+      game.player.gold -= price;
+      game.player.inventory = game.player.inventory || [];
+      const bought = JSON.parse(JSON.stringify(item));
+      bought.count = 1;
+      game.player.inventory.push(bought);
+      game.addLog(`<span class="log-world">🛒【購置貨品】</span>花費 <b>${price}</b> 兩購得【${bought.name}】放入行囊！`);
+      game.updateUI();
+      if (typeof updateEquipmentUI === 'function') updateEquipmentUI();
     }
 
     function declineBounty() {
